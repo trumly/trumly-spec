@@ -1,0 +1,4 @@
+---
+id: lonely
+type: store
+---

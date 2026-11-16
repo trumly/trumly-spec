@@ -1,0 +1,120 @@
+{
+ "ghosts": [
+  {
+   "link": "owns",
+   "node": "a",
+   "plane": "q",
+   "rule": "r",
+   "to_type": "team"
+  },
+  {
+   "link": "uses",
+   "node": "a",
+   "plane": "p",
+   "rule": "r",
+   "to_type": null
+  },
+  {
+   "link": "ok",
+   "node": "a",
+   "plane": "p",
+   "rule": "r",
+   "to_type": null
+  }
+ ],
+ "load_errors": [],
+ "nodes": [
+  {
+   "body": "",
+   "fields": {},
+   "id": "a",
+   "links": [
+    {
+     "to": "x",
+     "type": "uses"
+    }
+   ],
+   "parent": null,
+   "plane": "p",
+   "title": "a",
+   "type": "svc"
+  },
+  {
+   "body": "",
+   "fields": {
+    "order": 1
+   },
+   "id": "p",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "p",
+   "type": "plane"
+  },
+  {
+   "body": "",
+   "fields": {
+    "order": 2
+   },
+   "id": "q",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "q",
+   "type": "plane"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "svc"
+    },
+    "check": {
+     "require_link": [
+      {
+       "node_plane": "q",
+       "node_type": "team",
+       "type": "owns"
+      },
+      {
+       "min": 2,
+       "type": "uses"
+      },
+      {
+       "type": "ok"
+      }
+     ]
+    },
+    "statement": "s"
+   },
+   "id": "r",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "x",
+   "links": [],
+   "parent": null,
+   "plane": "q",
+   "title": "x",
+   "type": "dep"
+  }
+ ],
+ "results": [
+  {
+   "node": "a",
+   "rule": "r",
+   "severity": "warn",
+   "status": "fail"
+  }
+ ],
+ "structure": {
+  "errors": [],
+  "warnings": []
+ }
+}

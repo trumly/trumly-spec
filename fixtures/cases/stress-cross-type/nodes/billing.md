@@ -1,0 +1,4 @@
+---
+id: billing
+type: domain
+---

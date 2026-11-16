@@ -1,0 +1,139 @@
+{
+  "name": "a project's own vocabulary: describing its types, the agent index, and preparing a node to write",
+  "files": {
+    "overview.md": "---\nid: overview\ntype: overview\ntitle: Orders\nfields:\n  purpose: The orders database\n  audience: agents\n---\nMore.\n",
+    "physical.md": "---\nid: physical\ntype: plane\ntitle: Physical\nfields:\n  order: 2\n---\n",
+    "logical.md": "---\nid: logical\ntype: plane\ntitle: Logical\nfields:\n  order: 1\n---\n",
+    "type-table.md": "---\nid: type-table\ntype: type\ntitle: table\nfields:\n  name: table\n  plane: physical\n  description: A table.\n  fields:\n    - {name: rows, kind: number, required: true}\n---\n",
+    "type-server.md": "---\nid: type-server\ntype: type\ntitle: server\nfields:\n  name: server\n  plane: physical\n---\n",
+    "link-in.md": "---\nid: link-in\ntype: link-type\ntitle: in\nfields:\n  name: runs-on\n  from: [table]\n  to: [server]\n---\n",
+    "table-orders.md": "---\nid: table-orders\ntype: table\nplane: physical\nfields:\n  rows: 3\n---\n"
+  },
+  "calls": [
+    {
+      "tool": "describe_types",
+      "args": {
+        "type": "table"
+      },
+      "expect": {
+        "types": [
+          {
+            "name": "table",
+            "plane": "physical",
+            "existing_nodes": 1,
+            "required_fields": [
+              "rows"
+            ],
+            "links_out": [
+              {
+                "link": "runs-on",
+                "to": [
+                  "server"
+                ]
+              }
+            ],
+            "example": {
+              "id": "table-example",
+              "plane": "physical",
+              "fields": {
+                "rows": 0
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "tool": "describe_types",
+      "args": {
+        "plane": "physical"
+      },
+      "expect": {
+        "planes": [
+          {
+            "id": "logical"
+          },
+          {
+            "id": "physical"
+          }
+        ],
+        "types": [
+          {
+            "name": "server"
+          },
+          {
+            "name": "table"
+          }
+        ]
+      }
+    },
+    {
+      "tool": "describe_types",
+      "args": {
+        "type": "servr"
+      },
+      "expect": {
+        "types": [],
+        "error": "no type named 'servr'; did you mean 'server'?"
+      }
+    },
+    {
+      "tool": "get_index",
+      "args": {
+        "_write": true
+      },
+      "text": [
+        "# About this project: Orders",
+        "**Purpose:** The orders database",
+        "## What you can create",
+        "`physical` Physical: `server` (0), `table` (1)",
+        "Link types: `runs-on`"
+      ]
+    },
+    {
+      "tool": "_prepare",
+      "args": {
+        "node": {
+          "id": "server-main",
+          "type": "server",
+          "links": []
+        },
+        "is_new": true
+      },
+      "expect": {
+        "node": {
+          "plane": "physical"
+        },
+        "defaulted": {
+          "plane": "physical"
+        },
+        "advice": []
+      }
+    },
+    {
+      "tool": "_prepare",
+      "args": {
+        "node": {
+          "id": "thing-1",
+          "type": "srv",
+          "plane": "physical",
+          "links": [
+            {
+              "type": "runs",
+              "to": "x"
+            }
+          ]
+        },
+        "is_new": true
+      },
+      "expect": {
+        "defaulted": {},
+        "advice": [
+          "unknown_type: no type named 'srv' is defined in this project. Did you mean 'server'? Call describe_types to see the types; change the type with another put_node (same id, pass the rev you got back).",
+          "unknown_link_type: no link type named 'runs'. Did you mean 'runs-on'?",
+          "id_convention: ids are usually '<type>-<name>' (e.g. 'srv-1'). Not checked; rename_node can fix it."
+        ]
+      }
+    }
+  ]
+}

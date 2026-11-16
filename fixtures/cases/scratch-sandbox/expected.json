@@ -1,0 +1,264 @@
+{
+ "ghosts": [],
+ "load_errors": [],
+ "nodes": [
+  {
+   "body": "",
+   "fields": {},
+   "id": "d-child",
+   "links": [],
+   "parent": "main",
+   "plane": "p-draft2",
+   "title": "d-child",
+   "type": "t"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "d-other",
+   "links": [
+    {
+     "to": "d1",
+     "type": "dep"
+    }
+   ],
+   "parent": null,
+   "plane": "p-draft2",
+   "title": "d-other",
+   "type": "t"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "d-out",
+   "links": [
+    {
+     "to": "main",
+     "type": "dep"
+    }
+   ],
+   "parent": null,
+   "plane": "p-draft",
+   "title": "d-out",
+   "type": "t"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "d1",
+   "links": [
+    {
+     "to": "d2",
+     "type": "dep"
+    }
+   ],
+   "parent": null,
+   "plane": "p-draft",
+   "title": "d1",
+   "type": "t"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "d2",
+   "links": [],
+   "parent": "d1",
+   "plane": "p-draft",
+   "title": "d2",
+   "type": "t"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "f1",
+   "links": [],
+   "parent": null,
+   "plane": "p-flag",
+   "title": "f1",
+   "type": "t"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "f2",
+   "links": [
+    {
+     "to": "main",
+     "type": "dep"
+    }
+   ],
+   "parent": null,
+   "plane": "p-flag",
+   "title": "f2",
+   "type": "t"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "m-in",
+   "links": [
+    {
+     "to": "d1",
+     "type": "dep"
+    }
+   ],
+   "parent": null,
+   "plane": "p-main",
+   "title": "m-in",
+   "type": "t"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "main",
+   "links": [],
+   "parent": null,
+   "plane": "p-main",
+   "title": "main",
+   "type": "t"
+  },
+  {
+   "body": "",
+   "fields": {
+    "scratch": true
+   },
+   "id": "p-draft",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "p-draft",
+   "type": "plane"
+  },
+  {
+   "body": "",
+   "fields": {
+    "scratch": true
+   },
+   "id": "p-draft2",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "p-draft2",
+   "type": "plane"
+  },
+  {
+   "body": "",
+   "fields": {
+    "scratch": "yes"
+   },
+   "id": "p-flag",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "p-flag",
+   "type": "plane"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "p-main",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "p-main",
+   "type": "plane"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "t"
+    },
+    "check": {
+     "require_fields": [
+      "owner"
+     ]
+    },
+    "statement": "s"
+   },
+   "id": "r-all",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r-all",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "id": "d1"
+    },
+    "check": {
+     "require_fields": [
+      "owner"
+     ]
+    },
+    "statement": "s"
+   },
+   "id": "r-id",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r-id",
+   "type": "rule"
+  }
+ ],
+ "results": [
+  {
+   "node": "f1",
+   "rule": "r-all",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "f2",
+   "rule": "r-all",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "m-in",
+   "rule": "r-all",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "main",
+   "rule": "r-all",
+   "severity": "warn",
+   "status": "fail"
+  }
+ ],
+ "structure": {
+  "errors": [
+   {
+    "kind": "scratch_boundary",
+    "node": "d-child",
+    "ref": "parent->main"
+   },
+   {
+    "kind": "scratch_boundary",
+    "node": "d-other",
+    "ref": "dep->d1"
+   },
+   {
+    "kind": "scratch_boundary",
+    "node": "d-out",
+    "ref": "dep->main"
+   },
+   {
+    "kind": "scratch_boundary",
+    "node": "m-in",
+    "ref": "dep->d1"
+   }
+  ],
+  "warnings": [
+   {
+    "kind": "rule_matches_nothing",
+    "node": "r-id",
+    "ref": null
+   }
+  ]
+ }
+}

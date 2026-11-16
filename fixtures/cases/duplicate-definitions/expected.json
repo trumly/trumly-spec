@@ -1,0 +1,94 @@
+{
+ "ghosts": [],
+ "load_errors": [],
+ "nodes": [
+  {
+   "body": "",
+   "fields": {
+    "name": "service"
+   },
+   "id": "a-link",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "a-link",
+   "type": "link-type"
+  },
+  {
+   "body": "",
+   "fields": {
+    "name": "service"
+   },
+   "id": "a-type",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "a-type",
+   "type": "type"
+  },
+  {
+   "body": "",
+   "fields": {
+    "name": "service"
+   },
+   "id": "b-type",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "b-type",
+   "type": "type"
+  },
+  {
+   "body": "",
+   "fields": {
+    "name": "other"
+   },
+   "id": "c-type",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "c-type",
+   "type": "type"
+  },
+  {
+   "body": "",
+   "fields": {
+    "name": 3
+   },
+   "id": "d-type",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "d-type",
+   "type": "type"
+  },
+  {
+   "body": "",
+   "fields": {
+    "name": 3
+   },
+   "id": "e-type",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "e-type",
+   "type": "type"
+  }
+ ],
+ "results": [],
+ "structure": {
+  "errors": [],
+  "warnings": [
+   {
+    "kind": "duplicate_definition",
+    "node": "a-type",
+    "ref": "service"
+   },
+   {
+    "kind": "duplicate_definition",
+    "node": "b-type",
+    "ref": "service"
+   }
+  ]
+ }
+}

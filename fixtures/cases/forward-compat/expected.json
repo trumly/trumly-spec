@@ -1,0 +1,96 @@
+{
+ "ghosts": [],
+ "load_errors": [],
+ "nodes": [
+  {
+   "body": "Body.",
+   "fields": {
+    "future_field": {
+     "nested": [
+      1,
+      2
+     ]
+    },
+    "owner": "x"
+   },
+   "id": "a",
+   "links": [
+    {
+     "to": "b",
+     "type": "future-link"
+    }
+   ],
+   "parent": null,
+   "plane": null,
+   "title": "A",
+   "type": "future-kind"
+  },
+  {
+   "body": "",
+   "fields": {
+    "owner": "y"
+   },
+   "id": "b",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "b",
+   "type": "future-kind"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "c",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "c",
+   "type": "future-kind"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "future-kind"
+    },
+    "check": {
+     "require_fields": [
+      "owner"
+     ]
+    },
+    "severity": "error",
+    "statement": "s"
+   },
+   "id": "r",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r",
+   "type": "rule"
+  }
+ ],
+ "results": [
+  {
+   "node": "a",
+   "rule": "r",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "b",
+   "rule": "r",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "c",
+   "rule": "r",
+   "severity": "error",
+   "status": "fail"
+  }
+ ],
+ "structure": {
+  "errors": [],
+  "warnings": []
+ }
+}

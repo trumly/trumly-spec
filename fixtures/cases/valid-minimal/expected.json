@@ -1,0 +1,21 @@
+{
+ "ghosts": [],
+ "load_errors": [],
+ "nodes": [
+  {
+   "body": "",
+   "fields": {},
+   "id": "a",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "a",
+   "type": "thing"
+  }
+ ],
+ "results": [],
+ "structure": {
+  "errors": [],
+  "warnings": []
+ }
+}

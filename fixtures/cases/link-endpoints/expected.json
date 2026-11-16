@@ -1,0 +1,155 @@
+{
+ "ghosts": [],
+ "load_errors": [],
+ "nodes": [
+  {
+   "body": "",
+   "fields": {
+    "order": 1,
+    "scratch": true
+   },
+   "id": "draft-plane",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "draft-plane",
+   "type": "plane"
+  },
+  {
+   "body": "",
+   "fields": {
+    "from": [],
+    "name": "relates",
+    "to": []
+   },
+   "id": "lt-any",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "lt-any",
+   "type": "link-type"
+  },
+  {
+   "body": "",
+   "fields": {
+    "from": [
+     "team"
+    ],
+    "name": "owns",
+    "to": [
+     "service",
+     "store"
+    ]
+   },
+   "id": "lt-owns",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "lt-owns",
+   "type": "link-type"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "store-a",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "store-a",
+   "type": "store"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "svc-a",
+   "links": [
+    {
+     "to": "store-a",
+     "type": "owns"
+    },
+    {
+     "to": "ghost-node",
+     "type": "owns"
+    }
+   ],
+   "parent": null,
+   "plane": null,
+   "title": "svc-a",
+   "type": "service"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "svc-draft",
+   "links": [
+    {
+     "to": "svc-draft",
+     "type": "owns"
+    }
+   ],
+   "parent": null,
+   "plane": "draft-plane",
+   "title": "svc-draft",
+   "type": "service"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "team-a",
+   "links": [
+    {
+     "to": "svc-a",
+     "type": "owns"
+    },
+    {
+     "to": "store-a",
+     "type": "owns"
+    },
+    {
+     "to": "team-b",
+     "type": "owns"
+    },
+    {
+     "to": "team-b",
+     "type": "relates"
+    }
+   ],
+   "parent": null,
+   "plane": null,
+   "title": "team-a",
+   "type": "team"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "team-b",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "team-b",
+   "type": "team"
+  }
+ ],
+ "results": [],
+ "structure": {
+  "errors": [
+   {
+    "kind": "missing_link_target",
+    "node": "svc-a",
+    "ref": "owns->ghost-node"
+   }
+  ],
+  "warnings": [
+   {
+    "kind": "link_endpoint_mismatch",
+    "node": "svc-a",
+    "ref": "owns->store-a"
+   },
+   {
+    "kind": "link_endpoint_mismatch",
+    "node": "team-a",
+    "ref": "owns->team-b"
+   }
+  ]
+ }
+}

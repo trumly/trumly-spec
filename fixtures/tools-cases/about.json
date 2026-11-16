@@ -1,0 +1,54 @@
+{
+  "name": "a project describing itself with an overview and conventions: they open the agent index",
+  "files": {
+    "about.md": "---\nid: about\ntype: plane\ntitle: About\nfields: {order: 1}\n---\n",
+    "type-overview.md": "---\nid: type-overview\ntype: type\nfields:\n  name: overview\n  plane: about\n  fields:\n    - {name: purpose, kind: text, required: true}\n    - {name: stage, kind: choice, values: [define, design, plan, build]}\n---\n",
+    "type-convention.md": "---\nid: type-convention\ntype: type\nfields:\n  name: convention\n  plane: about\n---\n",
+    "overview.md": "---\nid: overview\ntype: overview\ntitle: Orders for the shop\nplane: about\nfields: {purpose: Keeps stock honest, stage: design}\n---\nStarts with the stock room.\n",
+    "convention-short.md": "---\nid: convention-short\ntype: convention\ntitle: Short titles\nplane: about\n---\nTitles stay under thirty characters.\n"
+  },
+  "calls": [
+    {
+      "tool": "get_index",
+      "args": {
+        "_write": true
+      },
+      "text": [
+        "# About this project: Orders for the shop\n\n**Purpose:** Keeps stock honest\n\n**Stage:** design\n\nStarts with the stock room.",
+        "**Conventions**\n- **Short titles**: Titles stay under thirty characters."
+      ]
+    },
+    {
+      "tool": "describe_types",
+      "args": {},
+      "expect": {
+        "overview": {
+          "exists": true,
+          "has_convention_type": true,
+          "has_conventions": true,
+          "convention_type": "convention"
+        }
+      }
+    },
+    {
+      "tool": "_prepare",
+      "args": {
+        "node": {
+          "id": "convention-x",
+          "type": "convention",
+          "title": "X"
+        },
+        "is_new": true
+      },
+      "expect": {
+        "node": {
+          "plane": "about"
+        },
+        "defaulted": {
+          "plane": "about"
+        },
+        "advice": []
+      }
+    }
+  ]
+}

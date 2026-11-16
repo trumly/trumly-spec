@@ -1,0 +1,342 @@
+{
+ "ghosts": [],
+ "load_errors": [],
+ "nodes": [
+  {
+   "body": "",
+   "fields": {
+    "status": "built"
+   },
+   "id": "comp-a",
+   "links": [
+    {
+     "to": "prod",
+     "type": "runs-in"
+    }
+   ],
+   "parent": null,
+   "plane": null,
+   "title": "comp-a",
+   "type": "comp"
+  },
+  {
+   "body": "",
+   "fields": {
+    "status": "planned"
+   },
+   "id": "comp-b",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "comp-b",
+   "type": "comp"
+  },
+  {
+   "body": "",
+   "fields": {
+    "order": 1
+   },
+   "id": "p1",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "p1",
+   "type": "plane"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "prod",
+   "links": [],
+   "parent": null,
+   "plane": "p1",
+   "title": "prod",
+   "type": "env"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "env"
+    },
+    "check": {
+     "path": [
+      {
+       "dir": "in",
+       "type": "runs-in"
+      },
+      {
+       "dir": "in",
+       "node_type": "req",
+       "type": "built-by"
+      }
+     ]
+    },
+    "statement": "s"
+   },
+   "id": "r-back",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r-back",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "env"
+    },
+    "check": {
+     "path": [
+      {
+       "min": 1,
+       "type": "runs-in"
+      }
+     ]
+    },
+    "statement": "s"
+   },
+   "id": "r-badstep",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r-badstep",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "req"
+    },
+    "check": {
+     "path": [
+      {
+       "node_fields": {
+        "status": "built"
+       },
+       "type": "built-by"
+      }
+     ]
+    },
+    "statement": "s"
+   },
+   "id": "r-built",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r-built",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "req"
+    },
+    "check": {
+     "path": [
+      {
+       "node_type": "comp",
+       "type": "built-by"
+      },
+      {
+       "node_plane": "p1",
+       "node_type": "env",
+       "type": "runs-in"
+      }
+     ]
+    },
+    "statement": "s"
+   },
+   "id": "r-chain",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r-chain",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "env"
+    },
+    "check": {
+     "path": []
+    },
+    "statement": "s"
+   },
+   "id": "r-empty",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r-empty",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "env"
+    },
+    "check": {
+     "path": {
+      "type": "runs-in"
+     }
+    },
+    "statement": "s"
+   },
+   "id": "r-notlist",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r-notlist",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "req-a",
+   "links": [
+    {
+     "to": "comp-a",
+     "type": "built-by"
+    },
+    {
+     "to": "comp-b",
+     "type": "built-by"
+    }
+   ],
+   "parent": null,
+   "plane": null,
+   "title": "req-a",
+   "type": "req"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "req-b",
+   "links": [
+    {
+     "to": "comp-b",
+     "type": "built-by"
+    }
+   ],
+   "parent": null,
+   "plane": null,
+   "title": "req-b",
+   "type": "req"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "req-c",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "req-c",
+   "type": "req"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "req-d",
+   "links": [
+    {
+     "to": "ghost",
+     "type": "built-by"
+    }
+   ],
+   "parent": null,
+   "plane": null,
+   "title": "req-d",
+   "type": "req"
+  }
+ ],
+ "results": [
+  {
+   "node": "prod",
+   "rule": "r-back",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "prod",
+   "rule": "r-badstep",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "prod",
+   "rule": "r-empty",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "prod",
+   "rule": "r-notlist",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "req-a",
+   "rule": "r-built",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "req-a",
+   "rule": "r-chain",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "req-b",
+   "rule": "r-built",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "req-b",
+   "rule": "r-chain",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "req-c",
+   "rule": "r-built",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "req-c",
+   "rule": "r-chain",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "req-d",
+   "rule": "r-built",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "req-d",
+   "rule": "r-chain",
+   "severity": "warn",
+   "status": "fail"
+  }
+ ],
+ "structure": {
+  "errors": [
+   {
+    "kind": "missing_link_target",
+    "node": "req-d",
+    "ref": "built-by->ghost"
+   }
+  ],
+  "warnings": []
+ }
+}

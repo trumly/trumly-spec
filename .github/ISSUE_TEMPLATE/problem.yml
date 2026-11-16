@@ -1,0 +1,23 @@
+name: Specification problem
+description: The specification is unclear, contradicts itself, or an implementation disagrees with it.
+labels: [problem]
+body:
+  - type: input
+    id: section
+    attributes:
+      label: Section
+      description: The part of the specification this is about, for example "7. Rules".
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What is wrong or unclear
+    validations:
+      required: true
+  - type: textarea
+    id: example
+    attributes:
+      label: Smallest example
+      description: The smallest node file or project that shows it, and the check output you expected.
+      render: markdown

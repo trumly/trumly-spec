@@ -1,0 +1,416 @@
+{
+ "ghosts": [],
+ "load_errors": [],
+ "nodes": [
+  {
+   "body": "",
+   "fields": {
+    "methods": [
+     {
+      "verb": "GET"
+     },
+     {
+      "verb": "PUT"
+     }
+    ],
+    "tags": [
+     "x",
+     "y"
+    ],
+    "tier": "gold"
+   },
+   "id": "a",
+   "links": [],
+   "parent": "g",
+   "plane": "p1",
+   "title": "a",
+   "type": "svc"
+  },
+  {
+   "body": "",
+   "fields": {
+    "methods": [
+     {
+      "verb": "GET"
+     }
+    ],
+    "tags": [
+     "z"
+    ],
+    "tier": "silver"
+   },
+   "id": "b",
+   "links": [],
+   "parent": null,
+   "plane": "p2",
+   "title": "b",
+   "type": "queue"
+  },
+  {
+   "body": "",
+   "fields": {
+    "methods": [
+     {
+      "verb": "DELETE"
+     }
+    ],
+    "tags": [],
+    "tier": "bronze"
+   },
+   "id": "c",
+   "links": [],
+   "parent": "a",
+   "plane": "p2",
+   "title": "c",
+   "type": "cache"
+  },
+  {
+   "body": "",
+   "fields": {
+    "tier": "gold"
+   },
+   "id": "d",
+   "links": [],
+   "parent": null,
+   "plane": "p1",
+   "title": "d",
+   "type": "other"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "g",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "g",
+   "type": "group"
+  },
+  {
+   "body": "",
+   "fields": {
+    "order": 1
+   },
+   "id": "p1",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "p1",
+   "type": "plane"
+  },
+  {
+   "body": "",
+   "fields": {
+    "order": 2
+   },
+   "id": "p2",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "p2",
+   "type": "plane"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": [
+      "svc",
+      "queue"
+     ]
+    },
+    "check": {
+     "require_fields": [
+      "owner"
+     ]
+    },
+    "statement": "s"
+   },
+   "id": "r1",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r1",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "plane": [
+      "p2",
+      "p9"
+     ],
+     "type": [
+      "svc",
+      "queue"
+     ]
+    },
+    "check": {
+     "require_fields": [
+      "owner"
+     ]
+    },
+    "statement": "s"
+   },
+   "id": "r2",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r2",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "tier": [
+      "gold",
+      "silver"
+     ]
+    },
+    "check": {
+     "require_fields": [
+      "owner"
+     ]
+    },
+    "statement": "s"
+   },
+   "id": "r3",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r3",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "methods[].verb": [
+      "PUT",
+      "DELETE"
+     ]
+    },
+    "check": {
+     "require_fields": [
+      "owner"
+     ]
+    },
+    "statement": "s"
+   },
+   "id": "r4",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r4",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "tags[]": [
+      "x",
+      "z"
+     ]
+    },
+    "check": {
+     "require_fields": [
+      "owner"
+     ]
+    },
+    "statement": "s"
+   },
+   "id": "r5",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r5",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "under": [
+      "g",
+      "a"
+     ]
+    },
+    "check": {
+     "require_fields": [
+      "owner"
+     ]
+    },
+    "statement": "s"
+   },
+   "id": "r6",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r6",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "id": [
+      "a",
+      "d",
+      "nope"
+     ]
+    },
+    "check": {
+     "require_fields": [
+      "owner"
+     ]
+    },
+    "statement": "s"
+   },
+   "id": "r7",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r7",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": []
+    },
+    "check": {
+     "require_fields": [
+      "owner"
+     ]
+    },
+    "statement": "s"
+   },
+   "id": "r8",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r8",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "svc"
+    },
+    "check": {
+     "require_fields": [
+      "owner"
+     ]
+    },
+    "statement": "s"
+   },
+   "id": "r9",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r9",
+   "type": "rule"
+  }
+ ],
+ "results": [
+  {
+   "node": "a",
+   "rule": "r1",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "a",
+   "rule": "r3",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "a",
+   "rule": "r4",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "a",
+   "rule": "r5",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "a",
+   "rule": "r6",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "a",
+   "rule": "r7",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "a",
+   "rule": "r9",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "b",
+   "rule": "r1",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "b",
+   "rule": "r2",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "b",
+   "rule": "r3",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "b",
+   "rule": "r5",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "c",
+   "rule": "r4",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "c",
+   "rule": "r6",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "d",
+   "rule": "r3",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "d",
+   "rule": "r7",
+   "severity": "warn",
+   "status": "fail"
+  }
+ ],
+ "structure": {
+  "errors": [],
+  "warnings": []
+ }
+}

@@ -1,0 +1,26 @@
+{
+ "ghosts": [],
+ "load_errors": [
+  {
+   "file": "x.md",
+   "kind": "duplicate_id"
+  }
+ ],
+ "nodes": [
+  {
+   "body": "",
+   "fields": {},
+   "id": "x",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "first",
+   "type": "t"
+  }
+ ],
+ "results": [],
+ "structure": {
+  "errors": [],
+  "warnings": []
+ }
+}

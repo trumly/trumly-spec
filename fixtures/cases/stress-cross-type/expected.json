@@ -1,0 +1,335 @@
+{
+ "ghosts": [
+  {
+   "link": "implemented-by",
+   "node": "req-refund",
+   "plane": "build",
+   "rule": "r-built",
+   "to_type": "component"
+  },
+  {
+   "link": "runs-in",
+   "node": "search-api",
+   "plane": "run",
+   "rule": "r-runs",
+   "to_type": "environment"
+  }
+ ],
+ "load_errors": [],
+ "nodes": [
+  {
+   "body": "",
+   "fields": {},
+   "id": "billing",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "billing",
+   "type": "domain"
+  },
+  {
+   "body": "",
+   "fields": {
+    "order": 2
+   },
+   "id": "build",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "build",
+   "type": "plane"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "catalogue",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "catalogue",
+   "type": "domain"
+  },
+  {
+   "body": "",
+   "fields": {
+    "order": 1
+   },
+   "id": "intent",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "intent",
+   "type": "plane"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "ledger",
+   "links": [],
+   "parent": "billing",
+   "plane": "build",
+   "title": "ledger",
+   "type": "datastore"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "pay-api",
+   "links": [
+    {
+     "to": "prod",
+     "type": "runs-in"
+    },
+    {
+     "to": "ledger",
+     "type": "accesses"
+    },
+    {
+     "to": "products",
+     "type": "accesses"
+    }
+   ],
+   "parent": "billing",
+   "plane": "build",
+   "title": "pay-api",
+   "type": "component"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "prod",
+   "links": [],
+   "parent": null,
+   "plane": "run",
+   "title": "prod",
+   "type": "environment"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "products",
+   "links": [],
+   "parent": "catalogue",
+   "plane": "build",
+   "title": "products",
+   "type": "datastore"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "requirement"
+    },
+    "check": {
+     "require_link": {
+      "node_plane": "build",
+      "node_type": "component",
+      "type": "implemented-by"
+     }
+    },
+    "statement": "s"
+   },
+   "id": "r-built",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r-built",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "component"
+    },
+    "check": {
+     "require_link": {
+      "ancestor_type": "domain",
+      "max": 0,
+      "scope": "other",
+      "type": "accesses"
+     }
+    },
+    "severity": "error",
+    "statement": "s"
+   },
+   "id": "r-context",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r-context",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "component"
+    },
+    "check": {
+     "require_link": {
+      "node_plane": "run",
+      "node_type": "environment",
+      "type": "runs-in"
+     }
+    },
+    "statement": "s"
+   },
+   "id": "r-runs",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r-runs",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "component"
+    },
+    "check": {
+     "require_link": {
+      "dir": "in",
+      "node_type": "requirement",
+      "type": "implemented-by"
+     }
+    },
+    "statement": "s"
+   },
+   "id": "r-traced",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r-traced",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "req-pay",
+   "links": [
+    {
+     "to": "pay-api",
+     "type": "implemented-by"
+    }
+   ],
+   "parent": null,
+   "plane": "intent",
+   "title": "req-pay",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "req-refund",
+   "links": [],
+   "parent": null,
+   "plane": "intent",
+   "title": "req-refund",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "req-search",
+   "links": [
+    {
+     "to": "search-api",
+     "type": "implemented-by"
+    }
+   ],
+   "parent": null,
+   "plane": "intent",
+   "title": "req-search",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {
+    "order": 3
+   },
+   "id": "run",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "run",
+   "type": "plane"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "search-api",
+   "links": [
+    {
+     "to": "products",
+     "type": "accesses"
+    }
+   ],
+   "parent": "catalogue",
+   "plane": "build",
+   "title": "search-api",
+   "type": "component"
+  }
+ ],
+ "results": [
+  {
+   "node": "pay-api",
+   "rule": "r-context",
+   "severity": "error",
+   "status": "fail"
+  },
+  {
+   "node": "pay-api",
+   "rule": "r-runs",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "pay-api",
+   "rule": "r-traced",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "req-pay",
+   "rule": "r-built",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "req-refund",
+   "rule": "r-built",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "req-search",
+   "rule": "r-built",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "search-api",
+   "rule": "r-context",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "search-api",
+   "rule": "r-runs",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "search-api",
+   "rule": "r-traced",
+   "severity": "warn",
+   "status": "pass"
+  }
+ ],
+ "structure": {
+  "errors": [],
+  "warnings": []
+ }
+}

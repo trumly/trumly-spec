@@ -1,0 +1,16 @@
+[package]
+name = "trumly-mcp"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+readme = "../../README.md"
+keywords.workspace = true
+categories.workspace = true
+description = "MCP server that lets AI agents read, query, check and (when allowed) change a trumly design model."
+
+[dependencies]
+trumly-core = { path = "../core", version = "0.1.0" }
+trumly-fs = { path = "../fs", version = "0.1.0" }
+serde_json = "1"

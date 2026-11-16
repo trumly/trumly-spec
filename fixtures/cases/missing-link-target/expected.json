@@ -1,0 +1,32 @@
+{
+ "ghosts": [],
+ "load_errors": [],
+ "nodes": [
+  {
+   "body": "",
+   "fields": {},
+   "id": "a",
+   "links": [
+    {
+     "to": "nowhere",
+     "type": "uses"
+    }
+   ],
+   "parent": null,
+   "plane": null,
+   "title": "a",
+   "type": "t"
+  }
+ ],
+ "results": [],
+ "structure": {
+  "errors": [
+   {
+    "kind": "missing_link_target",
+    "node": "a",
+    "ref": "uses->nowhere"
+   }
+  ],
+  "warnings": []
+ }
+}

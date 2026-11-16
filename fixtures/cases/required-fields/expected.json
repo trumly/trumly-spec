@@ -1,0 +1,148 @@
+{
+ "ghosts": [],
+ "load_errors": [],
+ "nodes": [
+  {
+   "body": "",
+   "fields": {},
+   "id": "other-thing",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "other-thing",
+   "type": "gadget"
+  },
+  {
+   "body": "",
+   "fields": {
+    "order": 1,
+    "scratch": true
+   },
+   "id": "p-draft",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "p-draft",
+   "type": "plane"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "service-draft",
+   "links": [],
+   "parent": null,
+   "plane": "p-draft",
+   "title": "service-draft",
+   "type": "service"
+  },
+  {
+   "body": "",
+   "fields": {
+    "owner": "",
+    "tier": "gold"
+   },
+   "id": "service-empty",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "service-empty",
+   "type": "service"
+  },
+  {
+   "body": "",
+   "fields": {
+    "owner": null
+   },
+   "id": "service-null",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "service-null",
+   "type": "service"
+  },
+  {
+   "body": "",
+   "fields": {
+    "owner": "ana",
+    "tier": "gold"
+   },
+   "id": "service-ok",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "service-ok",
+   "type": "service"
+  },
+  {
+   "body": "",
+   "fields": {
+    "owner": 0,
+    "tier": false
+   },
+   "id": "service-zero",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "service-zero",
+   "type": "service"
+  },
+  {
+   "body": "",
+   "fields": {
+    "fields": [
+     {
+      "kind": "text",
+      "name": "owner",
+      "required": true
+     },
+     {
+      "kind": "choice",
+      "name": "tier",
+      "required": true,
+      "values": [
+       "gold",
+       "silver"
+      ]
+     },
+     {
+      "kind": "text",
+      "name": "note"
+     },
+     {
+      "kind": "boolean",
+      "name": "flag",
+      "required": "yes"
+     }
+    ],
+    "name": "service"
+   },
+   "id": "type-service",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "type-service",
+   "type": "type"
+  }
+ ],
+ "results": [],
+ "structure": {
+  "errors": [],
+  "warnings": [
+   {
+    "kind": "missing_required_field",
+    "node": "service-empty",
+    "ref": "owner"
+   },
+   {
+    "kind": "missing_required_field",
+    "node": "service-null",
+    "ref": "owner"
+   },
+   {
+    "kind": "missing_required_field",
+    "node": "service-null",
+    "ref": "tier"
+   }
+  ]
+ }
+}

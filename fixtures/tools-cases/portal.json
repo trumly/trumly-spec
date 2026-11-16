@@ -1,0 +1,26 @@
+{
+  "name": "a small portal project: reading it, searching it and following its links",
+  "files": {
+    "goal.md": "---\nid: goal\ntype: goal\ntitle: Ship the portal\n---\nClients can see their invoices.\n",
+    "req.md": "---\nid: req\ntype: requirement\ntitle: Invoice list\nparent: goal\nlinks:\n  - type: serves\n    to: goal\n---\nShow every invoice, newest first.\n",
+    "orphan.md": "---\nid: orphan\ntype: requirement\ntitle: Dark mode\nlinks:\n  - type: serves\n    to: missing-goal\n---\nNice to have.\n"
+  },
+  "calls": [
+    {"tool": "get_node", "args": {"id": "req"}, "expect": {"node": {"id": "req", "title": "Invoice list", "parent": "goal", "body": "Show every invoice, newest first."}, "inbound": []}},
+    {"tool": "get_node", "args": {"id": "goal"}, "expect": {"inbound": [{"from": "req", "type": "serves"}]}},
+    {"tool": "get_node", "args": {"id": "nope"}, "error": "no node with id 'nope'"},
+    {"tool": "list_nodes", "args": {"type": "requirement"}, "expect": [{"id": "orphan"}, {"id": "req"}]},
+    {"tool": "list_nodes", "args": {"under": "goal"}, "expect": [{"id": "req"}]},
+    {"tool": "search", "args": {"query": "INVOICE"}, "expect": {"total": 2, "shown": 2}},
+    {"tool": "search", "args": {"query": "invoice", "type": "goal"}, "expect": {"total": 1, "results": [{"id": "goal", "matched": ["body"]}]}},
+    {"tool": "search", "args": {"query": "  "}, "error": "search needs a non-empty 'query'"},
+    {"tool": "get_links", "args": {"id": "req"}, "expect": {"outbound": [{"to": "goal", "to_title": "Ship the portal", "exists": true}], "inbound": []}},
+    {"tool": "get_links", "args": {"id": "orphan"}, "expect": {"outbound": [{"to": "missing-goal", "to_title": null, "exists": false}]}},
+    {"tool": "check", "args": {}, "expect": {"nodes": 3, "ok": false, "structure": {"errors": [{"node": "orphan", "kind": "missing_link_target"}]}}},
+    {"tool": "_standing", "args": {"id": "orphan"}, "expect": {"model": {"ok": false, "errors": 1}, "findings": {"errors": [{"kind": "missing_link_target"}]}}},
+    {"tool": "_standing", "args": {"id": "goal"}, "expect": {"findings": {"errors": []}}},
+    {"tool": "_rename_edit", "args": {"from": "goal", "to": "portal-goal"}, "expect": {"renamed": [["goal", "portal-goal"]], "delete": ["goal"]}},
+    {"tool": "_rename_edit", "args": {"from": "goal", "to": "req"}, "error": "“req” already exists."},
+    {"tool": "get_index", "args": {}, "text": ["Ship the portal", "Invoice list"]}
+  ]
+}

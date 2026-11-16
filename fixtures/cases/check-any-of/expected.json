@@ -1,0 +1,538 @@
+{
+ "ghosts": [],
+ "load_errors": [],
+ "nodes": [
+  {
+   "body": "",
+   "fields": {},
+   "id": "n1",
+   "links": [
+    {
+     "to": "t3",
+     "type": "a"
+    }
+   ],
+   "parent": null,
+   "plane": null,
+   "title": "n1",
+   "type": "t"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "n2",
+   "links": [
+    {
+     "to": "t3",
+     "type": "b"
+    }
+   ],
+   "parent": null,
+   "plane": null,
+   "title": "n2",
+   "type": "t"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "n3",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "n3",
+   "type": "t"
+  },
+  {
+   "body": "",
+   "fields": {
+    "x": 1
+   },
+   "id": "n4",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "n4",
+   "type": "t"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "t"
+    },
+    "check": {
+     "any_of": [
+      {
+       "require_fields": [
+        "x"
+       ],
+       "require_link": {
+        "type": "a"
+       }
+      },
+      {
+       "require_link": {
+        "type": "b"
+       }
+      }
+     ]
+    },
+    "statement": "s"
+   },
+   "id": "r-and-inside",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r-and-inside",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "t"
+    },
+    "check": {
+     "any_of": [
+      {
+       "require_link": {
+        "type": "a"
+       }
+      },
+      {
+       "require_link": {
+        "type": "b"
+       }
+      }
+     ]
+    },
+    "severity": "error",
+    "statement": "s"
+   },
+   "id": "r-either",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r-either",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "t"
+    },
+    "check": {
+     "any_of": []
+    },
+    "statement": "s"
+   },
+   "id": "r-empty",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r-empty",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "t"
+    },
+    "check": {
+     "any_of": [
+      {},
+      {
+       "require_link": {
+        "type": "a"
+       }
+      }
+     ]
+    },
+    "statement": "s"
+   },
+   "id": "r-empty-item",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r-empty-item",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "t"
+    },
+    "check": {
+     "any_of": [
+      {
+       "require_fields": [
+        "x"
+       ]
+      },
+      {
+       "require_link": {
+        "type": "a"
+       }
+      }
+     ]
+    },
+    "statement": "s"
+   },
+   "id": "r-fields-or-link",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r-fields-or-link",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "t"
+    },
+    "check": {
+     "any_of": [
+      {
+       "any_of": [
+        {
+         "require_link": {
+          "type": "a"
+         }
+        },
+        {
+         "require_link": {
+          "type": "b"
+         }
+        }
+       ]
+      },
+      {
+       "require_fields": [
+        "x"
+       ]
+      }
+     ]
+    },
+    "statement": "s"
+   },
+   "id": "r-nested",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r-nested",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "t"
+    },
+    "check": {
+     "any_of": {
+      "require_link": {
+       "type": "a"
+      }
+     }
+    },
+    "statement": "s"
+   },
+   "id": "r-not-list",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r-not-list",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "t"
+    },
+    "check": {
+     "any_of": [
+      {
+       "require_link": {
+        "type": "a"
+       }
+      },
+      {
+       "nonsense": 1
+      }
+     ]
+    },
+    "statement": "s"
+   },
+   "id": "r-with-bad-part",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r-with-bad-part",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "t"
+    },
+    "check": {
+     "any_of": [
+      {
+       "require_link": {
+        "type": "b"
+       }
+      }
+     ],
+     "require_fields": [
+      "x"
+     ]
+    },
+    "statement": "s"
+   },
+   "id": "r-with-sibling",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r-with-sibling",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "t3",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "t3",
+   "type": "u"
+  }
+ ],
+ "results": [
+  {
+   "node": "n1",
+   "rule": "r-and-inside",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "n1",
+   "rule": "r-either",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "n1",
+   "rule": "r-empty",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "n1",
+   "rule": "r-empty-item",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "n1",
+   "rule": "r-fields-or-link",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "n1",
+   "rule": "r-nested",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "n1",
+   "rule": "r-not-list",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "n1",
+   "rule": "r-with-bad-part",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "n1",
+   "rule": "r-with-sibling",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "n2",
+   "rule": "r-and-inside",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "n2",
+   "rule": "r-either",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "n2",
+   "rule": "r-empty",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "n2",
+   "rule": "r-empty-item",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "n2",
+   "rule": "r-fields-or-link",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "n2",
+   "rule": "r-nested",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "n2",
+   "rule": "r-not-list",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "n2",
+   "rule": "r-with-bad-part",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "n2",
+   "rule": "r-with-sibling",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "n3",
+   "rule": "r-and-inside",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "n3",
+   "rule": "r-either",
+   "severity": "error",
+   "status": "fail"
+  },
+  {
+   "node": "n3",
+   "rule": "r-empty",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "n3",
+   "rule": "r-empty-item",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "n3",
+   "rule": "r-fields-or-link",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "n3",
+   "rule": "r-nested",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "n3",
+   "rule": "r-not-list",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "n3",
+   "rule": "r-with-bad-part",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "n3",
+   "rule": "r-with-sibling",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "n4",
+   "rule": "r-and-inside",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "n4",
+   "rule": "r-either",
+   "severity": "error",
+   "status": "fail"
+  },
+  {
+   "node": "n4",
+   "rule": "r-empty",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "n4",
+   "rule": "r-empty-item",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "n4",
+   "rule": "r-fields-or-link",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "n4",
+   "rule": "r-nested",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "n4",
+   "rule": "r-not-list",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "n4",
+   "rule": "r-with-bad-part",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "n4",
+   "rule": "r-with-sibling",
+   "severity": "warn",
+   "status": "fail"
+  }
+ ],
+ "structure": {
+  "errors": [],
+  "warnings": []
+ }
+}

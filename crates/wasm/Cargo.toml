@@ -1,0 +1,19 @@
+[package]
+name = "trumly-wasm"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+readme = "../../README.md"
+keywords.workspace = true
+categories.workspace = true
+description = "trumly-core compiled for the browser as WebAssembly."
+
+[lib]
+# cdylib is what becomes the .wasm file; rlib lets `cargo test` link it on a normal machine.
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+trumly-core = { path = "../core", version = "0.1.0" }
+serde_json = "1"

@@ -1,0 +1,82 @@
+{
+ "ghosts": [],
+ "load_errors": [],
+ "nodes": [
+  {
+   "body": "",
+   "fields": {},
+   "id": "exactly-30",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+   "type": "thing"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "multibyte",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "éééééééééééééééééééééééééééééé",
+   "type": "thing"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "no-title",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "no-title",
+   "type": "thing"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "over-by-one",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+   "type": "thing"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "sentence",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "A client can book a free slot with a credit",
+   "type": "thing"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "this-is-a-very-long-id-that-goes-past-thirty-characters",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "this-is-a-very-long-id-that-goes-past-thirty-characters",
+   "type": "thing"
+  }
+ ],
+ "results": [],
+ "structure": {
+  "errors": [],
+  "warnings": [
+   {
+    "kind": "title_too_long",
+    "node": "over-by-one",
+    "ref": "31"
+   },
+   {
+    "kind": "title_too_long",
+    "node": "sentence",
+    "ref": "43"
+   }
+  ]
+ }
+}

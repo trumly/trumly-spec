@@ -1,0 +1,41 @@
+{
+ "ghosts": [],
+ "load_errors": [],
+ "nodes": [
+  {
+   "body": "",
+   "fields": {
+    "answer": "no",
+    "big": 9.223372036854776e+18,
+    "hex": 31,
+    "mode": "Yes",
+    "neg": -12,
+    "nul": null,
+    "perm": 755,
+    "sci": 1000.0,
+    "switch": "on",
+    "t": true
+   },
+   "id": "a",
+   "links": [
+    {
+     "fields": {
+      "off": "stop",
+      "on": "go"
+     },
+     "to": "a",
+     "type": "x"
+    }
+   ],
+   "parent": null,
+   "plane": null,
+   "title": "a",
+   "type": "t"
+  }
+ ],
+ "results": [],
+ "structure": {
+  "errors": [],
+  "warnings": []
+ }
+}

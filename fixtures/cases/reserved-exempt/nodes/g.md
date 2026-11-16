@@ -1,0 +1,4 @@
+---
+id: g
+type: group
+---

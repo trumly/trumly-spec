@@ -1,0 +1,23 @@
+name: close pull requests
+# We are not accepting pull requests yet (see CONTRIBUTING.md). This closes them with a pointer to the issue forms.
+# It only runs trusted code from the default branch and never checks out or runs anything from the pull request.
+on:
+  pull_request_target:
+    types: [opened, reopened]
+permissions:
+  pull-requests: write
+jobs:
+  close:
+    # Leave the maintainers' own pull requests and Dependabot's alone.
+    if: github.actor != 'dependabot[bot]' && !contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.pull_request.author_association)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              ...context.repo,
+              issue_number: context.issue.number,
+              body: "Thank you for the interest. We are not accepting pull requests yet, so this one has been closed. Please open an issue or start a discussion instead; see CONTRIBUTING.md.",
+            });
+            await github.rest.pulls.update({ ...context.repo, pull_number: context.issue.number, state: "closed" });

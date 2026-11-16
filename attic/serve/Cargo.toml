@@ -1,0 +1,20 @@
+[package]
+name = "trumly-serve"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+readme = "../../README.md"
+keywords.workspace = true
+categories.workspace = true
+description = "Local server for a trumly model folder: a small HTTP API over the files, with change notification."
+
+[dependencies]
+trumly-core = { path = "../core", version = "0.0.1" }
+trumly-fs = { path = "../fs", version = "0.0.1" }
+serde_json = "1"
+tiny_http = "0.12"
+
+[dev-dependencies]
+ureq = "2"

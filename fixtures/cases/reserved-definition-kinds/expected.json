@@ -1,0 +1,101 @@
+{
+ "ghosts": [],
+ "load_errors": [],
+ "nodes": [
+  {
+   "body": "",
+   "fields": {},
+   "id": "a",
+   "links": [],
+   "parent": null,
+   "plane": "p",
+   "title": "a",
+   "type": "svc"
+  },
+  {
+   "body": "",
+   "fields": {
+    "name": "needs"
+   },
+   "id": "link-type-needs",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "link-type-needs",
+   "type": "link-type"
+  },
+  {
+   "body": "",
+   "fields": {
+    "order": 1
+   },
+   "id": "p",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "p",
+   "type": "plane"
+  },
+  {
+   "body": "",
+   "fields": {
+    "name": "x",
+    "version": "1.0.0"
+   },
+   "id": "pack-x",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "pack-x",
+   "type": "pack"
+  },
+  {
+   "body": "",
+   "fields": {
+    "check": {
+     "require_fields": [
+      "owner"
+     ]
+    },
+    "severity": "error",
+    "statement": "s"
+   },
+   "id": "r",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "name": "svc"
+   },
+   "id": "type-svc",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "type-svc",
+   "type": "type"
+  }
+ ],
+ "results": [
+  {
+   "node": "a",
+   "rule": "r",
+   "severity": "error",
+   "status": "fail"
+  }
+ ],
+ "structure": {
+  "errors": [],
+  "warnings": [
+   {
+    "kind": "namespace_mismatch",
+    "node": "pack-x",
+    "ref": null
+   }
+  ]
+ }
+}

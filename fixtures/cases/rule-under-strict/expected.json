@@ -1,0 +1,74 @@
+{
+ "ghosts": [],
+ "load_errors": [],
+ "nodes": [
+  {
+   "body": "",
+   "fields": {},
+   "id": "a",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "a",
+   "type": "svc"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "b",
+   "links": [],
+   "parent": "a",
+   "plane": null,
+   "title": "b",
+   "type": "svc"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "c",
+   "links": [],
+   "parent": "b",
+   "plane": null,
+   "title": "c",
+   "type": "svc"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "under": "a"
+    },
+    "check": {
+     "require_fields": [
+      "zz"
+     ]
+    },
+    "statement": "s"
+   },
+   "id": "r",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r",
+   "type": "rule"
+  }
+ ],
+ "results": [
+  {
+   "node": "b",
+   "rule": "r",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "c",
+   "rule": "r",
+   "severity": "warn",
+   "status": "fail"
+  }
+ ],
+ "structure": {
+  "errors": [],
+  "warnings": []
+ }
+}

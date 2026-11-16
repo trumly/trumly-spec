@@ -1,0 +1,15 @@
+[package]
+name = "trumly-fs"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+readme = "../../README.md"
+keywords.workspace = true
+categories.workspace = true
+description = "Reads a trumly model folder from disk."
+
+[dependencies]
+trumly-core = { path = "../core", version = "0.1.0" }
+serde_json = "1"

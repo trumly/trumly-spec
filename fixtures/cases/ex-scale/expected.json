@@ -1,0 +1,3663 @@
+{
+ "ghosts": [
+  {
+   "link": "runs-in",
+   "node": "acc-cmp-2",
+   "plane": "run",
+   "rule": "rule-comp-runs",
+   "to_type": null
+  },
+  {
+   "link": "implemented-by",
+   "node": "acc-req-24",
+   "plane": "build",
+   "rule": "rule-req-built",
+   "to_type": "component"
+  },
+  {
+   "link": "runs-in",
+   "node": "bil-cmp-37",
+   "plane": "run",
+   "rule": "rule-comp-runs",
+   "to_type": null
+  },
+  {
+   "link": "runs-in",
+   "node": "bil-cmp-9",
+   "plane": "run",
+   "rule": "rule-comp-runs",
+   "to_type": null
+  },
+  {
+   "link": "implemented-by",
+   "node": "bil-req-12",
+   "plane": "build",
+   "rule": "rule-req-built",
+   "to_type": "component"
+  },
+  {
+   "link": "runs-in",
+   "node": "cat-cmp-42",
+   "plane": "run",
+   "rule": "rule-comp-runs",
+   "to_type": null
+  },
+  {
+   "link": "implemented-by",
+   "node": "cat-req-52",
+   "plane": "build",
+   "rule": "rule-req-built",
+   "to_type": "component"
+  },
+  {
+   "link": "implemented-by",
+   "node": "cat-req-6",
+   "plane": "build",
+   "rule": "rule-req-built",
+   "to_type": "component"
+  },
+  {
+   "link": "runs-in",
+   "node": "not-cmp-22",
+   "plane": "run",
+   "rule": "rule-comp-runs",
+   "to_type": null
+  },
+  {
+   "link": "implemented-by",
+   "node": "not-req-33",
+   "plane": "build",
+   "rule": "rule-req-built",
+   "to_type": "component"
+  },
+  {
+   "link": "implemented-by",
+   "node": "not-req-44",
+   "plane": "build",
+   "rule": "rule-req-built",
+   "to_type": "component"
+  },
+  {
+   "link": "implemented-by",
+   "node": "not-req-53",
+   "plane": "build",
+   "rule": "rule-req-built",
+   "to_type": "component"
+  }
+ ],
+ "load_errors": [],
+ "nodes": [
+  {
+   "body": "",
+   "fields": {},
+   "id": "acc-cmp-11",
+   "links": [
+    {
+     "to": "cat-env-2",
+     "type": "runs-in"
+    },
+    {
+     "to": "acc-ent-4",
+     "type": "reads"
+    }
+   ],
+   "parent": "accounts",
+   "plane": "build",
+   "title": "component 11 in accounts",
+   "type": "component"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "acc-cmp-15",
+   "links": [
+    {
+     "to": "not-env-0",
+     "type": "runs-in"
+    },
+    {
+     "to": "acc-ent-20",
+     "type": "reads"
+    }
+   ],
+   "parent": "accounts",
+   "plane": "build",
+   "title": "component 15 in accounts",
+   "type": "component"
+  },
+  {
+   "body": "",
+   "fields": {
+    "owner": "team-acc"
+   },
+   "id": "acc-cmp-19",
+   "links": [
+    {
+     "to": "cat-env-2",
+     "type": "runs-in"
+    },
+    {
+     "to": "acc-ent-8",
+     "type": "reads"
+    },
+    {
+     "to": "acc-db-3",
+     "type": "uses"
+    }
+   ],
+   "parent": "accounts",
+   "plane": "build",
+   "title": "component 19 in accounts",
+   "type": "component"
+  },
+  {
+   "body": "",
+   "fields": {
+    "owner": "team-acc"
+   },
+   "id": "acc-cmp-2",
+   "links": [],
+   "parent": "accounts",
+   "plane": "build",
+   "title": "component 2 in accounts",
+   "type": "component"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "acc-cmp-3",
+   "links": [
+    {
+     "to": "not-env-0",
+     "type": "runs-in"
+    },
+    {
+     "to": "acc-db-1",
+     "type": "uses"
+    }
+   ],
+   "parent": "accounts",
+   "plane": "build",
+   "title": "component 3 in accounts",
+   "type": "component"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "acc-cmp-30",
+   "links": [
+    {
+     "to": "cat-env-2",
+     "type": "runs-in"
+    },
+    {
+     "to": "acc-ent-8",
+     "type": "reads"
+    },
+    {
+     "to": "acc-db-3",
+     "type": "uses"
+    }
+   ],
+   "parent": "accounts",
+   "plane": "build",
+   "title": "component 30 in accounts",
+   "type": "component"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "acc-cmp-32",
+   "links": [
+    {
+     "to": "not-env-0",
+     "type": "runs-in"
+    },
+    {
+     "to": "acc-ent-10",
+     "type": "reads"
+    },
+    {
+     "to": "acc-db-3",
+     "type": "uses"
+    }
+   ],
+   "parent": "accounts",
+   "plane": "build",
+   "title": "component 32 in accounts",
+   "type": "component"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "acc-cmp-34",
+   "links": [
+    {
+     "to": "bil-env-3",
+     "type": "runs-in"
+    },
+    {
+     "to": "acc-ent-16",
+     "type": "reads"
+    },
+    {
+     "to": "acc-db-3",
+     "type": "uses"
+    }
+   ],
+   "parent": "accounts",
+   "plane": "build",
+   "title": "component 34 in accounts",
+   "type": "component"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "acc-cmp-40",
+   "links": [
+    {
+     "to": "bil-env-5",
+     "type": "runs-in"
+    },
+    {
+     "to": "acc-ent-10",
+     "type": "reads"
+    },
+    {
+     "to": "acc-db-1",
+     "type": "uses"
+    }
+   ],
+   "parent": "accounts",
+   "plane": "build",
+   "title": "component 40 in accounts",
+   "type": "component"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "acc-cmp-5",
+   "links": [
+    {
+     "to": "bil-env-3",
+     "type": "runs-in"
+    },
+    {
+     "to": "acc-db-1",
+     "type": "uses"
+    }
+   ],
+   "parent": "accounts",
+   "plane": "build",
+   "title": "component 5 in accounts",
+   "type": "component"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "acc-cmp-6",
+   "links": [
+    {
+     "to": "not-env-0",
+     "type": "runs-in"
+    },
+    {
+     "to": "acc-ent-4",
+     "type": "reads"
+    }
+   ],
+   "parent": "accounts",
+   "plane": "build",
+   "title": "component 6 in accounts",
+   "type": "component"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "acc-cmp-7",
+   "links": [
+    {
+     "to": "not-env-1",
+     "type": "runs-in"
+    },
+    {
+     "to": "acc-ent-4",
+     "type": "reads"
+    },
+    {
+     "to": "acc-db-3",
+     "type": "uses"
+    }
+   ],
+   "parent": "accounts",
+   "plane": "build",
+   "title": "component 7 in accounts",
+   "type": "component"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "acc-cmp-8",
+   "links": [
+    {
+     "to": "cat-env-2",
+     "type": "runs-in"
+    },
+    {
+     "to": "acc-db-1",
+     "type": "uses"
+    }
+   ],
+   "parent": "accounts",
+   "plane": "build",
+   "title": "component 8 in accounts",
+   "type": "component"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "acc-db-1",
+   "links": [
+    {
+     "to": "not-env-0",
+     "type": "runs-in"
+    }
+   ],
+   "parent": "accounts",
+   "plane": "build",
+   "title": "datastore 1 in accounts",
+   "type": "datastore"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "acc-db-3",
+   "links": [
+    {
+     "to": "bil-env-5",
+     "type": "runs-in"
+    }
+   ],
+   "parent": "accounts",
+   "plane": "build",
+   "title": "datastore 3 in accounts",
+   "type": "datastore"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "acc-ent-10",
+   "links": [],
+   "parent": "accounts",
+   "plane": "domain",
+   "title": "entity 10 in accounts",
+   "type": "entity"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "acc-ent-11",
+   "links": [],
+   "parent": "accounts",
+   "plane": "domain",
+   "title": "entity 11 in accounts",
+   "type": "entity"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "acc-ent-16",
+   "links": [],
+   "parent": "accounts",
+   "plane": "domain",
+   "title": "entity 16 in accounts",
+   "type": "entity"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "acc-ent-20",
+   "links": [],
+   "parent": "accounts",
+   "plane": "domain",
+   "title": "entity 20 in accounts",
+   "type": "entity"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "acc-ent-4",
+   "links": [],
+   "parent": "accounts",
+   "plane": "domain",
+   "title": "entity 4 in accounts",
+   "type": "entity"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "acc-ent-8",
+   "links": [],
+   "parent": "accounts",
+   "plane": "domain",
+   "title": "entity 8 in accounts",
+   "type": "entity"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "acc-env-4",
+   "links": [],
+   "parent": "accounts",
+   "plane": "run",
+   "title": "environment 4 in accounts",
+   "type": "environment"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "acc-goal-1",
+   "links": [],
+   "parent": "accounts",
+   "plane": "intent",
+   "title": "goal 1 in accounts",
+   "type": "goal"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "acc-jrn-0",
+   "links": [
+    {
+     "to": "acc-goal-1",
+     "type": "serves"
+    }
+   ],
+   "parent": "accounts",
+   "plane": "behaviour",
+   "title": "journey 0 in accounts",
+   "type": "journey"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "acc-jrn-11",
+   "links": [
+    {
+     "to": "acc-goal-1",
+     "type": "serves"
+    }
+   ],
+   "parent": "accounts",
+   "plane": "behaviour",
+   "title": "journey 11 in accounts",
+   "type": "journey"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "acc-jrn-15",
+   "links": [
+    {
+     "to": "acc-goal-1",
+     "type": "serves"
+    }
+   ],
+   "parent": "accounts",
+   "plane": "behaviour",
+   "title": "journey 15 in accounts",
+   "type": "journey"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "acc-jrn-6",
+   "links": [
+    {
+     "to": "acc-goal-1",
+     "type": "serves"
+    }
+   ],
+   "parent": "accounts",
+   "plane": "behaviour",
+   "title": "journey 6 in accounts",
+   "type": "journey"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "acc-req-1",
+   "links": [
+    {
+     "to": "acc-jrn-6",
+     "type": "satisfies"
+    },
+    {
+     "to": "acc-cmp-11",
+     "type": "implemented-by"
+    }
+   ],
+   "parent": "accounts",
+   "plane": "behaviour",
+   "title": "requirement 1 in accounts",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "acc-req-14",
+   "links": [
+    {
+     "to": "acc-jrn-15",
+     "type": "satisfies"
+    },
+    {
+     "to": "acc-cmp-8",
+     "type": "implemented-by"
+    }
+   ],
+   "parent": "accounts",
+   "plane": "behaviour",
+   "title": "requirement 14 in accounts",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "acc-req-22",
+   "links": [
+    {
+     "to": "acc-jrn-0",
+     "type": "satisfies"
+    },
+    {
+     "to": "acc-cmp-34",
+     "type": "implemented-by"
+    }
+   ],
+   "parent": "accounts",
+   "plane": "behaviour",
+   "title": "requirement 22 in accounts",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "acc-req-23",
+   "links": [
+    {
+     "to": "acc-jrn-0",
+     "type": "satisfies"
+    },
+    {
+     "to": "acc-cmp-5",
+     "type": "implemented-by"
+    }
+   ],
+   "parent": "accounts",
+   "plane": "behaviour",
+   "title": "requirement 23 in accounts",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "acc-req-24",
+   "links": [
+    {
+     "to": "acc-jrn-15",
+     "type": "satisfies"
+    }
+   ],
+   "parent": "accounts",
+   "plane": "behaviour",
+   "title": "requirement 24 in accounts",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "acc-req-34",
+   "links": [
+    {
+     "to": "acc-jrn-6",
+     "type": "satisfies"
+    },
+    {
+     "to": "acc-cmp-40",
+     "type": "implemented-by"
+    }
+   ],
+   "parent": "accounts",
+   "plane": "behaviour",
+   "title": "requirement 34 in accounts",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "acc-req-36",
+   "links": [
+    {
+     "to": "acc-jrn-0",
+     "type": "satisfies"
+    },
+    {
+     "to": "acc-cmp-8",
+     "type": "implemented-by"
+    }
+   ],
+   "parent": "accounts",
+   "plane": "behaviour",
+   "title": "requirement 36 in accounts",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "acc-req-4",
+   "links": [
+    {
+     "to": "acc-jrn-11",
+     "type": "satisfies"
+    },
+    {
+     "to": "acc-cmp-6",
+     "type": "implemented-by"
+    }
+   ],
+   "parent": "accounts",
+   "plane": "behaviour",
+   "title": "requirement 4 in accounts",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "acc-req-7",
+   "links": [
+    {
+     "to": "acc-jrn-11",
+     "type": "satisfies"
+    },
+    {
+     "to": "acc-cmp-3",
+     "type": "implemented-by"
+    }
+   ],
+   "parent": "accounts",
+   "plane": "behaviour",
+   "title": "requirement 7 in accounts",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "acc-req-9",
+   "links": [
+    {
+     "to": "acc-jrn-6",
+     "type": "satisfies"
+    },
+    {
+     "to": "acc-cmp-30",
+     "type": "implemented-by"
+    }
+   ],
+   "parent": "accounts",
+   "plane": "behaviour",
+   "title": "requirement 9 in accounts",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "accounts",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "Accounts",
+   "type": "group"
+  },
+  {
+   "body": "",
+   "fields": {
+    "order": 2
+   },
+   "id": "behaviour",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "Behaviour",
+   "type": "plane"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "bil-cmp-14",
+   "links": [
+    {
+     "to": "bil-env-5",
+     "type": "runs-in"
+    },
+    {
+     "to": "bil-db-8",
+     "type": "uses"
+    }
+   ],
+   "parent": "billing",
+   "plane": "build",
+   "title": "component 14 in billing",
+   "type": "component"
+  },
+  {
+   "body": "",
+   "fields": {
+    "owner": "team-bil"
+   },
+   "id": "bil-cmp-20",
+   "links": [
+    {
+     "to": "bil-env-5",
+     "type": "runs-in"
+    },
+    {
+     "to": "bil-ent-1",
+     "type": "reads"
+    },
+    {
+     "to": "bil-db-0",
+     "type": "uses"
+    }
+   ],
+   "parent": "billing",
+   "plane": "build",
+   "title": "component 20 in billing",
+   "type": "component"
+  },
+  {
+   "body": "",
+   "fields": {
+    "owner": "team-bil"
+   },
+   "id": "bil-cmp-26",
+   "links": [
+    {
+     "to": "bil-env-5",
+     "type": "runs-in"
+    },
+    {
+     "to": "bil-db-0",
+     "type": "uses"
+    }
+   ],
+   "parent": "billing",
+   "plane": "build",
+   "title": "component 26 in billing",
+   "type": "component"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "bil-cmp-29",
+   "links": [
+    {
+     "to": "acc-env-4",
+     "type": "runs-in"
+    },
+    {
+     "to": "bil-ent-1",
+     "type": "reads"
+    }
+   ],
+   "parent": "billing",
+   "plane": "build",
+   "title": "component 29 in billing",
+   "type": "component"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "bil-cmp-31",
+   "links": [
+    {
+     "to": "bil-env-3",
+     "type": "runs-in"
+    },
+    {
+     "to": "bil-db-0",
+     "type": "uses"
+    }
+   ],
+   "parent": "billing",
+   "plane": "build",
+   "title": "component 31 in billing",
+   "type": "component"
+  },
+  {
+   "body": "",
+   "fields": {
+    "owner": "team-bil"
+   },
+   "id": "bil-cmp-35",
+   "links": [
+    {
+     "to": "acc-env-4",
+     "type": "runs-in"
+    },
+    {
+     "to": "bil-ent-1",
+     "type": "reads"
+    }
+   ],
+   "parent": "billing",
+   "plane": "build",
+   "title": "component 35 in billing",
+   "type": "component"
+  },
+  {
+   "body": "",
+   "fields": {
+    "owner": "team-bil"
+   },
+   "id": "bil-cmp-37",
+   "links": [
+    {
+     "to": "bil-db-0",
+     "type": "uses"
+    }
+   ],
+   "parent": "billing",
+   "plane": "build",
+   "title": "component 37 in billing",
+   "type": "component"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "bil-cmp-38",
+   "links": [
+    {
+     "to": "cat-env-2",
+     "type": "runs-in"
+    },
+    {
+     "to": "bil-ent-7",
+     "type": "reads"
+    }
+   ],
+   "parent": "billing",
+   "plane": "build",
+   "title": "component 38 in billing",
+   "type": "component"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "bil-cmp-39",
+   "links": [
+    {
+     "to": "bil-env-3",
+     "type": "runs-in"
+    },
+    {
+     "to": "bil-ent-5",
+     "type": "reads"
+    },
+    {
+     "to": "bil-db-8",
+     "type": "uses"
+    }
+   ],
+   "parent": "billing",
+   "plane": "build",
+   "title": "component 39 in billing",
+   "type": "component"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "bil-cmp-4",
+   "links": [
+    {
+     "to": "bil-env-5",
+     "type": "runs-in"
+    },
+    {
+     "to": "bil-db-0",
+     "type": "uses"
+    }
+   ],
+   "parent": "billing",
+   "plane": "build",
+   "title": "component 4 in billing",
+   "type": "component"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "bil-cmp-41",
+   "links": [
+    {
+     "to": "cat-env-2",
+     "type": "runs-in"
+    },
+    {
+     "to": "bil-db-0",
+     "type": "uses"
+    }
+   ],
+   "parent": "billing",
+   "plane": "build",
+   "title": "component 41 in billing",
+   "type": "component"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "bil-cmp-43",
+   "links": [
+    {
+     "to": "cat-env-2",
+     "type": "runs-in"
+    }
+   ],
+   "parent": "billing",
+   "plane": "build",
+   "title": "component 43 in billing",
+   "type": "component"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "bil-cmp-9",
+   "links": [
+    {
+     "to": "bil-ent-5",
+     "type": "reads"
+    },
+    {
+     "to": "bil-db-8",
+     "type": "uses"
+    }
+   ],
+   "parent": "billing",
+   "plane": "build",
+   "title": "component 9 in billing",
+   "type": "component"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "bil-db-0",
+   "links": [
+    {
+     "to": "cat-env-2",
+     "type": "runs-in"
+    }
+   ],
+   "parent": "billing",
+   "plane": "build",
+   "title": "datastore 0 in billing",
+   "type": "datastore"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "bil-db-8",
+   "links": [
+    {
+     "to": "cat-env-2",
+     "type": "runs-in"
+    }
+   ],
+   "parent": "billing",
+   "plane": "build",
+   "title": "datastore 8 in billing",
+   "type": "datastore"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "bil-db-9",
+   "links": [
+    {
+     "to": "bil-env-3",
+     "type": "runs-in"
+    }
+   ],
+   "parent": "billing",
+   "plane": "build",
+   "title": "datastore 9 in billing",
+   "type": "datastore"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "bil-ent-1",
+   "links": [],
+   "parent": "billing",
+   "plane": "domain",
+   "title": "entity 1 in billing",
+   "type": "entity"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "bil-ent-15",
+   "links": [],
+   "parent": "billing",
+   "plane": "domain",
+   "title": "entity 15 in billing",
+   "type": "entity"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "bil-ent-5",
+   "links": [],
+   "parent": "billing",
+   "plane": "domain",
+   "title": "entity 5 in billing",
+   "type": "entity"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "bil-ent-7",
+   "links": [],
+   "parent": "billing",
+   "plane": "domain",
+   "title": "entity 7 in billing",
+   "type": "entity"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "bil-env-3",
+   "links": [],
+   "parent": "billing",
+   "plane": "run",
+   "title": "environment 3 in billing",
+   "type": "environment"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "bil-env-5",
+   "links": [],
+   "parent": "billing",
+   "plane": "run",
+   "title": "environment 5 in billing",
+   "type": "environment"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "bil-goal-3",
+   "links": [],
+   "parent": "billing",
+   "plane": "intent",
+   "title": "goal 3 in billing",
+   "type": "goal"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "bil-goal-4",
+   "links": [],
+   "parent": "billing",
+   "plane": "intent",
+   "title": "goal 4 in billing",
+   "type": "goal"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "bil-goal-5",
+   "links": [],
+   "parent": "billing",
+   "plane": "intent",
+   "title": "goal 5 in billing",
+   "type": "goal"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "bil-goal-7",
+   "links": [],
+   "parent": "billing",
+   "plane": "intent",
+   "title": "goal 7 in billing",
+   "type": "goal"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "bil-jrn-1",
+   "links": [
+    {
+     "to": "bil-goal-5",
+     "type": "serves"
+    }
+   ],
+   "parent": "billing",
+   "plane": "behaviour",
+   "title": "journey 1 in billing",
+   "type": "journey"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "bil-jrn-10",
+   "links": [
+    {
+     "to": "bil-goal-3",
+     "type": "serves"
+    }
+   ],
+   "parent": "billing",
+   "plane": "behaviour",
+   "title": "journey 10 in billing",
+   "type": "journey"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "bil-jrn-12",
+   "links": [
+    {
+     "to": "bil-goal-5",
+     "type": "serves"
+    }
+   ],
+   "parent": "billing",
+   "plane": "behaviour",
+   "title": "journey 12 in billing",
+   "type": "journey"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "bil-jrn-14",
+   "links": [
+    {
+     "to": "bil-goal-5",
+     "type": "serves"
+    }
+   ],
+   "parent": "billing",
+   "plane": "behaviour",
+   "title": "journey 14 in billing",
+   "type": "journey"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "bil-jrn-2",
+   "links": [
+    {
+     "to": "bil-goal-7",
+     "type": "serves"
+    }
+   ],
+   "parent": "billing",
+   "plane": "behaviour",
+   "title": "journey 2 in billing",
+   "type": "journey"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "bil-jrn-5",
+   "links": [
+    {
+     "to": "bil-goal-4",
+     "type": "serves"
+    }
+   ],
+   "parent": "billing",
+   "plane": "behaviour",
+   "title": "journey 5 in billing",
+   "type": "journey"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "bil-jrn-7",
+   "links": [
+    {
+     "to": "bil-goal-4",
+     "type": "serves"
+    }
+   ],
+   "parent": "billing",
+   "plane": "behaviour",
+   "title": "journey 7 in billing",
+   "type": "journey"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "bil-jrn-9",
+   "links": [
+    {
+     "to": "bil-goal-5",
+     "type": "serves"
+    }
+   ],
+   "parent": "billing",
+   "plane": "behaviour",
+   "title": "journey 9 in billing",
+   "type": "journey"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "bil-req-0",
+   "links": [
+    {
+     "to": "bil-jrn-10",
+     "type": "satisfies"
+    },
+    {
+     "to": "bil-cmp-38",
+     "type": "implemented-by"
+    }
+   ],
+   "parent": "billing",
+   "plane": "behaviour",
+   "title": "requirement 0 in billing",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "bil-req-11",
+   "links": [
+    {
+     "to": "bil-jrn-10",
+     "type": "satisfies"
+    },
+    {
+     "to": "bil-cmp-9",
+     "type": "implemented-by"
+    }
+   ],
+   "parent": "billing",
+   "plane": "behaviour",
+   "title": "requirement 11 in billing",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "bil-req-12",
+   "links": [
+    {
+     "to": "bil-jrn-2",
+     "type": "satisfies"
+    }
+   ],
+   "parent": "billing",
+   "plane": "behaviour",
+   "title": "requirement 12 in billing",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "bil-req-13",
+   "links": [
+    {
+     "to": "bil-jrn-7",
+     "type": "satisfies"
+    },
+    {
+     "to": "bil-cmp-14",
+     "type": "implemented-by"
+    }
+   ],
+   "parent": "billing",
+   "plane": "behaviour",
+   "title": "requirement 13 in billing",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "bil-req-25",
+   "links": [
+    {
+     "to": "bil-jrn-7",
+     "type": "satisfies"
+    },
+    {
+     "to": "bil-cmp-20",
+     "type": "implemented-by"
+    }
+   ],
+   "parent": "billing",
+   "plane": "behaviour",
+   "title": "requirement 25 in billing",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "bil-req-31",
+   "links": [
+    {
+     "to": "bil-jrn-12",
+     "type": "satisfies"
+    },
+    {
+     "to": "bil-cmp-37",
+     "type": "implemented-by"
+    }
+   ],
+   "parent": "billing",
+   "plane": "behaviour",
+   "title": "requirement 31 in billing",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "bil-req-32",
+   "links": [
+    {
+     "to": "bil-jrn-5",
+     "type": "satisfies"
+    },
+    {
+     "to": "bil-cmp-37",
+     "type": "implemented-by"
+    }
+   ],
+   "parent": "billing",
+   "plane": "behaviour",
+   "title": "requirement 32 in billing",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "bil-req-39",
+   "links": [
+    {
+     "to": "bil-jrn-1",
+     "type": "satisfies"
+    },
+    {
+     "to": "bil-cmp-37",
+     "type": "implemented-by"
+    }
+   ],
+   "parent": "billing",
+   "plane": "behaviour",
+   "title": "requirement 39 in billing",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "bil-req-40",
+   "links": [
+    {
+     "to": "bil-jrn-14",
+     "type": "satisfies"
+    },
+    {
+     "to": "bil-cmp-43",
+     "type": "implemented-by"
+    }
+   ],
+   "parent": "billing",
+   "plane": "behaviour",
+   "title": "requirement 40 in billing",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "bil-req-46",
+   "links": [
+    {
+     "to": "bil-jrn-12",
+     "type": "satisfies"
+    },
+    {
+     "to": "bil-cmp-35",
+     "type": "implemented-by"
+    }
+   ],
+   "parent": "billing",
+   "plane": "behaviour",
+   "title": "requirement 46 in billing",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "bil-req-47",
+   "links": [
+    {
+     "to": "bil-jrn-10",
+     "type": "satisfies"
+    },
+    {
+     "to": "bil-cmp-20",
+     "type": "implemented-by"
+    }
+   ],
+   "parent": "billing",
+   "plane": "behaviour",
+   "title": "requirement 47 in billing",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "bil-req-5",
+   "links": [
+    {
+     "to": "bil-jrn-10",
+     "type": "satisfies"
+    },
+    {
+     "to": "bil-cmp-41",
+     "type": "implemented-by"
+    }
+   ],
+   "parent": "billing",
+   "plane": "behaviour",
+   "title": "requirement 5 in billing",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "bil-req-50",
+   "links": [
+    {
+     "to": "bil-jrn-10",
+     "type": "satisfies"
+    },
+    {
+     "to": "bil-cmp-14",
+     "type": "implemented-by"
+    }
+   ],
+   "parent": "billing",
+   "plane": "behaviour",
+   "title": "requirement 50 in billing",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "bil-req-51",
+   "links": [
+    {
+     "to": "bil-jrn-14",
+     "type": "satisfies"
+    },
+    {
+     "to": "bil-cmp-9",
+     "type": "implemented-by"
+    }
+   ],
+   "parent": "billing",
+   "plane": "behaviour",
+   "title": "requirement 51 in billing",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "bil-req-8",
+   "links": [
+    {
+     "to": "bil-jrn-7",
+     "type": "satisfies"
+    },
+    {
+     "to": "bil-cmp-29",
+     "type": "implemented-by"
+    }
+   ],
+   "parent": "billing",
+   "plane": "behaviour",
+   "title": "requirement 8 in billing",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "billing",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "Billing",
+   "type": "group"
+  },
+  {
+   "body": "",
+   "fields": {
+    "order": 4
+   },
+   "id": "build",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "Build",
+   "type": "plane"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "cat-cmp-0",
+   "links": [
+    {
+     "to": "not-env-0",
+     "type": "runs-in"
+    },
+    {
+     "to": "cat-db-6",
+     "type": "uses"
+    }
+   ],
+   "parent": "catalogue",
+   "plane": "build",
+   "title": "component 0 in catalogue",
+   "type": "component"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "cat-cmp-12",
+   "links": [
+    {
+     "to": "bil-env-3",
+     "type": "runs-in"
+    },
+    {
+     "to": "cat-ent-19",
+     "type": "reads"
+    },
+    {
+     "to": "cat-db-6",
+     "type": "uses"
+    }
+   ],
+   "parent": "catalogue",
+   "plane": "build",
+   "title": "component 12 in catalogue",
+   "type": "component"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "cat-cmp-13",
+   "links": [
+    {
+     "to": "bil-env-3",
+     "type": "runs-in"
+    },
+    {
+     "to": "cat-db-4",
+     "type": "uses"
+    }
+   ],
+   "parent": "catalogue",
+   "plane": "build",
+   "title": "component 13 in catalogue",
+   "type": "component"
+  },
+  {
+   "body": "",
+   "fields": {
+    "owner": "team-cat"
+   },
+   "id": "cat-cmp-17",
+   "links": [
+    {
+     "to": "not-env-1",
+     "type": "runs-in"
+    },
+    {
+     "to": "cat-db-4",
+     "type": "uses"
+    }
+   ],
+   "parent": "catalogue",
+   "plane": "build",
+   "title": "component 17 in catalogue",
+   "type": "component"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "cat-cmp-18",
+   "links": [
+    {
+     "to": "cat-env-2",
+     "type": "runs-in"
+    },
+    {
+     "to": "cat-ent-9",
+     "type": "reads"
+    }
+   ],
+   "parent": "catalogue",
+   "plane": "build",
+   "title": "component 18 in catalogue",
+   "type": "component"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "cat-cmp-36",
+   "links": [
+    {
+     "to": "acc-env-4",
+     "type": "runs-in"
+    },
+    {
+     "to": "cat-db-5",
+     "type": "uses"
+    }
+   ],
+   "parent": "catalogue",
+   "plane": "build",
+   "title": "component 36 in catalogue",
+   "type": "component"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "cat-cmp-42",
+   "links": [
+    {
+     "to": "cat-ent-9",
+     "type": "reads"
+    },
+    {
+     "to": "cat-db-5",
+     "type": "uses"
+    }
+   ],
+   "parent": "catalogue",
+   "plane": "build",
+   "title": "component 42 in catalogue",
+   "type": "component"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "cat-db-4",
+   "links": [
+    {
+     "to": "cat-env-2",
+     "type": "runs-in"
+    }
+   ],
+   "parent": "catalogue",
+   "plane": "build",
+   "title": "datastore 4 in catalogue",
+   "type": "datastore"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "cat-db-5",
+   "links": [
+    {
+     "to": "bil-env-5",
+     "type": "runs-in"
+    }
+   ],
+   "parent": "catalogue",
+   "plane": "build",
+   "title": "datastore 5 in catalogue",
+   "type": "datastore"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "cat-db-6",
+   "links": [
+    {
+     "to": "not-env-1",
+     "type": "runs-in"
+    }
+   ],
+   "parent": "catalogue",
+   "plane": "build",
+   "title": "datastore 6 in catalogue",
+   "type": "datastore"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "cat-ent-0",
+   "links": [],
+   "parent": "catalogue",
+   "plane": "domain",
+   "title": "entity 0 in catalogue",
+   "type": "entity"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "cat-ent-19",
+   "links": [],
+   "parent": "catalogue",
+   "plane": "domain",
+   "title": "entity 19 in catalogue",
+   "type": "entity"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "cat-ent-22",
+   "links": [],
+   "parent": "catalogue",
+   "plane": "domain",
+   "title": "entity 22 in catalogue",
+   "type": "entity"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "cat-ent-3",
+   "links": [],
+   "parent": "catalogue",
+   "plane": "domain",
+   "title": "entity 3 in catalogue",
+   "type": "entity"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "cat-ent-9",
+   "links": [],
+   "parent": "catalogue",
+   "plane": "domain",
+   "title": "entity 9 in catalogue",
+   "type": "entity"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "cat-env-2",
+   "links": [],
+   "parent": "catalogue",
+   "plane": "run",
+   "title": "environment 2 in catalogue",
+   "type": "environment"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "cat-goal-0",
+   "links": [],
+   "parent": "catalogue",
+   "plane": "intent",
+   "title": "goal 0 in catalogue",
+   "type": "goal"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "cat-goal-6",
+   "links": [],
+   "parent": "catalogue",
+   "plane": "intent",
+   "title": "goal 6 in catalogue",
+   "type": "goal"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "cat-req-10",
+   "links": [
+    {
+     "to": "acc-jrn-0",
+     "type": "satisfies"
+    },
+    {
+     "to": "cat-cmp-36",
+     "type": "implemented-by"
+    }
+   ],
+   "parent": "catalogue",
+   "plane": "behaviour",
+   "title": "requirement 10 in catalogue",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "cat-req-17",
+   "links": [
+    {
+     "to": "bil-jrn-5",
+     "type": "satisfies"
+    },
+    {
+     "to": "cat-cmp-12",
+     "type": "implemented-by"
+    }
+   ],
+   "parent": "catalogue",
+   "plane": "behaviour",
+   "title": "requirement 17 in catalogue",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "cat-req-2",
+   "links": [
+    {
+     "to": "bil-jrn-7",
+     "type": "satisfies"
+    },
+    {
+     "to": "cat-cmp-17",
+     "type": "implemented-by"
+    }
+   ],
+   "parent": "catalogue",
+   "plane": "behaviour",
+   "title": "requirement 2 in catalogue",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "cat-req-20",
+   "links": [
+    {
+     "to": "acc-jrn-15",
+     "type": "satisfies"
+    },
+    {
+     "to": "cat-cmp-13",
+     "type": "implemented-by"
+    }
+   ],
+   "parent": "catalogue",
+   "plane": "behaviour",
+   "title": "requirement 20 in catalogue",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "cat-req-21",
+   "links": [
+    {
+     "to": "not-jrn-4",
+     "type": "satisfies"
+    },
+    {
+     "to": "cat-cmp-12",
+     "type": "implemented-by"
+    }
+   ],
+   "parent": "catalogue",
+   "plane": "behaviour",
+   "title": "requirement 21 in catalogue",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "cat-req-26",
+   "links": [
+    {
+     "to": "acc-jrn-0",
+     "type": "satisfies"
+    },
+    {
+     "to": "cat-cmp-13",
+     "type": "implemented-by"
+    }
+   ],
+   "parent": "catalogue",
+   "plane": "behaviour",
+   "title": "requirement 26 in catalogue",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "cat-req-28",
+   "links": [
+    {
+     "to": "not-jrn-8",
+     "type": "satisfies"
+    },
+    {
+     "to": "cat-cmp-42",
+     "type": "implemented-by"
+    }
+   ],
+   "parent": "catalogue",
+   "plane": "behaviour",
+   "title": "requirement 28 in catalogue",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "cat-req-30",
+   "links": [
+    {
+     "to": "bil-jrn-14",
+     "type": "satisfies"
+    },
+    {
+     "to": "cat-cmp-42",
+     "type": "implemented-by"
+    }
+   ],
+   "parent": "catalogue",
+   "plane": "behaviour",
+   "title": "requirement 30 in catalogue",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "cat-req-35",
+   "links": [
+    {
+     "to": "not-jrn-4",
+     "type": "satisfies"
+    },
+    {
+     "to": "cat-cmp-17",
+     "type": "implemented-by"
+    }
+   ],
+   "parent": "catalogue",
+   "plane": "behaviour",
+   "title": "requirement 35 in catalogue",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "cat-req-41",
+   "links": [
+    {
+     "to": "bil-jrn-2",
+     "type": "satisfies"
+    },
+    {
+     "to": "cat-cmp-18",
+     "type": "implemented-by"
+    }
+   ],
+   "parent": "catalogue",
+   "plane": "behaviour",
+   "title": "requirement 41 in catalogue",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "cat-req-42",
+   "links": [
+    {
+     "to": "acc-jrn-6",
+     "type": "satisfies"
+    },
+    {
+     "to": "cat-cmp-17",
+     "type": "implemented-by"
+    }
+   ],
+   "parent": "catalogue",
+   "plane": "behaviour",
+   "title": "requirement 42 in catalogue",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "cat-req-43",
+   "links": [
+    {
+     "to": "acc-jrn-15",
+     "type": "satisfies"
+    },
+    {
+     "to": "cat-cmp-12",
+     "type": "implemented-by"
+    }
+   ],
+   "parent": "catalogue",
+   "plane": "behaviour",
+   "title": "requirement 43 in catalogue",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "cat-req-48",
+   "links": [
+    {
+     "to": "not-jrn-13",
+     "type": "satisfies"
+    },
+    {
+     "to": "cat-cmp-36",
+     "type": "implemented-by"
+    }
+   ],
+   "parent": "catalogue",
+   "plane": "behaviour",
+   "title": "requirement 48 in catalogue",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "cat-req-52",
+   "links": [
+    {
+     "to": "bil-jrn-12",
+     "type": "satisfies"
+    }
+   ],
+   "parent": "catalogue",
+   "plane": "behaviour",
+   "title": "requirement 52 in catalogue",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "cat-req-54",
+   "links": [
+    {
+     "to": "bil-jrn-7",
+     "type": "satisfies"
+    },
+    {
+     "to": "cat-cmp-17",
+     "type": "implemented-by"
+    }
+   ],
+   "parent": "catalogue",
+   "plane": "behaviour",
+   "title": "requirement 54 in catalogue",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "cat-req-6",
+   "links": [
+    {
+     "to": "acc-jrn-11",
+     "type": "satisfies"
+    }
+   ],
+   "parent": "catalogue",
+   "plane": "behaviour",
+   "title": "requirement 6 in catalogue",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "catalogue",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "Catalogue",
+   "type": "group"
+  },
+  {
+   "body": "",
+   "fields": {
+    "order": 3
+   },
+   "id": "domain",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "Domain",
+   "type": "plane"
+  },
+  {
+   "body": "",
+   "fields": {
+    "order": 1
+   },
+   "id": "intent",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "Intent",
+   "type": "plane"
+  },
+  {
+   "body": "",
+   "fields": {
+    "owner": "team-not"
+   },
+   "id": "not-cmp-1",
+   "links": [
+    {
+     "to": "bil-env-3",
+     "type": "runs-in"
+    },
+    {
+     "to": "not-ent-14",
+     "type": "reads"
+    }
+   ],
+   "parent": "notify",
+   "plane": "build",
+   "title": "component 1 in notify",
+   "type": "component"
+  },
+  {
+   "body": "",
+   "fields": {
+    "owner": "team-not"
+   },
+   "id": "not-cmp-10",
+   "links": [
+    {
+     "to": "not-env-1",
+     "type": "runs-in"
+    },
+    {
+     "to": "not-ent-23",
+     "type": "reads"
+    }
+   ],
+   "parent": "notify",
+   "plane": "build",
+   "title": "component 10 in notify",
+   "type": "component"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "not-cmp-16",
+   "links": [
+    {
+     "to": "bil-env-5",
+     "type": "runs-in"
+    }
+   ],
+   "parent": "notify",
+   "plane": "build",
+   "title": "component 16 in notify",
+   "type": "component"
+  },
+  {
+   "body": "",
+   "fields": {
+    "owner": "team-not"
+   },
+   "id": "not-cmp-21",
+   "links": [
+    {
+     "to": "bil-env-3",
+     "type": "runs-in"
+    },
+    {
+     "to": "not-ent-14",
+     "type": "reads"
+    }
+   ],
+   "parent": "notify",
+   "plane": "build",
+   "title": "component 21 in notify",
+   "type": "component"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "not-cmp-22",
+   "links": [
+    {
+     "to": "not-db-11",
+     "type": "uses"
+    }
+   ],
+   "parent": "notify",
+   "plane": "build",
+   "title": "component 22 in notify",
+   "type": "component"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "not-cmp-23",
+   "links": [
+    {
+     "to": "bil-env-3",
+     "type": "runs-in"
+    },
+    {
+     "to": "not-ent-12",
+     "type": "reads"
+    },
+    {
+     "to": "not-db-11",
+     "type": "uses"
+    }
+   ],
+   "parent": "notify",
+   "plane": "build",
+   "title": "component 23 in notify",
+   "type": "component"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "not-cmp-24",
+   "links": [
+    {
+     "to": "not-env-1",
+     "type": "runs-in"
+    }
+   ],
+   "parent": "notify",
+   "plane": "build",
+   "title": "component 24 in notify",
+   "type": "component"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "not-cmp-25",
+   "links": [
+    {
+     "to": "not-env-0",
+     "type": "runs-in"
+    }
+   ],
+   "parent": "notify",
+   "plane": "build",
+   "title": "component 25 in notify",
+   "type": "component"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "not-cmp-27",
+   "links": [
+    {
+     "to": "not-env-0",
+     "type": "runs-in"
+    },
+    {
+     "to": "not-ent-21",
+     "type": "reads"
+    }
+   ],
+   "parent": "notify",
+   "plane": "build",
+   "title": "component 27 in notify",
+   "type": "component"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "not-cmp-28",
+   "links": [
+    {
+     "to": "bil-env-5",
+     "type": "runs-in"
+    },
+    {
+     "to": "not-ent-14",
+     "type": "reads"
+    },
+    {
+     "to": "not-db-2",
+     "type": "uses"
+    }
+   ],
+   "parent": "notify",
+   "plane": "build",
+   "title": "component 28 in notify",
+   "type": "component"
+  },
+  {
+   "body": "",
+   "fields": {
+    "owner": "team-not"
+   },
+   "id": "not-cmp-33",
+   "links": [
+    {
+     "to": "bil-env-3",
+     "type": "runs-in"
+    },
+    {
+     "to": "not-ent-14",
+     "type": "reads"
+    }
+   ],
+   "parent": "notify",
+   "plane": "build",
+   "title": "component 33 in notify",
+   "type": "component"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "not-db-10",
+   "links": [
+    {
+     "to": "acc-env-4",
+     "type": "runs-in"
+    }
+   ],
+   "parent": "notify",
+   "plane": "build",
+   "title": "datastore 10 in notify",
+   "type": "datastore"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "not-db-11",
+   "links": [
+    {
+     "to": "cat-env-2",
+     "type": "runs-in"
+    }
+   ],
+   "parent": "notify",
+   "plane": "build",
+   "title": "datastore 11 in notify",
+   "type": "datastore"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "not-db-2",
+   "links": [
+    {
+     "to": "not-env-0",
+     "type": "runs-in"
+    }
+   ],
+   "parent": "notify",
+   "plane": "build",
+   "title": "datastore 2 in notify",
+   "type": "datastore"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "not-db-7",
+   "links": [
+    {
+     "to": "not-env-1",
+     "type": "runs-in"
+    }
+   ],
+   "parent": "notify",
+   "plane": "build",
+   "title": "datastore 7 in notify",
+   "type": "datastore"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "not-ent-12",
+   "links": [],
+   "parent": "notify",
+   "plane": "domain",
+   "title": "entity 12 in notify",
+   "type": "entity"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "not-ent-13",
+   "links": [],
+   "parent": "notify",
+   "plane": "domain",
+   "title": "entity 13 in notify",
+   "type": "entity"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "not-ent-14",
+   "links": [],
+   "parent": "notify",
+   "plane": "domain",
+   "title": "entity 14 in notify",
+   "type": "entity"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "not-ent-17",
+   "links": [],
+   "parent": "notify",
+   "plane": "domain",
+   "title": "entity 17 in notify",
+   "type": "entity"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "not-ent-18",
+   "links": [],
+   "parent": "notify",
+   "plane": "domain",
+   "title": "entity 18 in notify",
+   "type": "entity"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "not-ent-2",
+   "links": [],
+   "parent": "notify",
+   "plane": "domain",
+   "title": "entity 2 in notify",
+   "type": "entity"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "not-ent-21",
+   "links": [],
+   "parent": "notify",
+   "plane": "domain",
+   "title": "entity 21 in notify",
+   "type": "entity"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "not-ent-23",
+   "links": [],
+   "parent": "notify",
+   "plane": "domain",
+   "title": "entity 23 in notify",
+   "type": "entity"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "not-ent-6",
+   "links": [],
+   "parent": "notify",
+   "plane": "domain",
+   "title": "entity 6 in notify",
+   "type": "entity"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "not-env-0",
+   "links": [],
+   "parent": "notify",
+   "plane": "run",
+   "title": "environment 0 in notify",
+   "type": "environment"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "not-env-1",
+   "links": [],
+   "parent": "notify",
+   "plane": "run",
+   "title": "environment 1 in notify",
+   "type": "environment"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "not-goal-2",
+   "links": [],
+   "parent": "notify",
+   "plane": "intent",
+   "title": "goal 2 in notify",
+   "type": "goal"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "not-jrn-13",
+   "links": [
+    {
+     "to": "not-goal-2",
+     "type": "serves"
+    }
+   ],
+   "parent": "notify",
+   "plane": "behaviour",
+   "title": "journey 13 in notify",
+   "type": "journey"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "not-jrn-3",
+   "links": [
+    {
+     "to": "not-goal-2",
+     "type": "serves"
+    }
+   ],
+   "parent": "notify",
+   "plane": "behaviour",
+   "title": "journey 3 in notify",
+   "type": "journey"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "not-jrn-4",
+   "links": [
+    {
+     "to": "not-goal-2",
+     "type": "serves"
+    }
+   ],
+   "parent": "notify",
+   "plane": "behaviour",
+   "title": "journey 4 in notify",
+   "type": "journey"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "not-jrn-8",
+   "links": [
+    {
+     "to": "not-goal-2",
+     "type": "serves"
+    }
+   ],
+   "parent": "notify",
+   "plane": "behaviour",
+   "title": "journey 8 in notify",
+   "type": "journey"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "not-req-15",
+   "links": [
+    {
+     "to": "not-jrn-3",
+     "type": "satisfies"
+    },
+    {
+     "to": "not-cmp-24",
+     "type": "implemented-by"
+    }
+   ],
+   "parent": "notify",
+   "plane": "behaviour",
+   "title": "requirement 15 in notify",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "not-req-16",
+   "links": [
+    {
+     "to": "not-jrn-13",
+     "type": "satisfies"
+    },
+    {
+     "to": "not-cmp-10",
+     "type": "implemented-by"
+    }
+   ],
+   "parent": "notify",
+   "plane": "behaviour",
+   "title": "requirement 16 in notify",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "not-req-18",
+   "links": [
+    {
+     "to": "not-jrn-3",
+     "type": "satisfies"
+    },
+    {
+     "to": "not-cmp-25",
+     "type": "implemented-by"
+    }
+   ],
+   "parent": "notify",
+   "plane": "behaviour",
+   "title": "requirement 18 in notify",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "not-req-19",
+   "links": [
+    {
+     "to": "not-jrn-4",
+     "type": "satisfies"
+    },
+    {
+     "to": "not-cmp-28",
+     "type": "implemented-by"
+    }
+   ],
+   "parent": "notify",
+   "plane": "behaviour",
+   "title": "requirement 19 in notify",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "not-req-27",
+   "links": [
+    {
+     "to": "not-jrn-4",
+     "type": "satisfies"
+    },
+    {
+     "to": "not-cmp-23",
+     "type": "implemented-by"
+    }
+   ],
+   "parent": "notify",
+   "plane": "behaviour",
+   "title": "requirement 27 in notify",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "not-req-29",
+   "links": [
+    {
+     "to": "not-jrn-4",
+     "type": "satisfies"
+    },
+    {
+     "to": "not-cmp-23",
+     "type": "implemented-by"
+    }
+   ],
+   "parent": "notify",
+   "plane": "behaviour",
+   "title": "requirement 29 in notify",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "not-req-3",
+   "links": [
+    {
+     "to": "not-jrn-8",
+     "type": "satisfies"
+    },
+    {
+     "to": "not-cmp-1",
+     "type": "implemented-by"
+    }
+   ],
+   "parent": "notify",
+   "plane": "behaviour",
+   "title": "requirement 3 in notify",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "not-req-33",
+   "links": [
+    {
+     "to": "not-jrn-3",
+     "type": "satisfies"
+    }
+   ],
+   "parent": "notify",
+   "plane": "behaviour",
+   "title": "requirement 33 in notify",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "not-req-37",
+   "links": [
+    {
+     "to": "not-jrn-13",
+     "type": "satisfies"
+    },
+    {
+     "to": "not-cmp-10",
+     "type": "implemented-by"
+    }
+   ],
+   "parent": "notify",
+   "plane": "behaviour",
+   "title": "requirement 37 in notify",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "not-req-38",
+   "links": [
+    {
+     "to": "not-jrn-3",
+     "type": "satisfies"
+    },
+    {
+     "to": "not-cmp-22",
+     "type": "implemented-by"
+    }
+   ],
+   "parent": "notify",
+   "plane": "behaviour",
+   "title": "requirement 38 in notify",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "not-req-44",
+   "links": [
+    {
+     "to": "not-jrn-8",
+     "type": "satisfies"
+    }
+   ],
+   "parent": "notify",
+   "plane": "behaviour",
+   "title": "requirement 44 in notify",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "not-req-45",
+   "links": [
+    {
+     "to": "not-jrn-4",
+     "type": "satisfies"
+    },
+    {
+     "to": "not-cmp-16",
+     "type": "implemented-by"
+    }
+   ],
+   "parent": "notify",
+   "plane": "behaviour",
+   "title": "requirement 45 in notify",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "not-req-49",
+   "links": [
+    {
+     "to": "not-jrn-8",
+     "type": "satisfies"
+    },
+    {
+     "to": "not-cmp-16",
+     "type": "implemented-by"
+    }
+   ],
+   "parent": "notify",
+   "plane": "behaviour",
+   "title": "requirement 49 in notify",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "not-req-53",
+   "links": [
+    {
+     "to": "not-jrn-4",
+     "type": "satisfies"
+    }
+   ],
+   "parent": "notify",
+   "plane": "behaviour",
+   "title": "requirement 53 in notify",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "not-req-55",
+   "links": [
+    {
+     "to": "not-jrn-13",
+     "type": "satisfies"
+    },
+    {
+     "to": "not-cmp-21",
+     "type": "implemented-by"
+    }
+   ],
+   "parent": "notify",
+   "plane": "behaviour",
+   "title": "requirement 55 in notify",
+   "type": "requirement"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "notify",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "Notify",
+   "type": "group"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "component",
+     "under": "billing"
+    },
+    "check": {
+     "require_fields": [
+      "owner"
+     ]
+    },
+    "severity": "warn",
+    "statement": "Billing components have an owner"
+   },
+   "id": "rule-billing-owner",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "Billing components have an owner",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "component"
+    },
+    "check": {
+     "require_link": {
+      "to_plane": "run",
+      "type": "runs-in"
+     }
+    },
+    "severity": "error",
+    "statement": "Every component runs in an environment"
+   },
+   "id": "rule-comp-runs",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "Every component runs in an environment",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "requirement"
+    },
+    "check": {
+     "require_link": {
+      "to_plane": "build",
+      "to_type": "component",
+      "type": "implemented-by"
+     }
+    },
+    "severity": "warn",
+    "statement": "Every requirement is implemented by a component"
+   },
+   "id": "rule-req-built",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "Every requirement is implemented by a component",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "order": 5
+   },
+   "id": "run",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "Run",
+   "type": "plane"
+  }
+ ],
+ "results": [
+  {
+   "node": "acc-cmp-11",
+   "rule": "rule-comp-runs",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "acc-cmp-15",
+   "rule": "rule-comp-runs",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "acc-cmp-19",
+   "rule": "rule-comp-runs",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "acc-cmp-2",
+   "rule": "rule-comp-runs",
+   "severity": "error",
+   "status": "fail"
+  },
+  {
+   "node": "acc-cmp-3",
+   "rule": "rule-comp-runs",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "acc-cmp-30",
+   "rule": "rule-comp-runs",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "acc-cmp-32",
+   "rule": "rule-comp-runs",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "acc-cmp-34",
+   "rule": "rule-comp-runs",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "acc-cmp-40",
+   "rule": "rule-comp-runs",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "acc-cmp-5",
+   "rule": "rule-comp-runs",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "acc-cmp-6",
+   "rule": "rule-comp-runs",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "acc-cmp-7",
+   "rule": "rule-comp-runs",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "acc-cmp-8",
+   "rule": "rule-comp-runs",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "acc-req-1",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "acc-req-14",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "acc-req-22",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "acc-req-23",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "acc-req-24",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "acc-req-34",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "acc-req-36",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "acc-req-4",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "acc-req-7",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "acc-req-9",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "bil-cmp-14",
+   "rule": "rule-billing-owner",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "bil-cmp-14",
+   "rule": "rule-comp-runs",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "bil-cmp-20",
+   "rule": "rule-billing-owner",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "bil-cmp-20",
+   "rule": "rule-comp-runs",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "bil-cmp-26",
+   "rule": "rule-billing-owner",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "bil-cmp-26",
+   "rule": "rule-comp-runs",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "bil-cmp-29",
+   "rule": "rule-billing-owner",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "bil-cmp-29",
+   "rule": "rule-comp-runs",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "bil-cmp-31",
+   "rule": "rule-billing-owner",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "bil-cmp-31",
+   "rule": "rule-comp-runs",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "bil-cmp-35",
+   "rule": "rule-billing-owner",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "bil-cmp-35",
+   "rule": "rule-comp-runs",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "bil-cmp-37",
+   "rule": "rule-billing-owner",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "bil-cmp-37",
+   "rule": "rule-comp-runs",
+   "severity": "error",
+   "status": "fail"
+  },
+  {
+   "node": "bil-cmp-38",
+   "rule": "rule-billing-owner",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "bil-cmp-38",
+   "rule": "rule-comp-runs",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "bil-cmp-39",
+   "rule": "rule-billing-owner",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "bil-cmp-39",
+   "rule": "rule-comp-runs",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "bil-cmp-4",
+   "rule": "rule-billing-owner",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "bil-cmp-4",
+   "rule": "rule-comp-runs",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "bil-cmp-41",
+   "rule": "rule-billing-owner",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "bil-cmp-41",
+   "rule": "rule-comp-runs",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "bil-cmp-43",
+   "rule": "rule-billing-owner",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "bil-cmp-43",
+   "rule": "rule-comp-runs",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "bil-cmp-9",
+   "rule": "rule-billing-owner",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "bil-cmp-9",
+   "rule": "rule-comp-runs",
+   "severity": "error",
+   "status": "fail"
+  },
+  {
+   "node": "bil-req-0",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "bil-req-11",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "bil-req-12",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "bil-req-13",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "bil-req-25",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "bil-req-31",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "bil-req-32",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "bil-req-39",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "bil-req-40",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "bil-req-46",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "bil-req-47",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "bil-req-5",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "bil-req-50",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "bil-req-51",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "bil-req-8",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "cat-cmp-0",
+   "rule": "rule-comp-runs",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "cat-cmp-12",
+   "rule": "rule-comp-runs",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "cat-cmp-13",
+   "rule": "rule-comp-runs",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "cat-cmp-17",
+   "rule": "rule-comp-runs",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "cat-cmp-18",
+   "rule": "rule-comp-runs",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "cat-cmp-36",
+   "rule": "rule-comp-runs",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "cat-cmp-42",
+   "rule": "rule-comp-runs",
+   "severity": "error",
+   "status": "fail"
+  },
+  {
+   "node": "cat-req-10",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "cat-req-17",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "cat-req-2",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "cat-req-20",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "cat-req-21",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "cat-req-26",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "cat-req-28",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "cat-req-30",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "cat-req-35",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "cat-req-41",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "cat-req-42",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "cat-req-43",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "cat-req-48",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "cat-req-52",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "cat-req-54",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "cat-req-6",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "not-cmp-1",
+   "rule": "rule-comp-runs",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "not-cmp-10",
+   "rule": "rule-comp-runs",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "not-cmp-16",
+   "rule": "rule-comp-runs",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "not-cmp-21",
+   "rule": "rule-comp-runs",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "not-cmp-22",
+   "rule": "rule-comp-runs",
+   "severity": "error",
+   "status": "fail"
+  },
+  {
+   "node": "not-cmp-23",
+   "rule": "rule-comp-runs",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "not-cmp-24",
+   "rule": "rule-comp-runs",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "not-cmp-25",
+   "rule": "rule-comp-runs",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "not-cmp-27",
+   "rule": "rule-comp-runs",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "not-cmp-28",
+   "rule": "rule-comp-runs",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "not-cmp-33",
+   "rule": "rule-comp-runs",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "not-req-15",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "not-req-16",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "not-req-18",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "not-req-19",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "not-req-27",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "not-req-29",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "not-req-3",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "not-req-33",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "not-req-37",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "not-req-38",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "not-req-44",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "not-req-45",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "not-req-49",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "not-req-53",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "not-req-55",
+   "rule": "rule-req-built",
+   "severity": "warn",
+   "status": "pass"
+  }
+ ],
+ "structure": {
+  "errors": [],
+  "warnings": [
+   {
+    "kind": "title_too_long",
+    "node": "rule-billing-owner",
+    "ref": "32"
+   },
+   {
+    "kind": "title_too_long",
+    "node": "rule-comp-runs",
+    "ref": "38"
+   },
+   {
+    "kind": "title_too_long",
+    "node": "rule-req-built",
+    "ref": "47"
+   }
+  ]
+ }
+}

@@ -1,0 +1,155 @@
+{
+ "ghosts": [],
+ "load_errors": [],
+ "nodes": [
+  {
+   "body": "",
+   "fields": {
+    "pack": "foo@1"
+   },
+   "id": "foo--thing",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "foo--thing",
+   "type": "t"
+  },
+  {
+   "body": "",
+   "fields": {
+    "pack": "system-design-lite@0.1.0"
+   },
+   "id": "lone",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "lone",
+   "type": "t"
+  },
+  {
+   "body": "",
+   "fields": {
+    "name": "old2",
+    "version": 1
+   },
+   "id": "old2--pack",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "old2--pack",
+   "type": "pack"
+  },
+  {
+   "body": "",
+   "fields": {
+    "version": 1
+   },
+   "id": "pack-nameless",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "pack-nameless",
+   "type": "pack"
+  },
+  {
+   "body": "",
+   "fields": {
+    "name": "old",
+    "version": 1
+   },
+   "id": "pack-old",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "pack-old",
+   "type": "pack"
+  },
+  {
+   "body": "",
+   "fields": {
+    "name": "system-design-lite",
+    "namespace": "sdl",
+    "version": "0.1.0"
+   },
+   "id": "sdl--pack",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "sdl--pack",
+   "type": "pack"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "sdl--stray",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "sdl--stray",
+   "type": "t"
+  },
+  {
+   "body": "",
+   "fields": {
+    "name": "actor",
+    "pack": "system-design-lite@0.1.0"
+   },
+   "id": "sdl--type-actor",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "sdl--type-actor",
+   "type": "type"
+  },
+  {
+   "body": "",
+   "fields": {
+    "pack": 3
+   },
+   "id": "weird",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "weird",
+   "type": "t"
+  },
+  {
+   "body": "",
+   "fields": {
+    "pack": "system-design-lite@0.1.0"
+   },
+   "id": "xyz--type-x",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "xyz--type-x",
+   "type": "type"
+  }
+ ],
+ "results": [],
+ "structure": {
+  "errors": [],
+  "warnings": [
+   {
+    "kind": "namespace_mismatch",
+    "node": "lone",
+    "ref": null
+   },
+   {
+    "kind": "namespace_mismatch",
+    "node": "pack-old",
+    "ref": null
+   },
+   {
+    "kind": "namespace_mismatch",
+    "node": "sdl--stray",
+    "ref": null
+   },
+   {
+    "kind": "namespace_mismatch",
+    "node": "xyz--type-x",
+    "ref": null
+   }
+  ]
+ }
+}

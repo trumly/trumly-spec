@@ -1,0 +1,61 @@
+{
+ "ghosts": [],
+ "load_errors": [],
+ "nodes": [
+  {
+   "body": "",
+   "fields": {},
+   "id": "a",
+   "links": [
+    {
+     "to": "b",
+     "type": "uses"
+    },
+    {
+     "to": "b",
+     "type": "uses"
+    },
+    {
+     "key": "k",
+     "to": "b",
+     "type": "uses"
+    },
+    {
+     "key": "k",
+     "to": "b",
+     "type": "uses"
+    }
+   ],
+   "parent": null,
+   "plane": null,
+   "title": "a",
+   "type": "t"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "b",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "b",
+   "type": "t"
+  }
+ ],
+ "results": [],
+ "structure": {
+  "errors": [
+   {
+    "kind": "duplicate_link",
+    "node": "a",
+    "ref": "uses->b"
+   },
+   {
+    "kind": "duplicate_link",
+    "node": "a",
+    "ref": "uses->b#k"
+   }
+  ],
+  "warnings": []
+ }
+}

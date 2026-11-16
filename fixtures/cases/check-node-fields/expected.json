@@ -1,0 +1,352 @@
+{
+ "ghosts": [
+  {
+   "link": "depends-on",
+   "node": "db",
+   "plane": null,
+   "rule": "r-pure-require",
+   "to_type": null
+  },
+  {
+   "link": "depends-on",
+   "node": "util",
+   "plane": null,
+   "rule": "r-pure-require",
+   "to_type": null
+  }
+ ],
+ "load_errors": [],
+ "nodes": [
+  {
+   "body": "",
+   "fields": {},
+   "id": "bare",
+   "links": [
+    {
+     "to": "util",
+     "type": "depends-on"
+    }
+   ],
+   "parent": null,
+   "plane": null,
+   "title": "bare",
+   "type": "comp"
+  },
+  {
+   "body": "",
+   "fields": {
+    "layer": "infra"
+   },
+   "id": "db",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "db",
+   "type": "comp"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "comp"
+    },
+    "check": {
+     "require_link": {
+      "node_fields": [
+       "layer"
+      ],
+      "type": "depends-on"
+     }
+    },
+    "statement": "s"
+   },
+   "id": "r-bad-fields",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r-bad-fields",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "comp"
+    },
+    "check": {
+     "forbid_link": {
+      "max": 1,
+      "type": "depends-on"
+     }
+    },
+    "statement": "s"
+   },
+   "id": "r-forbid-bounds",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r-forbid-bounds",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "comp"
+    },
+    "check": {
+     "forbid_link": [
+      {
+       "dir": "in",
+       "node_fields": {
+        "layer": "app"
+       },
+       "node_type": "comp",
+       "type": "depends-on"
+      }
+     ]
+    },
+    "statement": "s"
+   },
+   "id": "r-forbid-in",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r-forbid-in",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "layer": "domain",
+     "type": "comp"
+    },
+    "check": {
+     "forbid_link": {
+      "node_fields": {
+       "layer": "infra"
+      },
+      "type": "depends-on"
+     }
+    },
+    "statement": "s"
+   },
+   "id": "r-pure-only",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r-pure-only",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "comp"
+    },
+    "check": {
+     "require_link": {
+      "node_fields": {
+       "layer": "pure"
+      },
+      "type": "depends-on"
+     }
+    },
+    "statement": "s"
+   },
+   "id": "r-pure-require",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r-pure-require",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "layer": "domain"
+   },
+   "id": "svc",
+   "links": [
+    {
+     "to": "util",
+     "type": "depends-on"
+    },
+    {
+     "to": "db",
+     "type": "depends-on"
+    }
+   ],
+   "parent": null,
+   "plane": null,
+   "title": "svc",
+   "type": "comp"
+  },
+  {
+   "body": "",
+   "fields": {
+    "layer": "app"
+   },
+   "id": "ui",
+   "links": [
+    {
+     "to": "svc",
+     "type": "depends-on"
+    },
+    {
+     "to": "util",
+     "type": "depends-on"
+    }
+   ],
+   "parent": null,
+   "plane": null,
+   "title": "ui",
+   "type": "comp"
+  },
+  {
+   "body": "",
+   "fields": {
+    "layer": "pure"
+   },
+   "id": "util",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "util",
+   "type": "comp"
+  }
+ ],
+ "results": [
+  {
+   "node": "bare",
+   "rule": "r-bad-fields",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "bare",
+   "rule": "r-forbid-bounds",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "bare",
+   "rule": "r-forbid-in",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "bare",
+   "rule": "r-pure-require",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "db",
+   "rule": "r-bad-fields",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "db",
+   "rule": "r-forbid-bounds",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "db",
+   "rule": "r-forbid-in",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "db",
+   "rule": "r-pure-require",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "svc",
+   "rule": "r-bad-fields",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "svc",
+   "rule": "r-forbid-bounds",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "svc",
+   "rule": "r-forbid-in",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "svc",
+   "rule": "r-pure-only",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "svc",
+   "rule": "r-pure-require",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "ui",
+   "rule": "r-bad-fields",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "ui",
+   "rule": "r-forbid-bounds",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "ui",
+   "rule": "r-forbid-in",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "ui",
+   "rule": "r-pure-require",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "util",
+   "rule": "r-bad-fields",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "util",
+   "rule": "r-forbid-bounds",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "util",
+   "rule": "r-forbid-in",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "util",
+   "rule": "r-pure-require",
+   "severity": "warn",
+   "status": "fail"
+  }
+ ],
+ "structure": {
+  "errors": [],
+  "warnings": []
+ }
+}

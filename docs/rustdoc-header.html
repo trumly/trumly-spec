@@ -1,0 +1,12 @@
+<script>
+  // Adds a way back to the spec site's reference page, at the top of rustdoc's sidebar.
+  document.addEventListener('DOMContentLoaded', () => {
+    const side = document.querySelector('nav.sidebar');
+    if (!side) return;
+    const a = document.createElement('a');
+    a.href = '/reference/';
+    a.textContent = '← trumly spec reference';
+    a.style.cssText = 'display:block;padding:8px 16px;font-weight:600';
+    side.prepend(a);
+  });
+</script>

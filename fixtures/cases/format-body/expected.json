@@ -1,0 +1,31 @@
+{
+ "ghosts": [],
+ "load_errors": [],
+ "nodes": [
+  {
+   "body": "# Heading\n\nText with --- inside.\n---\nmore",
+   "fields": {},
+   "id": "a",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "a",
+   "type": "doc"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "b",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "b",
+   "type": "doc"
+  }
+ ],
+ "results": [],
+ "structure": {
+  "errors": [],
+  "warnings": []
+ }
+}

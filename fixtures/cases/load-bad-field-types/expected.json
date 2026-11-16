@@ -1,0 +1,30 @@
+{
+ "ghosts": [],
+ "load_errors": [
+  {
+   "file": "a.md",
+   "kind": "invalid_frontmatter"
+  },
+  {
+   "file": "b.md",
+   "kind": "invalid_frontmatter"
+  }
+ ],
+ "nodes": [
+  {
+   "body": "",
+   "fields": {},
+   "id": "ok",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "ok",
+   "type": "t"
+  }
+ ],
+ "results": [],
+ "structure": {
+  "errors": [],
+  "warnings": []
+ }
+}

@@ -1,0 +1,371 @@
+{
+ "ghosts": [],
+ "load_errors": [],
+ "nodes": [
+  {
+   "body": "",
+   "fields": {},
+   "id": "a",
+   "links": [
+    {
+     "to": "b",
+     "type": "dep"
+    },
+    {
+     "to": "a",
+     "type": "other"
+    }
+   ],
+   "parent": null,
+   "plane": null,
+   "title": "a",
+   "type": "t"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "b",
+   "links": [
+    {
+     "to": "c",
+     "type": "dep"
+    }
+   ],
+   "parent": null,
+   "plane": null,
+   "title": "b",
+   "type": "t"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "c",
+   "links": [
+    {
+     "to": "a",
+     "type": "dep"
+    }
+   ],
+   "parent": null,
+   "plane": null,
+   "title": "c",
+   "type": "t"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "d",
+   "links": [
+    {
+     "to": "a",
+     "type": "dep"
+    }
+   ],
+   "parent": null,
+   "plane": null,
+   "title": "d",
+   "type": "t"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "e",
+   "links": [
+    {
+     "to": "e",
+     "type": "dep"
+    }
+   ],
+   "parent": null,
+   "plane": null,
+   "title": "e",
+   "type": "t"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "f",
+   "links": [
+    {
+     "to": "gone",
+     "type": "dep"
+    }
+   ],
+   "parent": null,
+   "plane": null,
+   "title": "f",
+   "type": "t"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "g",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "g",
+   "type": "t"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "t"
+    },
+    "check": {
+     "acyclic": [
+      "dep",
+      3
+     ]
+    },
+    "statement": "s"
+   },
+   "id": "r-bad",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r-bad",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "t"
+    },
+    "check": {
+     "acyclic": "dep"
+    },
+    "severity": "error",
+    "statement": "s"
+   },
+   "id": "r-dep",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r-dep",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "t"
+    },
+    "check": {
+     "acyclic": [
+      "dep",
+      "other"
+     ]
+    },
+    "statement": "s"
+   },
+   "id": "r-list",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r-list",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "t"
+    },
+    "check": {
+     "acyclic": {
+      "type": "dep"
+     }
+    },
+    "statement": "s"
+   },
+   "id": "r-map",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r-map",
+   "type": "rule"
+  }
+ ],
+ "results": [
+  {
+   "node": "a",
+   "rule": "r-bad",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "a",
+   "rule": "r-dep",
+   "severity": "error",
+   "status": "fail"
+  },
+  {
+   "node": "a",
+   "rule": "r-list",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "a",
+   "rule": "r-map",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "b",
+   "rule": "r-bad",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "b",
+   "rule": "r-dep",
+   "severity": "error",
+   "status": "fail"
+  },
+  {
+   "node": "b",
+   "rule": "r-list",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "b",
+   "rule": "r-map",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "c",
+   "rule": "r-bad",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "c",
+   "rule": "r-dep",
+   "severity": "error",
+   "status": "fail"
+  },
+  {
+   "node": "c",
+   "rule": "r-list",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "c",
+   "rule": "r-map",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "d",
+   "rule": "r-bad",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "d",
+   "rule": "r-dep",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "d",
+   "rule": "r-list",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "d",
+   "rule": "r-map",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "e",
+   "rule": "r-bad",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "e",
+   "rule": "r-dep",
+   "severity": "error",
+   "status": "fail"
+  },
+  {
+   "node": "e",
+   "rule": "r-list",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "e",
+   "rule": "r-map",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "f",
+   "rule": "r-bad",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "f",
+   "rule": "r-dep",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "f",
+   "rule": "r-list",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "f",
+   "rule": "r-map",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "g",
+   "rule": "r-bad",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "g",
+   "rule": "r-dep",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "g",
+   "rule": "r-list",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "g",
+   "rule": "r-map",
+   "severity": "warn",
+   "status": "unsupported"
+  }
+ ],
+ "structure": {
+  "errors": [
+   {
+    "kind": "missing_link_target",
+    "node": "f",
+    "ref": "dep->gone"
+   }
+  ],
+  "warnings": []
+ }
+}

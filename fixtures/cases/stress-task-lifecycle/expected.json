@@ -1,0 +1,369 @@
+{
+ "ghosts": [
+  {
+   "link": "transitions-to",
+   "node": "stuck",
+   "plane": "p",
+   "rule": "r-exit",
+   "to_type": null
+  }
+ ],
+ "load_errors": [],
+ "nodes": [
+  {
+   "body": "",
+   "fields": {
+    "initial": false,
+    "terminal": false
+   },
+   "id": "accepted",
+   "links": [
+    {
+     "fields": {
+      "on": "deliver"
+     },
+     "to": "delivered",
+     "type": "transitions-to"
+    },
+    {
+     "to": "cancelled",
+     "type": "transitions-to"
+    }
+   ],
+   "parent": null,
+   "plane": "p",
+   "title": "accepted",
+   "type": "state"
+  },
+  {
+   "body": "",
+   "fields": {
+    "initial": false,
+    "terminal": true
+   },
+   "id": "cancelled",
+   "links": [],
+   "parent": null,
+   "plane": "p",
+   "title": "cancelled",
+   "type": "state"
+  },
+  {
+   "body": "",
+   "fields": {
+    "initial": false,
+    "terminal": true
+   },
+   "id": "declined",
+   "links": [
+    {
+     "fields": {
+      "on": "retry"
+     },
+     "to": "requested",
+     "type": "transitions-to"
+    }
+   ],
+   "parent": null,
+   "plane": "p",
+   "title": "declined",
+   "type": "state"
+  },
+  {
+   "body": "",
+   "fields": {
+    "initial": false,
+    "terminal": true
+   },
+   "id": "delivered",
+   "links": [],
+   "parent": null,
+   "plane": "p",
+   "title": "delivered",
+   "type": "state"
+  },
+  {
+   "body": "",
+   "fields": {
+    "initial": false,
+    "terminal": true
+   },
+   "id": "orphan",
+   "links": [],
+   "parent": null,
+   "plane": "p",
+   "title": "orphan",
+   "type": "state"
+  },
+  {
+   "body": "",
+   "fields": {
+    "order": 1
+   },
+   "id": "p",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "p",
+   "type": "plane"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "initial": false,
+     "type": "state"
+    },
+    "check": {
+     "require_link": {
+      "dir": "in",
+      "type": "transitions-to"
+     }
+    },
+    "statement": "s"
+   },
+   "id": "r-entry",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r-entry",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "state"
+    },
+    "check": {
+     "require_link_fields": {
+      "fields": [
+       "on"
+      ],
+      "type": "transitions-to"
+     }
+    },
+    "severity": "error",
+    "statement": "s"
+   },
+   "id": "r-event",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r-event",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "terminal": false,
+     "type": "state"
+    },
+    "check": {
+     "require_link": {
+      "type": "transitions-to"
+     }
+    },
+    "severity": "error",
+    "statement": "s"
+   },
+   "id": "r-exit",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r-exit",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "terminal": true,
+     "type": "state"
+    },
+    "check": {
+     "require_link": {
+      "max": 0,
+      "type": "transitions-to"
+     }
+    },
+    "severity": "error",
+    "statement": "s"
+   },
+   "id": "r-final",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r-final",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "initial": true,
+    "terminal": false
+   },
+   "id": "requested",
+   "links": [
+    {
+     "fields": {
+      "on": "accept"
+     },
+     "to": "accepted",
+     "type": "transitions-to"
+    },
+    {
+     "fields": {
+      "on": "decline"
+     },
+     "to": "declined",
+     "type": "transitions-to"
+    }
+   ],
+   "parent": null,
+   "plane": "p",
+   "title": "requested",
+   "type": "state"
+  },
+  {
+   "body": "",
+   "fields": {
+    "initial": false,
+    "terminal": false
+   },
+   "id": "stuck",
+   "links": [],
+   "parent": null,
+   "plane": "p",
+   "title": "stuck",
+   "type": "state"
+  }
+ ],
+ "results": [
+  {
+   "node": "accepted",
+   "rule": "r-entry",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "accepted",
+   "rule": "r-event",
+   "severity": "error",
+   "status": "fail"
+  },
+  {
+   "node": "accepted",
+   "rule": "r-exit",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "cancelled",
+   "rule": "r-entry",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "cancelled",
+   "rule": "r-event",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "cancelled",
+   "rule": "r-final",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "declined",
+   "rule": "r-entry",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "declined",
+   "rule": "r-event",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "declined",
+   "rule": "r-final",
+   "severity": "error",
+   "status": "fail"
+  },
+  {
+   "node": "delivered",
+   "rule": "r-entry",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "delivered",
+   "rule": "r-event",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "delivered",
+   "rule": "r-final",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "orphan",
+   "rule": "r-entry",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "orphan",
+   "rule": "r-event",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "orphan",
+   "rule": "r-final",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "requested",
+   "rule": "r-event",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "requested",
+   "rule": "r-exit",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "stuck",
+   "rule": "r-entry",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "stuck",
+   "rule": "r-event",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "stuck",
+   "rule": "r-exit",
+   "severity": "error",
+   "status": "fail"
+  }
+ ],
+ "structure": {
+  "errors": [],
+  "warnings": []
+ }
+}

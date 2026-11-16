@@ -1,0 +1,270 @@
+{
+ "ghosts": [],
+ "load_errors": [],
+ "nodes": [
+  {
+   "body": "",
+   "fields": {
+    "seen": 0.97,
+    "target": 0.95
+   },
+   "id": "a",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "a",
+   "type": "t"
+  },
+  {
+   "body": "",
+   "fields": {
+    "seen": 0.9,
+    "target": 0.95
+   },
+   "id": "b",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "b",
+   "type": "t"
+  },
+  {
+   "body": "",
+   "fields": {
+    "seen": "x",
+    "target": 0.95
+   },
+   "id": "c",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "c",
+   "type": "t"
+  },
+  {
+   "body": "",
+   "fields": {
+    "seen": 0.99
+   },
+   "id": "d",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "d",
+   "type": "t"
+  },
+  {
+   "body": "",
+   "fields": {
+    "seen": 1,
+    "target": 1.0
+   },
+   "id": "e",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "e",
+   "type": "t"
+  },
+  {
+   "body": "",
+   "fields": {
+    "seen": "2026-10-19T10:00:00Z",
+    "target": "2026-10-19T09:00:00Z"
+   },
+   "id": "f",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "f",
+   "type": "t"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "t"
+    },
+    "check": {
+     "compare_fields": {
+      "left": "seen",
+      "op": ">=",
+      "right": "target"
+     }
+    },
+    "statement": "s"
+   },
+   "id": "r1",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r1",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "t"
+    },
+    "check": {
+     "compare_fields": [
+      {
+       "left": "seen",
+       "op": "==",
+       "right": "target"
+      },
+      {
+       "left": "seen",
+       "op": "!=",
+       "value": 0
+      }
+     ]
+    },
+    "statement": "s"
+   },
+   "id": "r2",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r2",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "t"
+    },
+    "check": {
+     "compare_fields": {
+      "left": "seen",
+      "op": "<",
+      "value": 1
+     }
+    },
+    "statement": "s"
+   },
+   "id": "r3",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r3",
+   "type": "rule"
+  }
+ ],
+ "results": [
+  {
+   "node": "a",
+   "rule": "r1",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "a",
+   "rule": "r2",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "a",
+   "rule": "r3",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "b",
+   "rule": "r1",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "b",
+   "rule": "r2",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "b",
+   "rule": "r3",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "c",
+   "rule": "r1",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "c",
+   "rule": "r2",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "c",
+   "rule": "r3",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "d",
+   "rule": "r1",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "d",
+   "rule": "r2",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "d",
+   "rule": "r3",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "e",
+   "rule": "r1",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "e",
+   "rule": "r2",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "e",
+   "rule": "r3",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "f",
+   "rule": "r1",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "f",
+   "rule": "r2",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "f",
+   "rule": "r3",
+   "severity": "warn",
+   "status": "fail"
+  }
+ ],
+ "structure": {
+  "errors": [],
+  "warnings": []
+ }
+}

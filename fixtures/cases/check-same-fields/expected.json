@@ -1,0 +1,195 @@
+{
+ "ghosts": [
+  {
+   "link": "references",
+   "node": "c-text",
+   "plane": null,
+   "rule": "r-need",
+   "to_type": null
+  }
+ ],
+ "load_errors": [],
+ "nodes": [
+  {
+   "body": "",
+   "fields": {
+    "data_type": "integer"
+   },
+   "id": "a-int",
+   "links": [
+    {
+     "to": "b-int",
+     "type": "references"
+    }
+   ],
+   "parent": null,
+   "plane": null,
+   "title": "a-int",
+   "type": "col"
+  },
+  {
+   "body": "",
+   "fields": {
+    "data_type": "integer"
+   },
+   "id": "b-int",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "b-int",
+   "type": "col"
+  },
+  {
+   "body": "",
+   "fields": {
+    "data_type": "text"
+   },
+   "id": "c-text",
+   "links": [
+    {
+     "to": "b-int",
+     "type": "references"
+    }
+   ],
+   "parent": null,
+   "plane": null,
+   "title": "c-text",
+   "type": "col"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "d-bare",
+   "links": [
+    {
+     "to": "b-int",
+     "type": "references"
+    }
+   ],
+   "parent": null,
+   "plane": null,
+   "title": "d-bare",
+   "type": "col"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "id": "a-int"
+    },
+    "check": {
+     "require_link": {
+      "same_fields": "data_type",
+      "type": "references"
+     }
+    },
+    "statement": "s"
+   },
+   "id": "r-bad",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r-bad",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "id": [
+      "a-int",
+      "c-text"
+     ]
+    },
+    "check": {
+     "require_link": {
+      "same_fields": [
+       "data_type"
+      ],
+      "type": "references"
+     }
+    },
+    "statement": "s"
+   },
+   "id": "r-need",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r-need",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "col"
+    },
+    "check": {
+     "require_link": {
+      "max": 0,
+      "min": 0,
+      "same_fields": [
+       "data_type"
+      ],
+      "type": "references"
+     }
+    },
+    "statement": "s"
+   },
+   "id": "r-same",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r-same",
+   "type": "rule"
+  }
+ ],
+ "results": [
+  {
+   "node": "a-int",
+   "rule": "r-bad",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "a-int",
+   "rule": "r-need",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "a-int",
+   "rule": "r-same",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "b-int",
+   "rule": "r-same",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "c-text",
+   "rule": "r-need",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "c-text",
+   "rule": "r-same",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "d-bare",
+   "rule": "r-same",
+   "severity": "warn",
+   "status": "pass"
+  }
+ ],
+ "structure": {
+  "errors": [],
+  "warnings": []
+ }
+}

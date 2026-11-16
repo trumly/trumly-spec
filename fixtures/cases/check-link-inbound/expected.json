@@ -1,0 +1,165 @@
+{
+ "ghosts": [],
+ "load_errors": [],
+ "nodes": [
+  {
+   "body": "",
+   "fields": {},
+   "id": "a",
+   "links": [
+    {
+     "to": "db",
+     "type": "calls"
+    }
+   ],
+   "parent": null,
+   "plane": null,
+   "title": "a",
+   "type": "svc"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "b",
+   "links": [
+    {
+     "to": "db",
+     "type": "calls"
+    }
+   ],
+   "parent": null,
+   "plane": null,
+   "title": "b",
+   "type": "job"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "db",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "db",
+   "type": "store"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "lonely",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "lonely",
+   "type": "store"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "store"
+    },
+    "check": {
+     "require_link": {
+      "dir": "in",
+      "type": "calls"
+     }
+    },
+    "statement": "s"
+   },
+   "id": "r1",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r1",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "store"
+    },
+    "check": {
+     "require_link": {
+      "dir": "in",
+      "max": 1,
+      "node_type": "svc",
+      "type": "calls"
+     }
+    },
+    "statement": "s"
+   },
+   "id": "r2",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r2",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "store"
+    },
+    "check": {
+     "require_link": {
+      "dir": "in",
+      "max": 0,
+      "node_type": "job",
+      "type": "calls"
+     }
+    },
+    "statement": "s"
+   },
+   "id": "r3",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r3",
+   "type": "rule"
+  }
+ ],
+ "results": [
+  {
+   "node": "db",
+   "rule": "r1",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "db",
+   "rule": "r2",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "db",
+   "rule": "r3",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "lonely",
+   "rule": "r1",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "lonely",
+   "rule": "r2",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "lonely",
+   "rule": "r3",
+   "severity": "warn",
+   "status": "pass"
+  }
+ ],
+ "structure": {
+  "errors": [],
+  "warnings": []
+ }
+}

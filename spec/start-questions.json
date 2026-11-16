@@ -1,0 +1,99 @@
+{
+  "intro": "The short questions trumly asks when a project is first set up, in the cloud's guided start and through the MCP `start_project` tool. Ask the person each one, offering the options as choices where there are any. Do not guess an answer for them.",
+  "questions": [
+    {
+      "id": "name",
+      "ask": "What shall we call it?",
+      "answer": "text",
+      "required": true
+    },
+    {
+      "id": "kind",
+      "ask": "What are you designing?",
+      "answer": "choice",
+      "required": false,
+      "note": "Only used to suggest packs; it is not stored.",
+      "options": [
+        {
+          "value": "software",
+          "label": "A software system"
+        },
+        {
+          "value": "product",
+          "label": "A product or service"
+        },
+        {
+          "value": "process",
+          "label": "A process or organisation"
+        },
+        {
+          "value": "other",
+          "label": "Something else"
+        }
+      ]
+    },
+    {
+      "id": "purpose",
+      "ask": "In one sentence, what is it, and who is it for?",
+      "answer": "text",
+      "required": true
+    },
+    {
+      "id": "audience",
+      "ask": "Who will read this design?",
+      "answer": "text",
+      "required": true,
+      "options": [
+        {
+          "value": "The team building it",
+          "label": "The team building it"
+        },
+        {
+          "value": "The team and AI agents",
+          "label": "The team and AI agents"
+        },
+        {
+          "value": "Mostly AI agents",
+          "label": "Mostly AI agents"
+        },
+        {
+          "value": "Stakeholders and the wider business",
+          "label": "Stakeholders too"
+        }
+      ]
+    },
+    {
+      "id": "owner",
+      "ask": "Who owns it? A person or a team.",
+      "answer": "text",
+      "required": true
+    },
+    {
+      "id": "approach",
+      "ask": "Is this a design from scratch, or are you working out the design of a system that already exists?",
+      "answer": "choice",
+      "required": true,
+      "note": "The overview records it. The project itself always starts at the design stage.",
+      "options": [
+        {
+          "value": "greenfield",
+          "label": "From scratch",
+          "hint": "greenfield: designing something new"
+        },
+        {
+          "value": "brownfield",
+          "label": "An existing system",
+          "hint": "brownfield: reverse-engineering what is already built"
+        }
+      ]
+    },
+    {
+      "id": "packs",
+      "ask": "Anything extra to start with?",
+      "answer": "multi",
+      "required": false,
+      "options_from": "packs",
+      "note": "Every project starts from the core. These are extra verified packs; leave empty for just the core."
+    }
+  ]
+}

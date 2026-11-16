@@ -1,0 +1,85 @@
+{
+ "ghosts": [],
+ "load_errors": [],
+ "nodes": [
+  {
+   "body": "",
+   "fields": {
+    "owner": "x"
+   },
+   "id": "a",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "a",
+   "type": "svc"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "b",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "b",
+   "type": "svc"
+  },
+  {
+   "body": "",
+   "fields": {
+    "owner": ""
+   },
+   "id": "c",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "c",
+   "type": "svc"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "svc"
+    },
+    "check": {
+     "require_fields": [
+      "owner"
+     ]
+    },
+    "severity": "error",
+    "statement": "s"
+   },
+   "id": "r",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r",
+   "type": "rule"
+  }
+ ],
+ "results": [
+  {
+   "node": "a",
+   "rule": "r",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "b",
+   "rule": "r",
+   "severity": "error",
+   "status": "fail"
+  },
+  {
+   "node": "c",
+   "rule": "r",
+   "severity": "error",
+   "status": "fail"
+  }
+ ],
+ "structure": {
+  "errors": [],
+  "warnings": []
+ }
+}

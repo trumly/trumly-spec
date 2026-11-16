@@ -1,0 +1,190 @@
+{
+ "ghosts": [
+  {
+   "link": "accesses",
+   "node": "c3",
+   "plane": null,
+   "rule": "r2",
+   "to_type": null
+  }
+ ],
+ "load_errors": [],
+ "nodes": [
+  {
+   "body": "",
+   "fields": {},
+   "id": "c1",
+   "links": [
+    {
+     "to": "s1",
+     "type": "accesses"
+    },
+    {
+     "to": "s2",
+     "type": "accesses"
+    }
+   ],
+   "parent": "d1",
+   "plane": null,
+   "title": "c1",
+   "type": "component"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "c2",
+   "links": [
+    {
+     "to": "s2",
+     "type": "accesses"
+    }
+   ],
+   "parent": "d2",
+   "plane": null,
+   "title": "c2",
+   "type": "component"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "c3",
+   "links": [
+    {
+     "to": "s1",
+     "type": "accesses"
+    }
+   ],
+   "parent": null,
+   "plane": null,
+   "title": "c3",
+   "type": "component"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "d1",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "d1",
+   "type": "domain"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "d2",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "d2",
+   "type": "domain"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "component"
+    },
+    "check": {
+     "require_link": {
+      "ancestor_type": "domain",
+      "max": 0,
+      "scope": "other",
+      "type": "accesses"
+     }
+    },
+    "statement": "s"
+   },
+   "id": "r1",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r1",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "component"
+    },
+    "check": {
+     "require_link": {
+      "ancestor_type": "domain",
+      "scope": "same",
+      "type": "accesses"
+     }
+    },
+    "statement": "s"
+   },
+   "id": "r2",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r2",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "s1",
+   "links": [],
+   "parent": "d1",
+   "plane": null,
+   "title": "s1",
+   "type": "store"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "s2",
+   "links": [],
+   "parent": "d2",
+   "plane": null,
+   "title": "s2",
+   "type": "store"
+  }
+ ],
+ "results": [
+  {
+   "node": "c1",
+   "rule": "r1",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "c1",
+   "rule": "r2",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "c2",
+   "rule": "r1",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "c2",
+   "rule": "r2",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "c3",
+   "rule": "r1",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "c3",
+   "rule": "r2",
+   "severity": "warn",
+   "status": "fail"
+  }
+ ],
+ "structure": {
+  "errors": [],
+  "warnings": []
+ }
+}

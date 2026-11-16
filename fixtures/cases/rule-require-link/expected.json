@@ -1,0 +1,198 @@
+{
+ "ghosts": [
+  {
+   "link": "runs_on",
+   "node": "b",
+   "plane": "p2",
+   "rule": "r",
+   "to_type": "env"
+  },
+  {
+   "link": "runs_on",
+   "node": "c",
+   "plane": "p2",
+   "rule": "r",
+   "to_type": "env"
+  },
+  {
+   "link": "runs_on",
+   "node": "d",
+   "plane": "p2",
+   "rule": "r",
+   "to_type": "env"
+  },
+  {
+   "link": "runs_on",
+   "node": "other",
+   "plane": "p2",
+   "rule": "r",
+   "to_type": "env"
+  }
+ ],
+ "load_errors": [],
+ "nodes": [
+  {
+   "body": "",
+   "fields": {},
+   "id": "a",
+   "links": [
+    {
+     "to": "e",
+     "type": "runs_on"
+    }
+   ],
+   "parent": null,
+   "plane": "p1",
+   "title": "a",
+   "type": "svc"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "b",
+   "links": [],
+   "parent": null,
+   "plane": "p1",
+   "title": "b",
+   "type": "svc"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "c",
+   "links": [
+    {
+     "to": "other",
+     "type": "runs_on"
+    }
+   ],
+   "parent": null,
+   "plane": "p1",
+   "title": "c",
+   "type": "svc"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "d",
+   "links": [
+    {
+     "to": "nowhere",
+     "type": "runs_on"
+    }
+   ],
+   "parent": null,
+   "plane": "p1",
+   "title": "d",
+   "type": "svc"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "e",
+   "links": [],
+   "parent": null,
+   "plane": "p2",
+   "title": "e",
+   "type": "env"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "other",
+   "links": [],
+   "parent": null,
+   "plane": "p2",
+   "title": "other",
+   "type": "svc"
+  },
+  {
+   "body": "",
+   "fields": {
+    "order": 1
+   },
+   "id": "p1",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "p1",
+   "type": "plane"
+  },
+  {
+   "body": "",
+   "fields": {
+    "order": 2
+   },
+   "id": "p2",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "p2",
+   "type": "plane"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "svc"
+    },
+    "check": {
+     "require_link": {
+      "to_plane": "p2",
+      "to_type": "env",
+      "type": "runs_on"
+     }
+    },
+    "statement": "s"
+   },
+   "id": "r",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r",
+   "type": "rule"
+  }
+ ],
+ "results": [
+  {
+   "node": "a",
+   "rule": "r",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "b",
+   "rule": "r",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "c",
+   "rule": "r",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "d",
+   "rule": "r",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "other",
+   "rule": "r",
+   "severity": "warn",
+   "status": "fail"
+  }
+ ],
+ "structure": {
+  "errors": [
+   {
+    "kind": "missing_link_target",
+    "node": "d",
+    "ref": "runs_on->nowhere"
+   }
+  ],
+  "warnings": []
+ }
+}

@@ -1,0 +1,9 @@
+# The core bundle built into the binary: name@version, one per line. The packs repo (trumly-packs) is the source of truth;
+# `node scripts/sync-core.mjs` copies exactly these versions into this folder, and `--check` fails when they have drifted.
+core@1.0.0
+links@1.0.0
+about@1.0.0
+define@1.1.0
+design@1.0.0
+plan@1.0.0
+governance@1.1.0

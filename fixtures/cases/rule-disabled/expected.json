@@ -1,0 +1,134 @@
+{
+ "ghosts": [
+  {
+   "link": "needs",
+   "node": "a",
+   "plane": "p",
+   "rule": "str",
+   "to_type": null
+  }
+ ],
+ "load_errors": [],
+ "nodes": [
+  {
+   "body": "",
+   "fields": {},
+   "id": "a",
+   "links": [],
+   "parent": null,
+   "plane": "p",
+   "title": "a",
+   "type": "svc"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "svc"
+    },
+    "check": {
+     "require_fields": [
+      "owner"
+     ]
+    },
+    "enabled": false,
+    "severity": "error",
+    "statement": "s"
+   },
+   "id": "off",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "off",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "svc"
+    },
+    "enabled": false,
+    "statement": "s"
+   },
+   "id": "off-no-check",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "off-no-check",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "svc"
+    },
+    "check": {
+     "require_fields": [
+      "owner"
+     ]
+    },
+    "enabled": true,
+    "statement": "s"
+   },
+   "id": "on",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "on",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "order": 1
+   },
+   "id": "p",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "p",
+   "type": "plane"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "svc"
+    },
+    "check": {
+     "require_link": {
+      "type": "needs"
+     }
+    },
+    "enabled": "false",
+    "statement": "s"
+   },
+   "id": "str",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "str",
+   "type": "rule"
+  }
+ ],
+ "results": [
+  {
+   "node": "a",
+   "rule": "on",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "a",
+   "rule": "str",
+   "severity": "warn",
+   "status": "fail"
+  }
+ ],
+ "structure": {
+  "errors": [],
+  "warnings": []
+ }
+}

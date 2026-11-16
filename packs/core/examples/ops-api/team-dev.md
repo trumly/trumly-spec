@@ -1,0 +1,11 @@
+---
+id: team-dev
+type: team
+title: Dev
+plane: pln--plan
+fields:
+  kind: agent
+  focus: Implements work packages for review
+---
+
+An AI agent that writes code and hands it to people to review.

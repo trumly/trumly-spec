@@ -1,0 +1,19 @@
+[workspace]
+resolver = "2"
+members = ["crates/core", "crates/cli", "crates/wasm", "crates/fs", "crates/mcp"]
+# the local HTTP server is kept for future use, but is not built or shipped
+exclude = ["attic"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+license = "Apache-2.0"
+repository = "https://github.com/trumly/trumly-spec"
+homepage = "https://spec.trumly.co"
+keywords = ["design", "specification", "graph", "architecture", "mcp"]
+categories = ["development-tools", "command-line-utilities"]
+
+[profile.release]
+opt-level = "s"   # small: this ships to browsers
+lto = true
+strip = true

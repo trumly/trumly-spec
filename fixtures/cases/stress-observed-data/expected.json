@@ -1,0 +1,285 @@
+{
+ "ghosts": [],
+ "load_errors": [],
+ "nodes": [
+  {
+   "body": "",
+   "fields": {
+    "limit": 250,
+    "observed": 180,
+    "observed_at": "2026-10-19T09:30:00Z",
+    "status": "ok",
+    "unit": "ms"
+   },
+   "id": "checkout-latency",
+   "links": [],
+   "parent": null,
+   "plane": "p",
+   "title": "checkout-latency",
+   "type": "metric"
+  },
+  {
+   "body": "",
+   "fields": {
+    "limit": 0.01,
+    "observed": 0.02,
+    "status": "degraded",
+    "unit": "ratio"
+   },
+   "id": "error-rate",
+   "links": [],
+   "parent": null,
+   "plane": "p",
+   "title": "error-rate",
+   "type": "metric"
+  },
+  {
+   "body": "",
+   "fields": {
+    "order": 1
+   },
+   "id": "p",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "p",
+   "type": "plane"
+  },
+  {
+   "body": "",
+   "fields": {
+    "limit": 100,
+    "observed": "n/a",
+    "observed_at": "2026-10-19T09:30:00Z",
+    "status": "weird",
+    "unit": "items"
+   },
+   "id": "queue-depth",
+   "links": [],
+   "parent": null,
+   "plane": "p",
+   "title": "queue-depth",
+   "type": "metric"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "metric",
+     "unit": "ms"
+    },
+    "check": {
+     "compare_fields": {
+      "left": "observed",
+      "op": "<=",
+      "right": "limit"
+     }
+    },
+    "severity": "error",
+    "statement": "s"
+   },
+   "id": "r-limit",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r-limit",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "metric"
+    },
+    "check": {
+     "field_is": {
+      "observed": {
+       "type": "number"
+      }
+     }
+    },
+    "statement": "s"
+   },
+   "id": "r-number",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r-number",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "metric"
+    },
+    "check": {
+     "field_is": {
+      "observed_at": {
+       "type": "string"
+      },
+      "status": {
+       "in": [
+        "ok",
+        "degraded",
+        "down"
+       ]
+      }
+     }
+    },
+    "statement": "s"
+   },
+   "id": "r-status",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r-status",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "metric",
+     "unit": "ratio"
+    },
+    "check": {
+     "compare_fields": {
+      "left": "observed",
+      "op": ">=",
+      "right": "target"
+     }
+    },
+    "statement": "s"
+   },
+   "id": "r-target",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r-target",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "limit": 300,
+    "observed": 410,
+    "observed_at": "2026-10-19T09:30:00Z",
+    "status": "ok",
+    "unit": "ms"
+   },
+   "id": "search-latency",
+   "links": [],
+   "parent": null,
+   "plane": "p",
+   "title": "search-latency",
+   "type": "metric"
+  },
+  {
+   "body": "",
+   "fields": {
+    "observed": 0.9991,
+    "observed_at": "2026-10-19T09:31:00Z",
+    "status": "ok",
+    "target": 0.999,
+    "unit": "ratio"
+   },
+   "id": "uptime",
+   "links": [],
+   "parent": null,
+   "plane": "p",
+   "title": "uptime",
+   "type": "metric"
+  }
+ ],
+ "results": [
+  {
+   "node": "checkout-latency",
+   "rule": "r-limit",
+   "severity": "error",
+   "status": "pass"
+  },
+  {
+   "node": "checkout-latency",
+   "rule": "r-number",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "checkout-latency",
+   "rule": "r-status",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "error-rate",
+   "rule": "r-number",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "error-rate",
+   "rule": "r-status",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "error-rate",
+   "rule": "r-target",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "queue-depth",
+   "rule": "r-number",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "queue-depth",
+   "rule": "r-status",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "search-latency",
+   "rule": "r-limit",
+   "severity": "error",
+   "status": "fail"
+  },
+  {
+   "node": "search-latency",
+   "rule": "r-number",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "search-latency",
+   "rule": "r-status",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "uptime",
+   "rule": "r-number",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "uptime",
+   "rule": "r-status",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "uptime",
+   "rule": "r-target",
+   "severity": "warn",
+   "status": "pass"
+  }
+ ],
+ "structure": {
+  "errors": [],
+  "warnings": []
+ }
+}

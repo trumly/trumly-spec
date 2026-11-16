@@ -1,0 +1,228 @@
+{
+ "ghosts": [],
+ "load_errors": [],
+ "nodes": [
+  {
+   "body": "",
+   "fields": {},
+   "id": "a",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "a",
+   "type": "svc"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "b",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "b",
+   "type": "svc"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "c",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "c",
+   "type": "svc"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "id": "a"
+    },
+    "check": {
+     "require_fields": [
+      "owner"
+     ]
+    },
+    "statement": "s"
+   },
+   "id": "r1",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r1",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "id": [
+      "b",
+      "c",
+      "zzz",
+      7
+     ]
+    },
+    "check": {
+     "require_fields": [
+      "owner"
+     ]
+    },
+    "statement": "s"
+   },
+   "id": "r2",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r2",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "id": "zzz"
+    },
+    "check": {
+     "require_fields": [
+      "owner"
+     ]
+    },
+    "statement": "s"
+   },
+   "id": "r3",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r3",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "id": 5
+    },
+    "check": {
+     "require_fields": [
+      "owner"
+     ]
+    },
+    "statement": "s"
+   },
+   "id": "r4",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r4",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "id": "a",
+     "type": "other"
+    },
+    "check": {
+     "require_fields": [
+      "owner"
+     ]
+    },
+    "statement": "s"
+   },
+   "id": "r5",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r5",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "id": "zzz"
+    },
+    "check": {
+     "require_fields": [
+      "owner"
+     ]
+    },
+    "enabled": false,
+    "statement": "s"
+   },
+   "id": "r6",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r6",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "id": "r1"
+    },
+    "check": {
+     "require_fields": [
+      "owner"
+     ]
+    },
+    "statement": "s"
+   },
+   "id": "r7",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r7",
+   "type": "rule"
+  }
+ ],
+ "results": [
+  {
+   "node": "a",
+   "rule": "r1",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "b",
+   "rule": "r2",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "c",
+   "rule": "r2",
+   "severity": "warn",
+   "status": "fail"
+  }
+ ],
+ "structure": {
+  "errors": [],
+  "warnings": [
+   {
+    "kind": "rule_matches_nothing",
+    "node": "r3",
+    "ref": null
+   },
+   {
+    "kind": "rule_matches_nothing",
+    "node": "r4",
+    "ref": null
+   },
+   {
+    "kind": "rule_matches_nothing",
+    "node": "r5",
+    "ref": null
+   },
+   {
+    "kind": "rule_matches_nothing",
+    "node": "r7",
+    "ref": null
+   }
+  ]
+ }
+}

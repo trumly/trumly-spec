@@ -1,0 +1,898 @@
+{
+ "ghosts": [],
+ "load_errors": [],
+ "nodes": [
+  {
+   "body": "",
+   "fields": {
+    "endpoint": {
+     "params": [
+      "id"
+     ],
+     "path": "/users"
+    },
+    "methods": [
+     {
+      "name": "list",
+      "verb": "GET"
+     },
+     {
+      "name": "add",
+      "verb": "POST"
+     }
+    ],
+    "tags": [
+     "x",
+     "y"
+    ]
+   },
+   "id": "a",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "a",
+   "type": "api"
+  },
+  {
+   "body": "",
+   "fields": {
+    "endpoint": {
+     "path": "/x"
+    },
+    "methods": [
+     {
+      "name": "list",
+      "verb": "GET"
+     },
+     {
+      "name": "list",
+      "verb": "FETCH"
+     }
+    ],
+    "tags": [
+     "x",
+     "x"
+    ]
+   },
+   "id": "b",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "b",
+   "type": "api"
+  },
+  {
+   "body": "",
+   "fields": {
+    "endpoint": {},
+    "methods": [],
+    "tags": []
+   },
+   "id": "c",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "c",
+   "type": "api"
+  },
+  {
+   "body": "",
+   "fields": {
+    "endpoint": "text",
+    "methods": [
+     {
+      "name": "a"
+     },
+     3
+    ],
+    "tags": "x"
+   },
+   "id": "d",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "d",
+   "type": "api"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "e",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "e",
+   "type": "api"
+  },
+  {
+   "body": "",
+   "fields": {
+    "a.b": 1
+   },
+   "id": "f",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "f",
+   "type": "api"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "api"
+    },
+    "check": {
+     "require_fields": [
+      "endpoint.path"
+     ]
+    },
+    "statement": "s"
+   },
+   "id": "r1",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r1",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "api"
+    },
+    "check": {
+     "require_fields": [
+      "methods[]..x"
+     ]
+    },
+    "statement": "s"
+   },
+   "id": "r10",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r10",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "api"
+    },
+    "check": {
+     "field_is": {
+      "methods": {
+       "unique": 3
+      }
+     }
+    },
+    "statement": "s"
+   },
+   "id": "r11",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r11",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "api"
+    },
+    "check": {
+     "compare_fields": {
+      "left": "endpoint.path",
+      "op": "==",
+      "right": "methods[].verb"
+     }
+    },
+    "statement": "s"
+   },
+   "id": "r12",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r12",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "methods[].verb": "POST",
+     "type": "api"
+    },
+    "check": {
+     "require_fields": [
+      "endpoint"
+     ]
+    },
+    "statement": "s"
+   },
+   "id": "r13",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r13",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "endpoint.path": "/x",
+     "type": "api"
+    },
+    "check": {
+     "require_fields": [
+      "tags"
+     ]
+    },
+    "statement": "s"
+   },
+   "id": "r14",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r14",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "methods[]..verb": "GET"
+    },
+    "check": {
+     "require_fields": [
+      "tags"
+     ]
+    },
+    "statement": "s"
+   },
+   "id": "r15",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r15",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "api"
+    },
+    "check": {
+     "require_fields": [
+      "methods[].verb"
+     ]
+    },
+    "statement": "s"
+   },
+   "id": "r2",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r2",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "api"
+    },
+    "check": {
+     "field_is": {
+      "methods[].verb": {
+       "in": [
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE"
+       ]
+      }
+     }
+    },
+    "statement": "s"
+   },
+   "id": "r3",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r3",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "api"
+    },
+    "check": {
+     "field_is": {
+      "methods": {
+       "min_items": 1
+      }
+     }
+    },
+    "statement": "s"
+   },
+   "id": "r4",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r4",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "api"
+    },
+    "check": {
+     "field_is": {
+      "methods": {
+       "unique": "name"
+      },
+      "tags": {
+       "optional": true,
+       "unique": true
+      }
+     }
+    },
+    "statement": "s"
+   },
+   "id": "r5",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r5",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "api"
+    },
+    "check": {
+     "field_is": {
+      "methods": {
+       "max_items": 1,
+       "type": "list"
+      }
+     }
+    },
+    "statement": "s"
+   },
+   "id": "r6",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r6",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "api"
+    },
+    "check": {
+     "compare_fields": {
+      "left": "methods[].verb",
+      "op": "!=",
+      "value": "HEAD"
+     }
+    },
+    "statement": "s"
+   },
+   "id": "r7",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r7",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "api"
+    },
+    "check": {
+     "require_fields": [
+      "a.b"
+     ]
+    },
+    "statement": "s"
+   },
+   "id": "r8",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r8",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "api"
+    },
+    "check": {
+     "field_is": {
+      "tags[]": {
+       "type": "string"
+      }
+     }
+    },
+    "statement": "s"
+   },
+   "id": "r9",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r9",
+   "type": "rule"
+  }
+ ],
+ "results": [
+  {
+   "node": "a",
+   "rule": "r1",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "a",
+   "rule": "r10",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "a",
+   "rule": "r11",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "a",
+   "rule": "r12",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "a",
+   "rule": "r13",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "a",
+   "rule": "r2",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "a",
+   "rule": "r3",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "a",
+   "rule": "r4",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "a",
+   "rule": "r5",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "a",
+   "rule": "r6",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "a",
+   "rule": "r7",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "a",
+   "rule": "r8",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "a",
+   "rule": "r9",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "b",
+   "rule": "r1",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "b",
+   "rule": "r10",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "b",
+   "rule": "r11",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "b",
+   "rule": "r12",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "b",
+   "rule": "r14",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "b",
+   "rule": "r2",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "b",
+   "rule": "r3",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "b",
+   "rule": "r4",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "b",
+   "rule": "r5",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "b",
+   "rule": "r6",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "b",
+   "rule": "r7",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "b",
+   "rule": "r8",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "b",
+   "rule": "r9",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "c",
+   "rule": "r1",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "c",
+   "rule": "r10",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "c",
+   "rule": "r11",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "c",
+   "rule": "r12",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "c",
+   "rule": "r2",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "c",
+   "rule": "r3",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "c",
+   "rule": "r4",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "c",
+   "rule": "r5",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "c",
+   "rule": "r6",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "c",
+   "rule": "r7",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "c",
+   "rule": "r8",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "c",
+   "rule": "r9",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "d",
+   "rule": "r1",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "d",
+   "rule": "r10",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "d",
+   "rule": "r11",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "d",
+   "rule": "r12",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "d",
+   "rule": "r2",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "d",
+   "rule": "r3",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "d",
+   "rule": "r4",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "d",
+   "rule": "r5",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "d",
+   "rule": "r6",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "d",
+   "rule": "r7",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "d",
+   "rule": "r8",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "d",
+   "rule": "r9",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "e",
+   "rule": "r1",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "e",
+   "rule": "r10",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "e",
+   "rule": "r11",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "e",
+   "rule": "r12",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "e",
+   "rule": "r2",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "e",
+   "rule": "r3",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "e",
+   "rule": "r4",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "e",
+   "rule": "r5",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "e",
+   "rule": "r6",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "e",
+   "rule": "r7",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "e",
+   "rule": "r8",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "e",
+   "rule": "r9",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "f",
+   "rule": "r1",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "f",
+   "rule": "r10",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "f",
+   "rule": "r11",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "f",
+   "rule": "r12",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "f",
+   "rule": "r2",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "f",
+   "rule": "r3",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "f",
+   "rule": "r4",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "f",
+   "rule": "r5",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "f",
+   "rule": "r6",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "f",
+   "rule": "r7",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "f",
+   "rule": "r8",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "f",
+   "rule": "r9",
+   "severity": "warn",
+   "status": "fail"
+  }
+ ],
+ "structure": {
+  "errors": [],
+  "warnings": []
+ }
+}

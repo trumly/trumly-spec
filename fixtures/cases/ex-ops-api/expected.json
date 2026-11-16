@@ -1,0 +1,407 @@
+{
+ "ghosts": [],
+ "load_errors": [],
+ "nodes": [
+  {
+   "body": "",
+   "fields": {
+    "given": "A job has just changed state",
+    "method": "test",
+    "then": "The job and its new state are shown within 60 seconds",
+    "when": "Ops staff open the job list"
+   },
+   "id": "acceptance-criterion-jobs-listed",
+   "links": [],
+   "parent": null,
+   "plane": "def--requirements",
+   "title": "Jobs listed",
+   "type": "acceptance-criterion"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "actor-ops-staff",
+   "links": [
+    {
+     "to": "component-ops-api",
+     "type": "uses"
+    }
+   ],
+   "parent": null,
+   "plane": "def--capabilities",
+   "title": "Ops staff",
+   "type": "actor"
+  },
+  {
+   "body": "",
+   "fields": {
+    "priority": "must",
+    "scope": "in",
+    "statement": "view the current status of every job",
+    "status": "proposed"
+   },
+   "id": "capability-view-job-status",
+   "links": [
+    {
+     "to": "actor-ops-staff",
+     "type": "performed-by"
+    },
+    {
+     "to": "goal-timely-visibility",
+     "type": "derives-from"
+    }
+   ],
+   "parent": null,
+   "plane": "def--capabilities",
+   "title": "View job status",
+   "type": "capability"
+  },
+  {
+   "body": "Serves the list of jobs and their status to operations staff.",
+   "fields": {
+    "kind": "service",
+    "owner": "Platform",
+    "status": "planned"
+   },
+   "id": "component-ops-api",
+   "links": [
+    {
+     "to": "requirement-list-jobs",
+     "type": "satisfies"
+    },
+    {
+     "to": "datastore-ops-db",
+     "type": "writes"
+    },
+    {
+     "to": "environment-production",
+     "type": "runs-in"
+    }
+   ],
+   "parent": null,
+   "plane": "dsn--design",
+   "title": "Ops API",
+   "type": "component"
+  },
+  {
+   "body": "Holds every job and its latest status.",
+   "fields": {
+    "kind": "relational",
+    "owner": "Platform"
+   },
+   "id": "datastore-ops-db",
+   "links": [],
+   "parent": null,
+   "plane": "dsn--design",
+   "title": "Ops db",
+   "type": "datastore"
+  },
+  {
+   "body": "Build the Ops API with the FastAPI framework.",
+   "fields": {
+    "status": "proposed"
+   },
+   "id": "decision-fastapi",
+   "links": [
+    {
+     "to": "component-ops-api",
+     "type": "governs"
+    }
+   ],
+   "parent": null,
+   "plane": "gov--decisions",
+   "title": "FastAPI",
+   "type": "decision"
+  },
+  {
+   "body": "Use PostgreSQL for the operations database.",
+   "fields": {
+    "status": "proposed"
+   },
+   "id": "decision-postgres",
+   "links": [
+    {
+     "to": "datastore-ops-db",
+     "type": "governs"
+    }
+   ],
+   "parent": null,
+   "plane": "gov--decisions",
+   "title": "Postgres",
+   "type": "decision"
+  },
+  {
+   "body": "The live system that operations staff use.",
+   "fields": {
+    "kind": "production"
+   },
+   "id": "environment-production",
+   "links": [],
+   "parent": null,
+   "plane": "dsn--design",
+   "title": "Production",
+   "type": "environment"
+  },
+  {
+   "body": "",
+   "fields": {
+    "statement": "Operations staff see the state of every job within a minute.",
+    "status": "proposed"
+   },
+   "id": "goal-timely-visibility",
+   "links": [
+    {
+     "to": "metric-status-freshness",
+     "type": "measured-by"
+    }
+   ],
+   "parent": null,
+   "plane": "def--intent",
+   "title": "Timely ops visibility",
+   "type": "goal"
+  },
+  {
+   "body": "The first slice: staff can see live job status.",
+   "fields": {
+    "status": "planned"
+   },
+   "id": "increment-live-status",
+   "links": [
+    {
+     "to": "capability-view-job-status",
+     "type": "enables"
+    }
+   ],
+   "parent": null,
+   "plane": "pln--plan",
+   "title": "Live job status",
+   "type": "increment"
+  },
+  {
+   "body": "",
+   "fields": {
+    "direction": "lower-is-better",
+    "how-measured": "Age of the newest status for each job, sampled every minute",
+    "kind": "success",
+    "target": 60,
+    "unit": "seconds"
+   },
+   "id": "metric-status-freshness",
+   "links": [],
+   "parent": null,
+   "plane": "def--intent",
+   "title": "Job status age",
+   "type": "metric"
+  },
+  {
+   "body": "",
+   "fields": {
+    "audience": "The build team and operations staff",
+    "owner": "Platform",
+    "purpose": "A status API so operations staff can see what every job is doing.",
+    "stage": "design"
+   },
+   "id": "overview",
+   "links": [],
+   "parent": null,
+   "plane": "abt--about",
+   "title": "Ops API",
+   "type": "overview"
+  },
+  {
+   "body": "",
+   "fields": {
+    "kind": "functional",
+    "priority": "must",
+    "statement": "The system shall list every job with its current status.",
+    "status": "proposed"
+   },
+   "id": "requirement-list-jobs",
+   "links": [
+    {
+     "to": "acceptance-criterion-jobs-listed",
+     "type": "verified-by"
+    },
+    {
+     "to": "capability-view-job-status",
+     "type": "derives-from"
+    }
+   ],
+   "parent": null,
+   "plane": "def--requirements",
+   "title": "List jobs",
+   "type": "requirement"
+  },
+  {
+   "body": "An AI agent that writes code and hands it to people to review.",
+   "fields": {
+    "focus": "Implements work packages for review",
+    "kind": "agent"
+   },
+   "id": "team-dev",
+   "links": [],
+   "parent": null,
+   "plane": "pln--plan",
+   "title": "Dev",
+   "type": "team"
+  },
+  {
+   "body": "The people who own the system.",
+   "fields": {
+    "focus": "Builds and runs the platform",
+    "kind": "human"
+   },
+   "id": "team-platform",
+   "links": [],
+   "parent": null,
+   "plane": "pln--plan",
+   "title": "Platform",
+   "type": "team"
+  },
+  {
+   "body": "Build the service that lists job status.",
+   "fields": {
+    "status": "planned"
+   },
+   "id": "work-package-build-status-api",
+   "links": [
+    {
+     "to": "team-dev",
+     "type": "owned-by"
+    },
+    {
+     "to": "team-platform",
+     "type": "reviewed-by"
+    },
+    {
+     "to": "component-ops-api",
+     "type": "delivers"
+    },
+    {
+     "to": "increment-live-status",
+     "type": "part-of"
+    }
+   ],
+   "parent": null,
+   "plane": "pln--plan",
+   "title": "Build status API",
+   "type": "work-package"
+  },
+  {
+   "body": "Create the operations database.",
+   "fields": {
+    "status": "planned"
+   },
+   "id": "work-package-provision-database",
+   "links": [
+    {
+     "to": "team-platform",
+     "type": "owned-by"
+    },
+    {
+     "to": "datastore-ops-db",
+     "type": "delivers"
+    },
+    {
+     "to": "increment-live-status",
+     "type": "part-of"
+    }
+   ],
+   "parent": null,
+   "plane": "pln--plan",
+   "title": "Provision database",
+   "type": "work-package"
+  }
+ ],
+ "results": [],
+ "structure": {
+  "errors": [],
+  "warnings": [
+   {
+    "kind": "undeclared_plane",
+    "node": "acceptance-criterion-jobs-listed",
+    "ref": "def--requirements"
+   },
+   {
+    "kind": "undeclared_plane",
+    "node": "actor-ops-staff",
+    "ref": "def--capabilities"
+   },
+   {
+    "kind": "undeclared_plane",
+    "node": "capability-view-job-status",
+    "ref": "def--capabilities"
+   },
+   {
+    "kind": "undeclared_plane",
+    "node": "component-ops-api",
+    "ref": "dsn--design"
+   },
+   {
+    "kind": "undeclared_plane",
+    "node": "datastore-ops-db",
+    "ref": "dsn--design"
+   },
+   {
+    "kind": "undeclared_plane",
+    "node": "decision-fastapi",
+    "ref": "gov--decisions"
+   },
+   {
+    "kind": "undeclared_plane",
+    "node": "decision-postgres",
+    "ref": "gov--decisions"
+   },
+   {
+    "kind": "undeclared_plane",
+    "node": "environment-production",
+    "ref": "dsn--design"
+   },
+   {
+    "kind": "undeclared_plane",
+    "node": "goal-timely-visibility",
+    "ref": "def--intent"
+   },
+   {
+    "kind": "undeclared_plane",
+    "node": "increment-live-status",
+    "ref": "pln--plan"
+   },
+   {
+    "kind": "undeclared_plane",
+    "node": "metric-status-freshness",
+    "ref": "def--intent"
+   },
+   {
+    "kind": "undeclared_plane",
+    "node": "overview",
+    "ref": "abt--about"
+   },
+   {
+    "kind": "undeclared_plane",
+    "node": "requirement-list-jobs",
+    "ref": "def--requirements"
+   },
+   {
+    "kind": "undeclared_plane",
+    "node": "team-dev",
+    "ref": "pln--plan"
+   },
+   {
+    "kind": "undeclared_plane",
+    "node": "team-platform",
+    "ref": "pln--plan"
+   },
+   {
+    "kind": "undeclared_plane",
+    "node": "work-package-build-status-api",
+    "ref": "pln--plan"
+   },
+   {
+    "kind": "undeclared_plane",
+    "node": "work-package-provision-database",
+    "ref": "pln--plan"
+   }
+  ]
+ }
+}

@@ -1,0 +1,57 @@
+{
+ "ghosts": [],
+ "load_errors": [],
+ "nodes": [
+  {
+   "body": "",
+   "fields": {},
+   "id": "a",
+   "links": [],
+   "parent": "b",
+   "plane": null,
+   "title": "a",
+   "type": "t"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "b",
+   "links": [],
+   "parent": "a",
+   "plane": null,
+   "title": "b",
+   "type": "t"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "c",
+   "links": [],
+   "parent": "a",
+   "plane": null,
+   "title": "c",
+   "type": "t"
+  }
+ ],
+ "results": [],
+ "structure": {
+  "errors": [
+   {
+    "kind": "parent_cycle",
+    "node": "a",
+    "ref": null
+   },
+   {
+    "kind": "parent_cycle",
+    "node": "b",
+    "ref": null
+   },
+   {
+    "kind": "parent_cycle",
+    "node": "c",
+    "ref": null
+   }
+  ],
+  "warnings": []
+ }
+}

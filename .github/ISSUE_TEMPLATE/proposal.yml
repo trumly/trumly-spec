@@ -1,0 +1,34 @@
+name: Specification change proposal
+description: Propose a change to the file format, the checks or the rule language.
+labels: [proposal]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The maintainers decide what goes into the specification. A proposal is considered, not voted on.
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What you cannot express or check today, and a real design where it came up.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: The change
+      description: What the specification would say.
+    validations:
+      required: true
+  - type: textarea
+    id: cases
+    attributes:
+      label: Conformance cases
+      description: A change to the format or the rule language needs a conformance case. Describe one that shows the new behaviour.
+    validations:
+      required: true
+  - type: textarea
+    id: compatibility
+    attributes:
+      label: Effect on existing projects
+      description: Would a project that checks clean today still check clean?
