@@ -13,5 +13,5 @@ exclude = ["tests/"] # the conformance test reads the fixtures in the repository
 documentation = "https://spec.trumly.co/reference/api/trumly_core/"
 
 [dependencies]
-saphyr = "0.2.2"
+saphyr = "0.3.4"
 serde_json = "1"
