@@ -110,6 +110,28 @@ fn write_mode_lists_the_write_tools() {
 }
 
 #[test]
+fn every_tool_has_a_title_and_says_whether_it_reads_or_can_destroy() {
+    // the connectors directory refuses a tool without these, and clients use them to decide when to ask first
+    let mut s = Session::start("hints", true);
+    let r = s.rpc("tools/list", json!({}));
+    let tools = r["result"]["tools"].as_array().unwrap();
+    assert!(tools.len() > 10);
+    for t in tools {
+        let name = t["name"].as_str().unwrap();
+        let title = t["title"].as_str().unwrap_or_default();
+        assert!(!title.is_empty(), "{name} has no title");
+        let a = &t["annotations"];
+        assert_eq!(a["title"], t["title"], "{name}");
+        let read_only = a["readOnlyHint"].as_bool().unwrap_or_else(|| panic!("{name} has no readOnlyHint"));
+        if read_only {
+            assert!(a["destructiveHint"].is_null(), "{name} is read-only and says it can destroy");
+        } else {
+            assert!(a["destructiveHint"].is_boolean(), "{name} writes but has no destructiveHint");
+        }
+    }
+}
+
+#[test]
 fn search_and_links_find_things() {
     let mut s = Session::start("search", false);
     let (err, found, _) = s.tool("search", json!({"query": "INVOICE"}));

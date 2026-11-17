@@ -91,10 +91,51 @@ fn write_tools() -> Vec<Value> {
     ]
 }
 
+/// A tool's title for people, and whether it can destroy what is already in the project. The connectors directory, and clients that
+/// ask before running a tool, need every tool to say whether it only reads (`readOnlyHint`) and, if it writes, whether it can
+/// destroy (`destructiveHint`). A tool missing here is listed with no title and as destructive, and the test for this fails.
+fn hints(name: &str) -> (&'static str, bool) {
+    match name {
+        "get_index" => ("Project map", false),
+        "describe_types" => ("Describe the vocabulary", false),
+        "get_node" => ("Read a node", false),
+        "list_nodes" => ("List nodes", false),
+        "search" => ("Search nodes", false),
+        "list_examples" => ("List examples", false),
+        "get_example" => ("Read an example", false),
+        "list_patterns" => ("List patterns", false),
+        "get_pattern" => ("Read a pattern", false),
+        "get_links" => ("Read a node\u{2019}s links", false),
+        "check" => ("Check the project", false),
+        "list_packs" => ("List packs", false),
+        "status" => ("Show changes", false),
+        "put_node" => ("Create or replace a node", true),
+        "delete_node" => ("Delete a node", true),
+        "start_project" => ("Set up a project", false),
+        "add_pack" => ("Add a pack", false),
+        "remove_pack" => ("Remove a pack", true),
+        "detach_pack" => ("Detach a pack", true),
+        "rename_node" => ("Rename a node", true),
+        _ => ("", true),
+    }
+}
+
+fn annotate(mut tool: Value, read_only: bool) -> Value {
+    let name = tool["name"].as_str().unwrap_or_default().to_string();
+    let (title, destructive) = hints(&name);
+    let mut annotations = json!({"title": title, "readOnlyHint": read_only, "openWorldHint": false});
+    if !read_only {
+        annotations["destructiveHint"] = json!(destructive);
+    }
+    tool["title"] = json!(title);
+    tool["annotations"] = annotations;
+    tool
+}
+
 fn tools(write: bool) -> Value {
-    let mut all = read_tools();
+    let mut all: Vec<Value> = read_tools().into_iter().map(|t| annotate(t, true)).collect();
     if write {
-        all.extend(write_tools());
+        all.extend(write_tools().into_iter().map(|t| annotate(t, false)));
     }
     Value::Array(all)
 }
