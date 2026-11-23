@@ -8,8 +8,10 @@ permissions:
   pull-requests: write
 jobs:
   close:
-    # Leave the maintainers' own pull requests and Dependabot's alone.
-    if: github.actor != 'dependabot[bot]' && !contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.pull_request.author_association)
+    # Leave the maintainers' own pull requests and Dependabot's alone. A branch in this repository needs push access, so it is a
+    # maintainer's; author_association alone is not enough, because it reads as an outsider when someone's organisation
+    # membership is private.
+    if: github.actor != 'dependabot[bot]' && github.event.pull_request.head.repo.full_name != github.repository && !contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.pull_request.author_association)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
