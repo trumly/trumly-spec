@@ -388,7 +388,8 @@ cases.update({
 if __name__ == "__main__":
     if CASES.exists():
         for d in CASES.iterdir():
-            if d.is_dir() and not d.name.startswith("ex-"):
+            # only the cases this script writes: a case written by hand (derived-*, names-*, check-*) is left alone
+            if d.is_dir() and d.name in cases:
                 shutil.rmtree(d)
     for name, files in cases.items():
         for rel, text in files.items():

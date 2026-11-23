@@ -222,6 +222,10 @@ fn followed_id(id: &str, old: &str, new: &str) -> Option<String> {
 /// Rename a type or a link type, given its definition node, and everything that uses the old name: nodes of the type
 /// (or links of the link type), rule filters and checks, and link types whose from/to list the type. With `ids`, nodes
 /// of a renamed type whose id follows `<type>-name` get the new type in their id too (references are fixed).
+///
+/// A definition in a pack may share its name with another pack's (spec 4a). Its qualified name (`k8s:service`) is always renamed.
+/// The bare name is renamed too, unless another namespace defines it as well: then a bare use does not say which one it means, so it
+/// is left alone.
 pub fn rename_def(graph: &Graph, def_id: &str, name: &str, ids: bool) -> Result<Edit, String> {
     let def = graph.get(def_id).ok_or(format!("“{def_id}” does not exist."))?;
     let kind = def.kind.clone().unwrap_or_default();
@@ -233,16 +237,29 @@ pub fn rename_def(graph: &Graph, def_id: &str, name: &str, ids: bool) -> Result<
     if new == old {
         return Ok(Edit::default());
     }
-    if graph.nodes().any(|n| {
+    let ns = crate::names::def_ns(def_id).map(str::to_string);
+    let same_name = |n: &crate::model::Node, name: &str| {
         n.id != def_id
             && n.kind.as_deref() == Some(kind.as_str())
-            && n.fields.get("name").and_then(Value::as_str) == Some(new.as_str())
-    }) {
+            && n.fields.get("name").and_then(Value::as_str) == Some(name)
+    };
+    // another pack may have the same name; the same namespace may not
+    if graph.nodes().any(|n| same_name(n, &new) && crate::names::def_ns(&n.id) == ns.as_deref()) {
         return Err(format!(
             "There is already a {} called “{new}”.",
             if kind == "type" { "type" } else { "link type" }
         ));
     }
+    let shared = graph.nodes().any(|n| same_name(n, &old) && crate::names::def_ns(&n.id) != ns.as_deref());
+    // every spelling of the old name that means this definition, with what it becomes
+    let mut pairs: Vec<(String, String)> = Vec::new();
+    if !shared {
+        pairs.push((old.clone(), new.clone()));
+    }
+    if let Some(ns) = &ns {
+        pairs.push((format!("{ns}:{old}"), format!("{ns}:{new}")));
+    }
+    let to_of = |s: &str| pairs.iter().find(|(o, _)| o == s).map(|(_, n)| n.clone());
     let mut w = Work::new(graph);
     {
         let d = w.nodes.get_mut(def_id).expect("it was just read");
@@ -256,8 +273,8 @@ pub fn rename_def(graph: &Graph, def_id: &str, name: &str, ids: bool) -> Result<
         for id in ids_of(&w) {
             let n = w.nodes.get_mut(&id).expect("listed");
             match n.kind.as_deref() {
-                Some(k) if k == old => {
-                    n.kind = Some(new.clone());
+                Some(k) if to_of(k).is_some() => {
+                    n.kind = to_of(k);
                     moved.push(id.clone());
                     w.changed.insert(id);
                 }
@@ -266,21 +283,27 @@ pub fn rename_def(graph: &Graph, def_id: &str, name: &str, ids: bool) -> Result<
                     if let Some(a) = n.fields.get_mut("applies_to").and_then(Value::as_object_mut) {
                         // `type` is one name, or a list of names (any of)
                         match a.get_mut("type") {
-                            Some(Value::String(t)) if *t == old => {
-                                *t = new.clone();
-                                hit = true;
+                            Some(Value::String(t)) => {
+                                if let Some(to) = to_of(t) {
+                                    *t = to;
+                                    hit = true;
+                                }
                             }
                             Some(Value::Array(list)) => {
-                                for t in list.iter_mut().filter(|t| t.as_str() == Some(old.as_str())) {
-                                    *t = Value::String(new.clone());
-                                    hit = true;
+                                for t in list.iter_mut() {
+                                    if let Some(to) = t.as_str().and_then(to_of) {
+                                        *t = Value::String(to);
+                                        hit = true;
+                                    }
                                 }
                             }
                             _ => {}
                         }
                     }
                     if let Some(c) = n.fields.get_mut("check") {
-                        hit |= rename_in(c, &["node_type", "to_type", "ancestor_type"], &old, &new);
+                        for (o, nw) in &pairs {
+                            hit |= rename_in(c, &["node_type", "to_type", "ancestor_type"], o, nw);
+                        }
                     }
                     if hit {
                         w.changed.insert(id);
@@ -290,9 +313,11 @@ pub fn rename_def(graph: &Graph, def_id: &str, name: &str, ids: bool) -> Result<
                     let mut hit = false;
                     for key in ["from", "to"] {
                         if let Some(Value::Array(a)) = n.fields.get_mut(key) {
-                            for t in a.iter_mut().filter(|t| t.as_str() == Some(old.as_str())) {
-                                *t = Value::String(new.clone());
-                                hit = true;
+                            for t in a.iter_mut() {
+                                if let Some(to) = t.as_str().and_then(to_of) {
+                                    *t = Value::String(to);
+                                    hit = true;
+                                }
                             }
                         }
                     }
@@ -316,13 +341,17 @@ pub fn rename_def(graph: &Graph, def_id: &str, name: &str, ids: bool) -> Result<
         for id in ids_of(&w) {
             let n = w.nodes.get_mut(&id).expect("listed");
             let mut hit = false;
-            for l in n.links.iter_mut().filter(|l| l.kind == old) {
-                l.kind = new.clone();
-                hit = true;
+            for l in n.links.iter_mut() {
+                if let Some(to) = to_of(&l.kind) {
+                    l.kind = to;
+                    hit = true;
+                }
             }
             if n.kind.as_deref() == Some("rule") {
                 if let Some(c) = n.fields.get_mut("check") {
-                    hit |= rename_link_in(c, &old, &new);
+                    for (o, nw) in &pairs {
+                        hit |= rename_link_in(c, o, nw);
+                    }
                 }
             }
             if hit {
@@ -340,6 +369,24 @@ mod tests {
 
     fn graph(files: &[(&str, &str)]) -> Graph {
         load(files.iter().map(|(p, t)| (p.to_string(), t.to_string())).collect()).0
+    }
+
+    #[test]
+    fn renaming_a_name_two_packs_share_changes_only_its_qualified_uses() {
+        let def = |ns: &str| format!("---\nid: {ns}--type-service\ntype: type\nfields: {{name: service}}\n---\n");
+        let node = |id: &str, ty: &str| format!("---\nid: {id}\ntype: {ty}\n---\n");
+        let g = graph(&[
+            ("k--type-service.md", &def("k")),
+            ("a--type-service.md", &def("a")),
+            ("n1.md", &node("n1", "k:service")),
+            ("n2.md", &node("n2", "a:service")),
+            ("n3.md", &node("n3", "service")),
+        ]);
+        let e = rename_def(&g, "k--type-service", "workload", false).unwrap();
+        let kind = |id: &str| e.write.iter().find(|n| n.id == id).and_then(|n| n.kind.clone());
+        assert_eq!(kind("n1").as_deref(), Some("k:workload"));
+        // the other pack's uses and the ambiguous bare one are left alone
+        assert!(kind("n2").is_none() && kind("n3").is_none());
     }
 
     const MODEL: &[(&str, &str)] = &[

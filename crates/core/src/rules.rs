@@ -1,12 +1,15 @@
 //! Runs the rules: which rule applies to which node, and does the node pass?
 //! Mirrors `matches`, `run_check` and `evaluate` in reference/core.py and section 5 of the spec.
 
+use std::collections::BTreeMap;
+
 use serde_json::Value;
 
 use crate::model::{Graph, Link, Node};
+use crate::names::{Names, Scope, def_ns};
 
 /// Node types that rules never apply to.
-const RESERVED: [&str; 6] = ["plane", "rule", "group", "type", "link-type", "pack"];
+pub(crate) const RESERVED: [&str; 7] = ["plane", "rule", "group", "type", "link-type", "pack", "derived"];
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 /// The outcome of one rule on one node.
@@ -124,12 +127,12 @@ fn ancestors<'a>(graph: &'a Graph, id: &'a str) -> Vec<&'a str> {
 }
 
 /// Does `node` match an `applies_to` filter? Every key must match.
-fn matches(graph: &Graph, node: &Node, filter: &serde_json::Map<String, Value>) -> bool {
+pub(crate) fn matches(graph: &Scope, node: &Node, filter: &serde_json::Map<String, Value>) -> bool {
     // Keys all have to match. A list under a key matches when any one of its items does ("type: [a, b]" is a or b).
     filter.iter().all(|(key, want)| {
         let wants = items(want);
         match key.as_str() {
-            "type" => wants.iter().any(|w| json_eq(&opt_value(&node.kind), w)),
+            "type" => wants.iter().any(|w| graph.same_type(&opt_value(&node.kind), w)),
             "plane" => wants.iter().any(|w| json_eq(&opt_value(&node.plane), w)),
             // Strict ancestor: the node itself does not count (`skip(1)`).
             "under" => {
@@ -208,7 +211,7 @@ type Slot<'a> = Option<&'a Value>;
 /// Otherwise a path is names joined by `.`, and a name followed by `[]` means "each item of that list":
 /// `endpoint.params`, `methods[].verb`, `tags[]`. Returns one slot per place reached: an empty list reaches
 /// none, a missing step or a non-list under `[]` reaches one missing slot. `None` means the path is malformed.
-fn resolve<'a>(root: impl Fn(&str) -> Option<&'a Value>, path: &str) -> Option<Vec<Slot<'a>>> {
+pub(crate) fn resolve<'a>(root: impl Fn(&str) -> Option<&'a Value>, path: &str) -> Option<Vec<Slot<'a>>> {
     if let Some(v) = root(path) {
         return Some(vec![Some(v)]);
     }
@@ -258,7 +261,23 @@ fn check_require_fields(node: &Node, names: &Value) -> Outcome {
     if all { Outcome::Pass } else { Outcome::Fail }
 }
 
-const FIELD_IS_KEYS: [&str; 8] = ["in", "min", "max", "type", "optional", "min_items", "max_items", "unique"];
+const FIELD_IS_KEYS: [&str; 11] = [
+    "in",
+    "min",
+    "max",
+    "type",
+    "optional",
+    "min_items",
+    "max_items",
+    "unique",
+    "min_length",
+    "max_length",
+    "max_bytes",
+];
+
+/// One node's calculated values for rules, by name: one value is text, several are a list of text. A name that could not be worked
+/// out is left out, so a rule sees it as an absent field.
+pub type Calc = BTreeMap<String, Value>;
 
 /// `unique` is `true` (the items differ from each other) or a field path inside each item (that field differs).
 fn unique_ok(list: &[Value], by: &Value) -> bool {
@@ -275,9 +294,16 @@ fn unique_ok(list: &[Value], by: &Value) -> bool {
     keys.iter().enumerate().all(|(i, k)| !keys[..i].iter().any(|j| json_eq(j, k)))
 }
 
-fn check_field_is(node: &Node, specs: &Value) -> Outcome {
+/// A name the node has no field of is read from its own `id` and `title`, then from `calc` (its calculated values), so a rule can check
+/// a node's name or a derived value like a field.
+fn check_field_is(node: &Node, calc: Option<&Calc>, specs: &Value) -> Outcome {
     let Some(specs) = specs.as_object() else { return Outcome::Bad };
     let mut outcome = Outcome::Pass;
+    // the node's own `id` and `title` can be checked like fields (a node's title is its id when the file gives none)
+    let own: Calc = [("id", node.id.clone()), ("title", node.title.clone())]
+        .into_iter()
+        .map(|(k, v)| (k.to_string(), Value::String(v)))
+        .collect();
     for (name, spec) in specs {
         let Some(spec) = spec.as_object() else { return Outcome::Bad };
         if spec.keys().any(|k| !FIELD_IS_KEYS.contains(&k.as_str())) {
@@ -289,7 +315,10 @@ fn check_field_is(node: &Node, specs: &Value) -> Outcome {
         if ["min", "max"].iter().any(|k| spec.get(*k).is_some_and(|v| !is_number(v))) {
             return Outcome::Bad;
         }
-        if ["min_items", "max_items"].iter().any(|k| spec.get(*k).is_some_and(|v| non_neg_int(v).is_none())) {
+        if ["min_items", "max_items", "min_length", "max_length", "max_bytes"]
+            .iter()
+            .any(|k| spec.get(*k).is_some_and(|v| non_neg_int(v).is_none()))
+        {
             return Outcome::Bad;
         }
         match spec.get("unique") {
@@ -300,7 +329,20 @@ fn check_field_is(node: &Node, specs: &Value) -> Outcome {
         if spec.get("type").is_some_and(|t| t.as_str().and_then(|t| type_is(&Value::Null, t)).is_none()) {
             return Outcome::Bad;
         }
-        let Some(slots) = resolve(|k| node.fields.get(k), name) else { return Outcome::Bad };
+        // a calculated name that gives several values is checked value by value, like a list written `name[]`
+        let calculated = calc
+            .and_then(|c| c.get(name.as_str()))
+            .filter(|_| !node.fields.contains_key(name.as_str()) && !own.contains_key(name.as_str()));
+        let slots: Vec<Slot> = match calculated {
+            Some(Value::Array(many)) => many.iter().map(Some).collect(),
+            _ => match resolve(
+                |k| node.fields.get(k).or_else(|| own.get(k)).or_else(|| calc.and_then(|c| c.get(k))),
+                name,
+            ) {
+                Some(s) => s,
+                None => return Outcome::Bad,
+            },
+        };
         for slot in slots {
             let Some(v) = slot else {
                 if spec.get("optional") != Some(&Value::Bool(true)) {
@@ -343,6 +385,25 @@ fn check_field_is(node: &Node, specs: &Value) -> Outcome {
                 if !v.as_array().is_some_and(|a| unique_ok(a, by)) {
                     outcome = Outcome::Fail;
                 }
+            }
+            // text lengths: characters for min_length and max_length, UTF-8 bytes for max_bytes; a value that is not text fails
+            let text = v.as_str();
+            if spec
+                .get("min_length")
+                .and_then(non_neg_int)
+                .is_some_and(|m| text.is_none_or(|s| (s.chars().count() as u64) < m))
+            {
+                outcome = Outcome::Fail;
+            }
+            if spec
+                .get("max_length")
+                .and_then(non_neg_int)
+                .is_some_and(|m| text.is_none_or(|s| (s.chars().count() as u64) > m))
+            {
+                outcome = Outcome::Fail;
+            }
+            if spec.get("max_bytes").and_then(non_neg_int).is_some_and(|m| text.is_none_or(|s| (s.len() as u64) > m)) {
+                outcome = Outcome::Fail;
             }
         }
     }
@@ -406,9 +467,9 @@ fn check_compare_fields(node: &Node, list: &Value) -> Outcome {
 }
 
 /// For every node, the links that point at it: (the node they come from, the link).
-type Inbound<'a> = std::collections::BTreeMap<&'a str, Vec<(&'a Node, &'a Link)>>;
+pub(crate) type Inbound<'a> = std::collections::BTreeMap<&'a str, Vec<(&'a Node, &'a Link)>>;
 
-fn build_inbound(graph: &Graph) -> Inbound<'_> {
+pub(crate) fn build_inbound(graph: &Graph) -> Inbound<'_> {
     let mut m: Inbound = Inbound::new();
     for n in graph.nodes() {
         for l in &n.links {
@@ -483,18 +544,21 @@ fn link_bounds(it: &Obj) -> (u64, Option<u64>) {
     (it.get("min").and_then(non_neg_int).unwrap_or(if max.is_some() { 0 } else { 1 }), max)
 }
 
-fn nearest_ancestor<'a>(graph: &'a Graph, id: &'a str, kind: &str) -> Option<&'a str> {
-    ancestors(graph, id).into_iter().skip(1).find(|a| graph.get(a).is_some_and(|n| n.kind.as_deref() == Some(kind)))
+fn nearest_ancestor<'a>(graph: &'a Scope, id: &'a str, kind: &str) -> Option<&'a str> {
+    ancestors(graph, id)
+        .into_iter()
+        .skip(1)
+        .find(|a| graph.get(a).is_some_and(|n| n.kind.as_deref().is_some_and(|k| graph.same_type_str(k, kind))))
 }
 
 /// How many links of this node (out) or to this node (in) satisfy every filter in `it`.
-fn count_links(graph: &Graph, inbound: &Inbound, node: &Node, it: &Obj) -> u64 {
+fn count_links(graph: &Scope, inbound: &Inbound, node: &Node, it: &Obj) -> u64 {
     let kind = it["type"].as_str().unwrap_or("");
     let pairs: Vec<(&Link, Option<&Node>)> = if dir_of(it) == Some("out") {
-        node.links.iter().filter(|l| l.kind == kind).map(|l| (l, graph.get(&l.to))).collect()
+        node.links.iter().filter(|l| graph.same_link(&l.kind, kind)).map(|l| (l, graph.get(&l.to))).collect()
     } else {
         inbound.get(node.id.as_str()).map_or_else(Vec::new, |v| {
-            v.iter().filter(|(_, l)| l.kind == kind).map(|(src, l)| (*l, Some(*src))).collect()
+            v.iter().filter(|(_, l)| graph.same_link(&l.kind, kind)).map(|(src, l)| (*l, Some(*src))).collect()
         })
     };
     let want_type = it.get("node_type").or_else(|| it.get("to_type"));
@@ -502,7 +566,7 @@ fn count_links(graph: &Graph, inbound: &Inbound, node: &Node, it: &Obj) -> u64 {
     let mut n = 0;
     for (l, other) in pairs {
         let Some(other) = other else { continue }; // a link to nothing never counts
-        if want_type.is_some_and(|w| !json_eq(&opt_value(&other.kind), w))
+        if want_type.is_some_and(|w| !graph.same_type(&opt_value(&other.kind), w))
             || want_plane.is_some_and(|w| !json_eq(&opt_value(&other.plane), w))
         {
             continue;
@@ -542,7 +606,7 @@ fn count_links(graph: &Graph, inbound: &Inbound, node: &Node, it: &Obj) -> u64 {
     n
 }
 
-fn check_require_link(graph: &Graph, inbound: &Inbound, node: &Node, list: &Value) -> Outcome {
+fn check_require_link(graph: &Scope, inbound: &Inbound, node: &Node, list: &Value) -> Outcome {
     let mut outcome = Outcome::Pass;
     for it in items(list) {
         let Some(it) = it.as_object().filter(|it| link_item_valid(it)) else { return Outcome::Bad };
@@ -556,7 +620,7 @@ fn check_require_link(graph: &Graph, inbound: &Inbound, node: &Node, list: &Valu
 }
 
 /// Sugar for `max: 0`: the same filters as `require_link`, but `min` and `max` are not accepted.
-fn check_forbid_link(graph: &Graph, inbound: &Inbound, node: &Node, list: &Value) -> Outcome {
+fn check_forbid_link(graph: &Scope, inbound: &Inbound, node: &Node, list: &Value) -> Outcome {
     let mut outcome = Outcome::Pass;
     for it in items(list) {
         let Some(it) =
@@ -581,19 +645,19 @@ fn step_valid(it: &Obj) -> bool {
 }
 
 /// Ids at the other end of `id`'s links of this step's type that exist and match the step's filters.
-fn step_targets<'a>(graph: &'a Graph, inbound: &Inbound<'a>, id: &str, step: &Obj) -> Vec<&'a str> {
+fn step_targets<'a>(graph: &'a Scope, inbound: &Inbound<'a>, id: &str, step: &Obj) -> Vec<&'a str> {
     let kind = step["type"].as_str().unwrap_or("");
     let ends: Vec<&'a Node> = if dir_of(step) == Some("out") {
         graph.get(id).map_or_else(Vec::new, |n| {
-            n.links.iter().filter(|l| l.kind == kind).filter_map(|l| graph.get(&l.to)).collect()
+            n.links.iter().filter(|l| graph.same_link(&l.kind, kind)).filter_map(|l| graph.get(&l.to)).collect()
         })
     } else {
-        inbound
-            .get(id)
-            .map_or_else(Vec::new, |v| v.iter().filter(|(_, l)| l.kind == kind).map(|(src, _)| *src).collect())
+        inbound.get(id).map_or_else(Vec::new, |v| {
+            v.iter().filter(|(_, l)| graph.same_link(&l.kind, kind)).map(|(src, _)| *src).collect()
+        })
     };
     ends.into_iter()
-        .filter(|o| step.get("node_type").is_none_or(|w| json_eq(&opt_value(&o.kind), w)))
+        .filter(|o| step.get("node_type").is_none_or(|w| graph.same_type(&opt_value(&o.kind), w)))
         .filter(|o| step.get("node_plane").is_none_or(|w| json_eq(&opt_value(&o.plane), w)))
         .filter(|o| {
             step.get("node_fields")
@@ -605,7 +669,7 @@ fn step_targets<'a>(graph: &'a Graph, inbound: &Inbound<'a>, id: &str, step: &Ob
 }
 
 /// A chain of link steps must exist from this node; each step is followed from every node the last one reached.
-fn check_path(graph: &Graph, inbound: &Inbound, node: &Node, steps: &Value) -> Outcome {
+fn check_path(graph: &Scope, inbound: &Inbound, node: &Node, steps: &Value) -> Outcome {
     let Some(steps) = steps.as_array().filter(|a| !a.is_empty()) else { return Outcome::Bad };
     let mut parsed: Vec<&Obj> = Vec::new();
     for s in steps {
@@ -625,7 +689,7 @@ fn check_path(graph: &Graph, inbound: &Inbound, node: &Node, steps: &Value) -> O
 }
 
 /// Fails if this node can reach itself by following links of the given type(s).
-fn check_acyclic(graph: &Graph, node: &Node, types: &Value) -> Outcome {
+fn check_acyclic(graph: &Scope, node: &Node, types: &Value) -> Outcome {
     let list = items(types);
     let kinds: Vec<&str> = list.iter().filter_map(|v| non_empty_str(Some(*v))).collect();
     if list.is_empty() || kinds.len() != list.len() {
@@ -633,21 +697,22 @@ fn check_acyclic(graph: &Graph, node: &Node, types: &Value) -> Outcome {
     }
     for kind in kinds {
         let mut seen: std::collections::BTreeSet<&str> = std::collections::BTreeSet::new();
-        let mut stack: Vec<&str> = node.links.iter().filter(|l| l.kind == kind).map(|l| l.to.as_str()).collect();
+        let mut stack: Vec<&str> =
+            node.links.iter().filter(|l| graph.same_link(&l.kind, kind)).map(|l| l.to.as_str()).collect();
         while let Some(cur) = stack.pop() {
             if cur == node.id {
                 return Outcome::Fail;
             }
             let Some(n) = graph.get(cur) else { continue };
             if seen.insert(cur) {
-                stack.extend(n.links.iter().filter(|l| l.kind == kind).map(|l| l.to.as_str()));
+                stack.extend(n.links.iter().filter(|l| graph.same_link(&l.kind, kind)).map(|l| l.to.as_str()));
             }
         }
     }
     Outcome::Pass
 }
 
-fn check_require_link_fields(inbound: &Inbound, node: &Node, list: &Value) -> Outcome {
+fn check_require_link_fields(graph: &Scope, inbound: &Inbound, node: &Node, list: &Value) -> Outcome {
     let mut outcome = Outcome::Pass;
     for it in items(list) {
         let Some(it) = it.as_object() else { return Outcome::Bad };
@@ -662,11 +727,11 @@ fn check_require_link_fields(inbound: &Inbound, node: &Node, list: &Value) -> Ou
         let kind = it["type"].as_str().unwrap_or("");
         let names: Vec<&str> = it["fields"].as_array().unwrap().iter().filter_map(Value::as_str).collect();
         let links: Vec<&Link> = if dir_of(it) == Some("out") {
-            node.links.iter().filter(|l| l.kind == kind).collect()
+            node.links.iter().filter(|l| graph.same_link(&l.kind, kind)).collect()
         } else {
-            inbound
-                .get(node.id.as_str())
-                .map_or_else(Vec::new, |v| v.iter().filter(|(_, l)| l.kind == kind).map(|(_, l)| *l).collect())
+            inbound.get(node.id.as_str()).map_or_else(Vec::new, |v| {
+                v.iter().filter(|(_, l)| graph.same_link(&l.kind, kind)).map(|(_, l)| *l).collect()
+            })
         };
         if !links.iter().all(|l| names.iter().all(|f| present(l.fields.get(*f)))) {
             outcome = Outcome::Fail;
@@ -678,7 +743,7 @@ fn check_require_link_fields(inbound: &Inbound, node: &Node, list: &Value) -> Ou
 /// `any_of`: a non-empty list of checks (each a full check map); passes if at least one passes. If none passes and one is not
 /// understood, the whole is not understood (that one might have passed). An empty list, a non-list, or an item that is not a
 /// non-empty map is not understood.
-fn check_any_of(graph: &Graph, inbound: &Inbound, node: &Node, val: &Value) -> Outcome {
+fn check_any_of(graph: &Scope, inbound: &Inbound, node: &Node, calc: Option<&Calc>, val: &Value) -> Outcome {
     let Some(list) = val.as_array().filter(|a| !a.is_empty()) else { return Outcome::Bad };
     let mut maps = Vec::new();
     for it in list {
@@ -689,7 +754,7 @@ fn check_any_of(graph: &Graph, inbound: &Inbound, node: &Node, val: &Value) -> O
     }
     let mut bad = false;
     for o in maps {
-        match run_check(graph, inbound, node, o) {
+        match run_check(graph, inbound, node, calc, o) {
             Status::Pass => return Outcome::Pass,
             Status::Unsupported => bad = true,
             _ => {}
@@ -699,20 +764,20 @@ fn check_any_of(graph: &Graph, inbound: &Inbound, node: &Node, val: &Value) -> O
 }
 
 /// Pass only if every part passes and every part is understood; a failure outranks "not understood".
-fn run_check(graph: &Graph, inbound: &Inbound, node: &Node, check: &Obj) -> Status {
+fn run_check(graph: &Scope, inbound: &Inbound, node: &Node, calc: Option<&Calc>, check: &Obj) -> Status {
     let mut any_fail = false;
     let mut any_bad = false;
     for (key, val) in check {
         let o = match key.as_str() {
             "require_fields" => check_require_fields(node, val),
-            "field_is" => check_field_is(node, val),
+            "field_is" => check_field_is(node, calc, val),
             "compare_fields" => check_compare_fields(node, val),
             "require_link" => check_require_link(graph, inbound, node, val),
             "forbid_link" => check_forbid_link(graph, inbound, node, val),
-            "require_link_fields" => check_require_link_fields(inbound, node, val),
+            "require_link_fields" => check_require_link_fields(graph, inbound, node, val),
             "path" => check_path(graph, inbound, node, val),
             "acyclic" => check_acyclic(graph, node, val),
-            "any_of" => check_any_of(graph, inbound, node, val),
+            "any_of" => check_any_of(graph, inbound, node, calc, val),
             _ => Outcome::Bad,
         };
         any_fail |= o == Outcome::Fail;
@@ -728,7 +793,7 @@ fn run_check(graph: &Graph, inbound: &Inbound, node: &Node, check: &Obj) -> Stat
 }
 
 /// One ghost per outgoing `require_link` that has fewer links than its minimum (which must be at least one).
-fn ghosts_for(graph: &Graph, inbound: &Inbound, node: &Node, rule: &str, check: &Obj) -> Vec<Ghost> {
+fn ghosts_for(graph: &Scope, inbound: &Inbound, node: &Node, rule: &str, check: &Obj) -> Vec<Ghost> {
     let Some(list) = check.get("require_link") else { return vec![] };
     let mut out = Vec::new();
     for it in items(list) {
@@ -751,8 +816,43 @@ fn ghosts_for(graph: &Graph, inbound: &Inbound, node: &Node, rule: &str, check: 
 
 /// Run every rule over the graph.
 pub fn evaluate(graph: &Graph) -> Evaluation {
+    evaluate_with(graph, &crate::derive::derive_all(graph))
+}
+
+/// The calculated values rules can read: each node's derived values as plain values (see [`Calc`]).
+fn calc_of(derived: &crate::derive::DerivedMap) -> BTreeMap<&str, Calc> {
+    use crate::derive::Derived;
+    let mut out = BTreeMap::new();
+    for (id, row) in derived {
+        let mut calc = Calc::new();
+        for (name, d) in row {
+            let values = match d {
+                Derived::Values(v) | Derived::Overridden { values: v, .. } => v,
+                Derived::Missing(_) => continue,
+            };
+            match values.as_slice() {
+                [] => {}
+                [one] => {
+                    calc.insert(name.clone(), Value::String(one.clone()));
+                }
+                many => {
+                    calc.insert(name.clone(), Value::Array(many.iter().cloned().map(Value::String).collect()));
+                }
+            }
+        }
+        if !calc.is_empty() {
+            out.insert(id.as_str(), calc);
+        }
+    }
+    out
+}
+
+/// [`evaluate`] with the derived values already worked out, so `check` computes them once.
+pub fn evaluate_with(graph: &Graph, derived: &crate::derive::DerivedMap) -> Evaluation {
+    let calcs = calc_of(derived);
     let rules: Vec<&Node> = graph.nodes().filter(|n| n.kind.as_deref() == Some("rule")).collect();
     let inbound = build_inbound(graph);
+    let names = Names::new(graph);
     let mut out = Evaluation::default();
     let empty = Obj::new();
 
@@ -767,7 +867,9 @@ pub fn evaluate(graph: &Graph) -> Evaluation {
             }
             // `applies_to` that is missing or not a map matches every node.
             let filter = rule.fields.get("applies_to").and_then(Value::as_object).unwrap_or(&empty);
-            if !matches(graph, node, filter) {
+            // the rule's names are read from its own pack: its own types first, then those of the packs it requires
+            let scope = Scope::new(graph, &names, def_ns(&rule.id));
+            if !matches(&scope, node, filter) {
                 continue;
             }
             let severity = match rule.fields.get("severity").and_then(Value::as_str) {
@@ -777,11 +879,11 @@ pub fn evaluate(graph: &Graph) -> Evaluation {
             let check = rule.fields.get("check").and_then(Value::as_object).filter(|c| !c.is_empty());
             let status = match check {
                 None => Status::Advisory,
-                Some(c) => run_check(graph, &inbound, node, c),
+                Some(c) => run_check(&scope, &inbound, node, calcs.get(node.id.as_str()), c),
             };
             out.results.push(RuleResult { node: node.id.clone(), rule: rule.id.clone(), severity, status });
             if let (Status::Fail, Some(c)) = (status, check) {
-                out.ghosts.extend(ghosts_for(graph, &inbound, node, &rule.id, c));
+                out.ghosts.extend(ghosts_for(&scope, &inbound, node, &rule.id, c));
             }
         }
     }
@@ -792,6 +894,7 @@ pub fn evaluate(graph: &Graph) -> Evaluation {
 
 /// Enabled rules that name specific nodes with `id` but match none of them: a typo looks exactly like success.
 pub fn unmatched_rules(graph: &Graph) -> Vec<String> {
+    let names = Names::new(graph);
     let mut out = Vec::new();
     for r in graph.nodes().filter(|n| n.kind.as_deref() == Some("rule")) {
         if r.fields.get("enabled") == Some(&Value::Bool(false)) {
@@ -801,10 +904,11 @@ pub fn unmatched_rules(graph: &Graph) -> Vec<String> {
         else {
             continue;
         };
+        let scope = Scope::new(graph, &names, def_ns(&r.id));
         let hit = graph.nodes().any(|n| {
             !n.kind.as_deref().is_some_and(|k| RESERVED.contains(&k))
                 && graph.scratch_of(n).is_none()
-                && matches(graph, n, filter)
+                && matches(&scope, n, filter)
         });
         if !hit {
             out.push(r.id.clone());

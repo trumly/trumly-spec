@@ -12,6 +12,7 @@ use std::collections::{BTreeMap, BTreeSet};
 use serde_json::{Map, Value, json};
 
 use crate::model::Node;
+use crate::names::{Kind, Names, def_ns};
 use crate::report::Report;
 
 /// The id of the overview node: by convention the first thing a new reader should see.
@@ -34,7 +35,7 @@ pub const OVERVIEW_FIELDS: [(&str, &str, &str); 5] = [
 /// The type the `about` pack defines for a project's own conventions: how it is written, one node per rule of thumb.
 pub const CONVENTION_TYPE: &str = "convention";
 
-const RESERVED: [&str; 6] = ["plane", "type", "link-type", "rule", "pack", "group"];
+const RESERVED: [&str; 7] = ["plane", "type", "link-type", "rule", "pack", "group", "derived"];
 
 fn s(v: &Value) -> String {
     v.as_str().unwrap_or("").to_string()
@@ -72,6 +73,52 @@ struct Vocab<'a> {
     rules: Vec<&'a Node>,
     counts: BTreeMap<String, usize>,
     planes_of: BTreeMap<String, BTreeMap<String, usize>>,
+    /// bare type names that definitions in two or more namespaces share: `types` lists each as `<namespace>:<name>`
+    shared_types: BTreeSet<String>,
+    /// bare link type names shared the same way
+    shared_links: BTreeSet<String>,
+    /// every `<namespace>:<name>` of a type, and the key it has in `types`
+    qualified_types: BTreeMap<String, String>,
+    /// every `<namespace>:<name>` of a link type, and the key it has in `link_types`
+    qualified_links: BTreeMap<String, String>,
+    /// resolves the type names that link types and rules use, each read from its own pack
+    names: Names,
+}
+
+/// Names that definitions in two or more namespaces share are listed apart, one entry per namespace, under `<namespace>:<name>`:
+/// the bare name would merge their fields. A project's own definition (no namespace) keeps the bare name. Returns the shared bare
+/// names and every qualified name with the key it ended up under.
+fn split_shared(map: &mut BTreeMap<String, Vec<&Node>>) -> (BTreeSet<String>, BTreeMap<String, String>) {
+    let mut shared = BTreeSet::new();
+    let mut qualified = BTreeMap::new();
+    let names: Vec<String> = map.keys().cloned().collect();
+    for name in names {
+        let defs: Vec<&Node> = map[&name].clone();
+        let mut by_ns: BTreeMap<String, Vec<&Node>> = BTreeMap::new();
+        for d in &defs {
+            if let Some(ns) = def_ns(&d.id) {
+                by_ns.entry(ns.to_string()).or_default().push(*d);
+            }
+        }
+        let own: Vec<&Node> = defs.iter().copied().filter(|d| def_ns(&d.id).is_none()).collect();
+        if by_ns.len() + usize::from(!own.is_empty()) > 1 {
+            shared.insert(name.clone());
+            map.remove(&name);
+            if !own.is_empty() {
+                map.insert(name.clone(), own);
+            }
+            for (ns, ds) in by_ns {
+                let q = format!("{ns}:{name}");
+                qualified.insert(q.clone(), q.clone());
+                map.insert(q, ds);
+            }
+        } else {
+            for ns in by_ns.keys() {
+                qualified.insert(format!("{ns}:{name}"), name.clone());
+            }
+        }
+    }
+    (shared, qualified)
 }
 
 fn vocab(report: &Report) -> Vocab<'_> {
@@ -83,6 +130,11 @@ fn vocab(report: &Report) -> Vocab<'_> {
         rules: vec![],
         counts: BTreeMap::new(),
         planes_of: BTreeMap::new(),
+        shared_types: BTreeSet::new(),
+        shared_links: BTreeSet::new(),
+        qualified_types: BTreeMap::new(),
+        qualified_links: BTreeMap::new(),
+        names: Names::new(&report.graph),
     };
     for n in report.graph.nodes() {
         let name = |n: &Node| Some(fstr(n, "name")).filter(|x| !x.is_empty()).unwrap_or_else(|| n.title.clone());
@@ -100,6 +152,8 @@ fn vocab(report: &Report) -> Vocab<'_> {
             }
         }
     }
+    (v.shared_types, v.qualified_types) = split_shared(&mut v.types);
+    (v.shared_links, v.qualified_links) = split_shared(&mut v.link_types);
     let order = |n: &Node| n.fields.get("order").and_then(Value::as_f64).unwrap_or(0.0);
     v.planes.sort_by(|a, b| order(a).partial_cmp(&order(b)).unwrap_or(std::cmp::Ordering::Equal).then(a.id.cmp(&b.id)));
     v
@@ -174,16 +228,22 @@ fn describe_type(name: &str, defs: &[&Node], v: &Vocab) -> Value {
         }
     }
     let main = defs[0];
+    // a name that packs share is listed as `<namespace>:<name>`; a rule or link type of that pack says it bare
+    let bare = name.split_once(':').map_or(name, |(_, b)| b);
+    // does a type name, read from the namespace of the link type or rule that uses it, mean one of these definitions?
+    let ids: Vec<&str> = defs.iter().map(|d| d.id.as_str()).collect();
+    let means =
+        |x: &str, ns: Option<&str>| v.names.candidates(Kind::Type, x, ns).iter().any(|c| ids.contains(&c.id.as_str()));
     let (declared, seen) = plane_for(name, defs, v);
     let mut links_out = vec![];
     let mut links_in = vec![];
     for (ln, lds) in &v.link_types {
         let from = union(lds.iter().map(|l| strs(l.fields.get("from"))));
         let to = union(lds.iter().map(|l| strs(l.fields.get("to"))));
-        if from.is_empty() || from.iter().any(|x| x == name) {
+        if from.is_empty() || lds.iter().any(|l| strs(l.fields.get("from")).iter().any(|x| means(x, def_ns(&l.id)))) {
             links_out.push(json!({"link": ln, "to": to}));
         }
-        if to.is_empty() || to.iter().any(|x| x == name) {
+        if to.is_empty() || lds.iter().any(|l| strs(l.fields.get("to")).iter().any(|x| means(x, def_ns(&l.id)))) {
             links_in.push(json!({"link": ln, "from": from}));
         }
     }
@@ -191,8 +251,8 @@ fn describe_type(name: &str, defs: &[&Node], v: &Vocab) -> Value {
         .rules
         .iter()
         .filter(|r| match r.fields.get("applies_to").and_then(|a| a.get("type")) {
-            Some(Value::String(t)) => t == name,
-            Some(Value::Array(list)) => list.iter().any(|t| t.as_str() == Some(name)),
+            Some(Value::String(t)) => means(t, def_ns(&r.id)),
+            Some(Value::Array(list)) => list.iter().any(|t| t.as_str().is_some_and(|t| means(t, def_ns(&r.id)))),
             _ => false,
         })
         .map(|r| json!({"id": r.id, "statement": Some(fstr(r, "statement")).filter(|x| !x.is_empty()).unwrap_or_else(|| r.title.clone()), "severity": Some(fstr(r, "severity")).filter(|x| !x.is_empty()).unwrap_or_else(|| "warn".into())}))
@@ -220,9 +280,18 @@ fn describe_type(name: &str, defs: &[&Node], v: &Vocab) -> Value {
     let mut out = json!({
         "name": name, "description": description, "plane": plane, "existing_nodes": v.counts.get(name).copied().unwrap_or(0),
         "fields": merged, "required_fields": required, "links_out": links_out, "links_in": links_in, "rules": rules,
-        "id_convention": format!("{name}-<short-name>"),
-        "example": {"id": format!("{name}-example"), "type": name, "title": "Example", "parent": null, "plane": plane, "fields": example_fields, "links": [], "body": ""},
+        "id_convention": format!("{bare}-<short-name>"),
+        "example": {"id": format!("{bare}-example"), "type": name, "title": "Example", "parent": null, "plane": plane, "fields": example_fields, "links": [], "body": ""},
     });
+    if let Some(ns) = def_ns(&main.id) {
+        out["qualified"] = json!(format!("{ns}:{bare}"));
+    }
+    if name.contains(':') {
+        out["bare"] = json!(bare);
+        out["note"] = json!(format!(
+            "Other packs define a type with the same name. Write {name} as a node's type (a bare '{bare}' is ambiguous)."
+        ));
+    }
     for k in ["label", "pack", "shape"] {
         if let Some(x) = main.fields.get(k).filter(|x| !x.is_null()) {
             out[k] = x.clone();
@@ -235,6 +304,62 @@ fn describe_type(name: &str, defs: &[&Node], v: &Vocab) -> Value {
         out["seen_on_planes"] = json!(seen);
     }
     out
+}
+
+/// What the project says about how nodes of a type are written: every node with a `describes` link to the type's definition
+/// or to the plane the type sits on, the type's own first (the most specific wins), then the plane's. Each comes with its
+/// fields and body, and the nodes that link to it (a naming pattern's tokens, say), so an agent naming a node has them in hand.
+/// The core follows `describes` and nothing else: it knows no pack, and a project without such nodes has no `conventions`.
+fn conventions_for(graph: &crate::model::Graph, defs: &[&Node], plane: Option<&str>) -> Vec<Value> {
+    let level = |to: &str| -> Option<u8> {
+        if defs.iter().any(|d| d.id == to) {
+            Some(0)
+        } else if plane == Some(to) {
+            Some(1)
+        } else {
+            None
+        }
+    };
+    let mut found: Vec<(u8, &Node)> = Vec::new();
+    for n in graph.nodes() {
+        if let Some(rank) =
+            n.links.iter().filter(|l| crate::names::kind_is(&l.kind, "describes")).filter_map(|l| level(&l.to)).min()
+        {
+            found.push((rank, n));
+        }
+    }
+    // Tokens that say they `stands-for` the type but are not `used-in` anything that describes it would
+    // otherwise never be handed over: they follow the conventions, as entries of their own.
+    let reached: std::collections::HashSet<&str> = found
+        .iter()
+        .flat_map(|(_, c)| graph.nodes().filter(move |o| o.links.iter().any(|l| l.to == c.id)).map(|o| o.id.as_str()))
+        .collect();
+    let mut direct: Vec<(u8, &Node)> = graph
+        .nodes()
+        .filter(|n| !reached.contains(n.id.as_str()) && !found.iter().any(|(_, f)| f.id == n.id))
+        .filter(|n| {
+            n.links.iter().any(|l| crate::names::kind_is(&l.kind, "stands-for") && defs.iter().any(|d| d.id == l.to))
+        })
+        .map(|n| (0u8, n))
+        .collect();
+    found.sort_by(|a, b| (a.0, &a.1.id).cmp(&(b.0, &b.1.id)));
+    direct.sort_by(|a, b| a.1.id.cmp(&b.1.id));
+    found.extend(direct);
+    found
+        .into_iter()
+        .map(|(rank, n)| {
+            let related: Vec<Value> = graph
+                .nodes()
+                .flat_map(|o| o.links.iter().filter(|l| l.to == n.id).map(move |l| (o, l)))
+                .take(50)
+                .map(|(o, l)| json!({"id": o.id, "type": o.kind, "title": o.title, "link": l.kind, "fields": o.fields}))
+                .collect();
+            json!({
+                "id": n.id, "type": n.kind, "title": n.title, "applies_to": if rank == 0 { "type" } else { "plane" },
+                "fields": n.fields, "body": n.body.trim(), "related": related,
+            })
+        })
+        .collect()
 }
 
 fn plane_summary(p: &Node, v: &Vocab) -> Value {
@@ -260,10 +385,23 @@ pub fn describe_types(report: &Report, args: &Value) -> Value {
     let v = vocab(report);
     let (a_type, a_plane, a_pack) = (args["type"].as_str(), args["plane"].as_str(), args["pack"].as_str());
     let in_pack = |n: &Node| a_pack.is_none_or(|p| fstr(n, "pack").split('@').next() == Some(p));
-    let types: Vec<Value> =
-        v.types.iter().filter(|(_, d)| d.iter().any(|n| in_pack(n))).map(|(n, d)| describe_type(n, d, &v)).collect();
+    let types: Vec<Value> = v
+        .types
+        .iter()
+        .filter(|(_, d)| d.iter().any(|n| in_pack(n)))
+        .map(|(n, d)| {
+            let mut t = describe_type(n, d, &v);
+            let c = conventions_for(&report.graph, d, t["plane"].as_str());
+            if !c.is_empty() {
+                t["conventions"] = json!(c);
+            }
+            t
+        })
+        .collect();
     let picked: Vec<Value> = match (a_type, a_plane) {
-        (Some(t), _) => types.iter().filter(|x| x["name"] == t).cloned().collect(),
+        (Some(t), _) => {
+            types.iter().filter(|x| x["name"] == t || x["qualified"] == t || x["bare"] == t).cloned().collect()
+        }
         (None, Some(p)) => types
             .iter()
             .filter(|x| x["plane"] == p || x["seen_on_planes"].as_array().is_some_and(|a| a.iter().any(|y| y == p)))
@@ -316,7 +454,7 @@ pub fn describe_types(report: &Report, args: &Value) -> Value {
             .iter()
             .filter(|(_, d)| d.iter().any(|n| in_pack(n)))
             .map(|(n, d)| {
-                let mut o = json!({"name": n, "description": Some(fstr(d[0], "description")).filter(|x| !x.is_empty()).unwrap_or_else(|| d[0].body.trim().to_string()), "from": union(d.iter().map(|l| strs(l.fields.get("from")))), "to": union(d.iter().map(|l| strs(l.fields.get("to"))))});
+                let mut o = json!({"name": n, "qualified": def_ns(&d[0].id).map(|ns| format!("{ns}:{}", n.split_once(':').map_or(n.as_str(), |(_, b)| b))), "description": Some(fstr(d[0], "description")).filter(|x| !x.is_empty()).unwrap_or_else(|| d[0].body.trim().to_string()), "from": union(d.iter().map(|l| strs(l.fields.get("from")))), "to": union(d.iter().map(|l| strs(l.fields.get("to"))))});
                 if let Some(i) = d[0].fields.get("inverse") {
                     o["inverse"] = i.clone();
                 }
@@ -396,7 +534,8 @@ pub fn conventions(report: &Report) -> Option<String> {
     let items: Vec<String> = nodes
         .iter()
         .map(|n| {
-            let about: Vec<&str> = n.links.iter().filter(|l| l.kind == "describes").map(|l| l.to.as_str()).collect();
+            let about: Vec<&str> =
+                n.links.iter().filter(|l| crate::names::kind_is(&l.kind, "describes")).map(|l| l.to.as_str()).collect();
             let tail = if about.is_empty() {
                 String::new()
             } else {
@@ -527,15 +666,29 @@ pub fn prepare(report: &Report, node: &Value, is_new: bool) -> Value {
     let ty = node["type"].as_str().unwrap_or("").to_string();
     let id = node["id"].as_str().unwrap_or("").to_string();
     if !RESERVED.contains(&ty.as_str()) && !ty.is_empty() {
-        if !v.types.is_empty() && !v.types.contains_key(&ty) {
+        // the key the type has in `types`: the name itself, or the shared `<namespace>:<name>` that a qualified name points at
+        let resolved: Option<String> =
+            if v.types.contains_key(&ty) { Some(ty.clone()) } else { v.qualified_types.get(&ty).cloned() };
+        if v.shared_types.contains(&ty) {
+            let options: Vec<String> = v
+                .types
+                .keys()
+                .filter(|k| k.split_once(':').is_some_and(|(_, b)| b == ty))
+                .map(|k| format!("'{k}'"))
+                .collect();
+            advice.push(format!(
+                "ambiguous_type: more than one pack defines a type named '{ty}'. Write the qualified name as the node's type: {}.",
+                options.join(" or ")
+            ));
+        } else if !v.types.is_empty() && resolved.is_none() {
             let near = suggest(&ty, &v.types.keys().cloned().collect::<Vec<_>>(), 3);
             advice.push(format!(
                 "unknown_type: no type named '{ty}' is defined in this project{} Call describe_types to see the types; change the type with another put_node (same id, pass the rev you got back).",
                 if near.is_empty() { ".".to_string() } else { format!(". Did you mean {}?", near.iter().map(|n| format!("'{n}'")).collect::<Vec<_>>().join(", ")) }
             ));
         }
-        if let Some(defs) = v.types.get(&ty) {
-            let (declared, seen) = plane_for(&ty, defs, &v);
+        if let Some((key, defs)) = resolved.as_ref().and_then(|k| v.types.get(k).map(|d| (k, d))) {
+            let (declared, seen) = plane_for(key, defs, &v);
             let home = declared.clone().or_else(|| seen.first().cloned());
             let plane = node["plane"].as_str().filter(|p| !p.is_empty()).map(str::to_string);
             match (&plane, &home) {
@@ -563,7 +716,11 @@ pub fn prepare(report: &Report, node: &Value, is_new: bool) -> Value {
         }
         if !v.link_types.is_empty() {
             for l in node["links"].as_array().into_iter().flatten() {
-                if let Some(t) = l["type"].as_str().filter(|t| !v.link_types.contains_key(*t)) {
+                if let Some(t) = l["type"].as_str().filter(|t| {
+                    !v.link_types.contains_key(*t)
+                        && !v.qualified_links.contains_key(*t)
+                        && !v.shared_links.contains(*t)
+                }) {
                     let near = suggest(t, &v.link_types.keys().cloned().collect::<Vec<_>>(), 3);
                     advice.push(format!(
                         "unknown_link_type: no link type named '{t}'{}",
@@ -579,9 +736,18 @@ pub fn prepare(report: &Report, node: &Value, is_new: bool) -> Value {
                 }
             }
         }
-        if !id.contains("--") && !id.starts_with(&format!("{ty}-")) && id != OVERVIEW_ID && !id.is_empty() {
+        for t in node["links"].as_array().into_iter().flatten().filter_map(|l| l["type"].as_str()) {
+            if v.shared_links.contains(t) {
+                advice.push(format!(
+                    "ambiguous_link_type: more than one pack defines a link type named '{t}'. Write the qualified name (see describe_types)."
+                ));
+            }
+        }
+        // ids are made of letters, digits and `-`, so a qualified type (`k8s:service`) gives `service-...`
+        let ty_bare = ty.split_once(':').map_or(ty.as_str(), |(_, b)| b);
+        if !id.contains("--") && !id.starts_with(&format!("{ty_bare}-")) && id != OVERVIEW_ID && !id.is_empty() {
             let rest = id.split_once('-').map_or(id.as_str(), |x| x.1);
-            advice.push(format!("id_convention: ids are usually '<type>-<name>' (e.g. '{ty}-{rest}'). Not checked; rename_node can fix it."));
+            advice.push(format!("id_convention: ids are usually '<type>-<name>' (e.g. '{ty_bare}-{rest}'). Not checked; rename_node can fix it."));
         }
     }
     json!({"node": node, "defaulted": Value::Object(defaulted), "advice": advice})
@@ -697,6 +863,37 @@ mod tests {
     }
 
     #[test]
+    fn a_name_two_packs_share_is_listed_per_pack_and_a_bare_use_is_ambiguous() {
+        let m = model(&[
+            (
+                "ot--pack.md",
+                "---\nid: ot--pack\ntype: pack\nfields: {name: other, version: 1.0.0, namespace: ot}\n---\n",
+            ),
+            (
+                "ot--type-data-table.md",
+                "---\nid: ot--type-data-table\ntype: type\nfields: {name: data-table, pack: other@1.0.0}\n---\n",
+            ),
+        ]);
+        let r = describe_types(&m, &json!({}));
+        let names: Vec<&str> = r["types"].as_array().unwrap().iter().map(|x| x["name"].as_str().unwrap()).collect();
+        assert!(names.contains(&"dm:data-table") && names.contains(&"ot:data-table") && !names.contains(&"data-table"));
+        let one = describe_types(&m, &json!({"type": "ot:data-table"}));
+        assert_eq!(one["types"][0]["bare"], "data-table");
+        assert_eq!(one["types"][0]["example"]["id"], "data-table-example");
+        assert_eq!(one["types"][0]["example"]["type"], "ot:data-table");
+        // asking by the bare name gives both
+        assert_eq!(describe_types(&m, &json!({"type": "data-table"}))["types"].as_array().unwrap().len(), 2);
+        let bare = prepare(&m, &json!({"id": "data-table-x", "type": "data-table"}), true);
+        let text = bare["advice"].to_string();
+        assert!(
+            text.contains("ambiguous_type") && text.contains("dm:data-table") && !text.contains("unknown_type"),
+            "{text}"
+        );
+        let qualified = prepare(&m, &json!({"id": "data-table-y", "type": "dm:data-table"}), true);
+        assert_eq!(qualified["advice"], json!([]), "{qualified}");
+    }
+
+    #[test]
     fn prepare_fills_the_plane_and_advises() {
         let m = model(&[]);
         let p = prepare(&m, &json!({"id": "data-db-server-main", "type": "data-db-server", "links": []}), true);
@@ -744,5 +941,34 @@ mod tests {
     fn suggests_by_prefix_containment_and_distance() {
         let known = ["data-db-server".to_string(), "data-table".to_string(), "component".to_string()];
         assert_eq!(suggest("data-server", &known, 3)[0], "data-db-server");
+    }
+
+    #[test]
+    fn describe_types_hands_over_what_describes_the_type_then_its_plane() {
+        let r = check(vec![
+            ("p.md".into(), "---\nid: p\ntype: plane\nfields:\n  order: 1\n---\n".into()),
+            ("t-db.md".into(), "---\nid: t-db\ntype: type\nfields:\n  name: db\n  plane: p\n---\n".into()),
+            ("c-plane.md".into(), "---\nid: c-plane\ntype: convention\nlinks:\n  - {type: describes, to: p}\n---\nPlane rule.\n".into()),
+            ("c-type.md".into(), "---\nid: c-type\ntype: name-pattern\nfields:\n  pattern: x\nlinks:\n  - {type: describes, to: t-db}\n---\n".into()),
+            ("tok.md".into(), "---\nid: tok\ntype: name-token\nfields:\n  token: psql\nlinks:\n  - {type: used-in, to: c-type}\n---\n".into()),
+            ("loose.md".into(), "---\nid: loose\ntype: name-token\nfields:\n  token: lonely\nlinks:\n  - {type: stands-for, to: t-db}\n---\n".into()),
+            ("other.md".into(), "---\nid: other\ntype: x\nfields: {}\n---\n".into()),
+        ]);
+        let out = describe_types(&r, &json!({"type": "db"}));
+        let c = out["types"][0]["conventions"].as_array().expect("conventions");
+        assert_eq!(c.iter().map(|x| x["id"].as_str().unwrap()).collect::<Vec<_>>(), ["c-type", "c-plane", "loose"]);
+        assert_eq!(c[2]["applies_to"], "type");
+        assert_eq!(c[2]["fields"]["token"], "lonely");
+        assert_eq!(c[0]["applies_to"], "type");
+        assert_eq!(c[0]["related"][0]["id"], "tok");
+        assert_eq!(c[0]["related"][0]["fields"]["token"], "psql");
+        assert_eq!(c[1]["applies_to"], "plane");
+        assert_eq!(c[1]["body"], "Plane rule.");
+        // a type nothing describes has no `conventions` key
+        let none = describe_types(
+            &check(vec![("t.md".into(), "---\nid: t\ntype: type\nfields:\n  name: z\n---\n".into())]),
+            &json!({"type": "z"}),
+        );
+        assert!(none["types"][0].get("conventions").is_none());
     }
 }

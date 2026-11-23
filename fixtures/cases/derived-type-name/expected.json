@@ -1,0 +1,126 @@
+{
+ "ghosts": [],
+ "load_errors": [],
+ "nodes": [
+  {
+   "body": "",
+   "fields": {},
+   "id": "box-1",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "Crate",
+   "type": "box"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "gadget"
+    },
+    "name": "label",
+    "template": "{title}-{@type}"
+   },
+   "id": "d-label",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "d-label",
+   "type": "derived"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "gadget"
+    },
+    "name": "via",
+    "template": "{runs-in/@type}-{id}"
+   },
+   "id": "d-via",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "d-via",
+   "type": "derived"
+  },
+  {
+   "body": "",
+   "derived": {
+    "label": {
+     "values": [
+      "Gizmo-gadget"
+     ]
+    },
+    "via": {
+     "values": [
+      "box-g-1"
+     ]
+    }
+   },
+   "fields": {},
+   "id": "g-1",
+   "links": [
+    {
+     "to": "box-1",
+     "type": "runs-in"
+    }
+   ],
+   "parent": null,
+   "plane": null,
+   "title": "Gizmo",
+   "type": "gadget"
+  },
+  {
+   "body": "",
+   "derived": {
+    "label": {
+     "values": [
+      "Widget-gadget"
+     ]
+    },
+    "via": {
+     "missing": [
+      "runs-in/@type"
+     ]
+    }
+   },
+   "fields": {},
+   "id": "g-2",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "Widget",
+   "type": "gadget"
+  },
+  {
+   "body": "",
+   "derived": {
+    "label": {
+     "values": [
+      "Own-custom"
+     ]
+    },
+    "via": {
+     "missing": [
+      "runs-in/@type"
+     ]
+    }
+   },
+   "fields": {
+    "@type": "custom"
+   },
+   "id": "g-3",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "Own",
+   "type": "gadget"
+  }
+ ],
+ "results": [],
+ "structure": {
+  "errors": [],
+  "warnings": []
+ }
+}

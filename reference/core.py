@@ -14,7 +14,7 @@ from pathlib import Path
 import yaml
 
 TITLE_MAX = 30                                                            # the longest name (title) a node should have, in characters
-RESERVED = {"plane", "rule", "group", "type", "link-type", "pack"}          # kernel types that rules never apply to
+RESERVED = {"plane", "rule", "group", "type", "link-type", "pack", "derived"}          # kernel types that rules never apply to
 FRONT = re.compile(r"\A---[ \t]*\n(.*?)^---[ \t]*$\n?(.*)\Z", re.S | re.M)
 
 
@@ -167,6 +167,130 @@ def load(root):
     return nodes, errors
 
 
+# ---------- names (type and link-type resolution) ----------
+# A type or link name is bare (`service`) or qualified by a pack namespace (`k8s:service`). A definition belongs to the namespace in
+# its id (`k8s--type-service`); one without `--` belongs to none. `_CTX` is the namespace of the pack whose rule, derived value or
+# link-type definition is being read (None for a node, a link, or a definition that is not in a pack).
+_NAMES = {"nodes": None, "idx": None}
+_CTX = [None]
+
+
+def def_ns(d):
+    return d["id"].split("--", 1)[0] if "--" in d["id"] else None
+
+
+def _index(nodes):
+    if _NAMES["nodes"] is not nodes:
+        idx = {}
+        for nid in sorted(nodes):
+            d = nodes[nid]
+            if d["type"] in ("type", "link-type") and is_str(d["fields"].get("name")):
+                idx.setdefault((d["type"], d["fields"]["name"]), []).append(d)
+        _NAMES["nodes"], _NAMES["idx"] = nodes, idx
+    return _NAMES["idx"]
+
+
+def namespace_levels(nodes, ns):
+    """Namespaces by distance from pack `ns`: [{ns}, the packs it requires or works with, the packs those require or work with, ...].
+    A pack `optional` counts only when the project has it, and then at the same level as a requirement. A namespace appears once,
+    at its nearest level; cycles are fine."""
+    present = {p["fields"].get("name") for p in nodes.values() if p["type"] == "pack"}
+    levels, seen, cur = [], set(), {ns}
+    while cur:
+        levels.append(cur)
+        seen |= cur
+        nxt = set()
+        for p in nodes.values():
+            if p["type"] == "pack" and def_ns(p) in cur:
+                for key in ("requires", "optional"):
+                    for r in p["fields"].get(key) if isinstance(p["fields"].get(key), list) else []:
+                        if is_str(r) and (key == "requires" or r.split("@")[0] in present):
+                            q = pack_namespace(nodes, r.split("@")[0])
+                            if q not in seen:
+                                nxt.add(q)
+        cur = nxt
+    return levels
+
+
+def candidates(nodes, kind, name, ctx=None):
+    """The definitions (`kind` is "type" or "link-type") that `name` can mean, from the viewpoint of pack namespace `ctx`.
+    Qualified: the definitions of that bare name in that namespace. Bare: the project's definitions of the name, except that inside
+    a pack the nearest level that has any wins: the pack's own, then those of the packs it requires, then of the packs they require.
+    Several namespaces at the winning level (or in the whole project) leave the name ambiguous."""
+    if not is_str(name):
+        return []
+    idx = _index(nodes)
+    if ":" in name:
+        ns, bare = name.split(":", 1)
+        return [d for d in idx.get((kind, bare), []) if def_ns(d) == ns]
+    every = idx.get((kind, name), [])
+    if ctx is not None and len(every) > 1:
+        for level in namespace_levels(nodes, ctx):   # nearest first: the pack itself, what it requires, what those require
+            near = [d for d in every if def_ns(d) in level]
+            if near:
+                return near
+    return every
+
+
+def same_name(nodes, kind, actual, want):
+    """Does what a node or link says (`actual`) denote what a rule, link-type or template says (`want`, read from namespace _CTX)?
+    By definition when both resolve; otherwise (an undefined name, or not a string) by plain equality."""
+    a = candidates(nodes, kind, actual)
+    w = candidates(nodes, kind, want, _CTX[0])
+    if a and w:
+        return bool({d["id"] for d in a} & {d["id"] for d in w})
+    return strict_eq(actual, want)
+
+
+def ambiguous(nodes, kind, name, ctx=None):
+    """True when a bare name, read from namespace `ctx`, still has definitions in two or more pack namespaces."""
+    return is_str(name) and ":" not in name and len({def_ns(d) for d in candidates(nodes, kind, name, ctx)}) > 1
+
+
+def names_in(nodes, n):
+    """The (kind, name) pairs a rule, derived or link-type node uses: type names and link names."""
+    out = []
+    f = n["fields"]
+
+    def add(kind, v):
+        for x in v if isinstance(v, list) else [v]:
+            if is_str(x):
+                out.append((kind, x))
+
+    def check_names(check):
+        if not isinstance(check, dict):
+            return
+        for key, val in check.items():
+            if key == "acyclic":
+                add("link-type", val)
+            elif key == "any_of" and isinstance(val, list):
+                for it in val:
+                    check_names(it)
+            elif key in ("require_link", "forbid_link", "require_link_fields", "path"):
+                for it in val if isinstance(val, list) else [val]:
+                    if isinstance(it, dict):
+                        add("link-type", it.get("type"))
+                        for k in ("node_type", "to_type", "ancestor_type"):
+                            add("type", it.get(k))
+
+    where = f.get("applies_to") if isinstance(f.get("applies_to"), dict) else {}
+    if n["type"] in ("rule", "derived"):
+        add("type", where.get("type"))
+    if n["type"] == "rule":
+        check_names(f.get("check"))
+    elif n["type"] == "derived" and isinstance(f.get("template"), str):
+        parts = parse_template(f["template"]) or []
+        for kind, val in parts:
+            if kind == "ph":
+                for hop in val.split("/")[:-1]:
+                    if hop != "@type" and hop:
+                        add("link-type", hop[1:] if hop.startswith("^") else hop)
+    elif n["type"] == "link-type":
+        add("type", f.get("from"))
+        add("type", f.get("to"))
+    return out
+
+
 # ---------- structure ----------
 def ancestors(nodes, nid):
     """The node itself, then its parents. Stops at a missing parent or a repeat."""
@@ -219,14 +343,14 @@ def scratch_of(nodes, n):
 
 
 def duplicate_definition(nodes, n):
-    """The name of a type or link-type that another node of the same kind also defines, else None."""
+    """The name of a type or link-type that another node of the same kind and namespace also defines, else None."""
     if n["type"] not in ("type", "link-type"):
         return None
     name = n["fields"].get("name")
     if not is_str(name):
         return None
     for m in nodes.values():
-        if m["id"] != n["id"] and m["type"] == n["type"] and m["fields"].get("name") == name:
+        if m["id"] != n["id"] and m["type"] == n["type"] and m["fields"].get("name") == name and def_ns(m) == def_ns(n):
             return name
     return None
 
@@ -236,8 +360,8 @@ def missing_required(nodes, n):
     if n["type"] in RESERVED or scratch_of(nodes, n) is not None:
         return []
     need = set()
-    for m in nodes.values():
-        if m["type"] == "type" and m["fields"].get("name") == n["type"] and isinstance(m["fields"].get("fields"), list):
+    for m in candidates(nodes, "type", n["type"]):
+        if isinstance(m["fields"].get("fields"), list):
             for d in m["fields"]["fields"]:
                 if isinstance(d, dict) and d.get("required") is True and is_str(d.get("name")):
                     need.add(d["name"])
@@ -253,14 +377,25 @@ def endpoint_mismatches(nodes, n):
         t = nodes.get(l["to"])
         if t is None:
             continue
-        frm, to = set(), set()
-        for m in nodes.values():
-            if m["type"] == "link-type" and m["fields"].get("name") == l["type"]:
-                for key, acc in (("from", frm), ("to", to)):
-                    v = m["fields"].get(key)
-                    if isinstance(v, list):
-                        acc.update(x for x in v if is_str(x))
-        if (frm and n["type"] not in frm) or (to and t["type"] not in to):
+        frm, to = [], []
+        for m in candidates(nodes, "link-type", l["type"]):
+            for key, acc in (("from", frm), ("to", to)):
+                v = m["fields"].get(key)
+                if isinstance(v, list):
+                    acc.extend((x, def_ns(m)) for x in v if is_str(x))
+
+        def among(kind_of, pairs):
+            for x, ns in pairs:
+                _CTX[0] = ns
+                if same_name(nodes, "type", kind_of, x):
+                    return True
+            return False
+
+        try:
+            bad = (frm and not among(n["type"], frm)) or (to and not among(t["type"], to))
+        finally:
+            _CTX[0] = None
+        if bad:
             out.append(f"{l['type']}->{l['to']}")
     return out
 
@@ -289,6 +424,17 @@ def structure(nodes):
         dup = duplicate_definition(nodes, n)
         if dup is not None:
             warnings.append({"node": nid, "kind": "duplicate_definition", "ref": dup})
+        if n["type"] in ("rule", "derived", "link-type") and def_ns(n) is not None:
+            seen_names = set()
+            for kind, name in names_in(nodes, n):
+                if (kind, name) not in seen_names and ambiguous(nodes, kind, name, def_ns(n)):
+                    seen_names.add((kind, name))
+                    warnings.append({"node": nid, "kind": "ambiguous_type" if kind == "type" else "ambiguous_link_type", "ref": name})
+        if n["type"] not in RESERVED and scratch_of(nodes, n) is None:
+            if ambiguous(nodes, "type", n["type"]):
+                warnings.append({"node": nid, "kind": "ambiguous_type", "ref": n["type"]})
+            for lt in sorted({l["type"] for l in n["links"] if ambiguous(nodes, "link-type", l["type"])}):
+                warnings.append({"node": nid, "kind": "ambiguous_link_type", "ref": lt})
         for r in sorted(set(endpoint_mismatches(nodes, n))):
             warnings.append({"node": nid, "kind": "link_endpoint_mismatch", "ref": r})
         for f in missing_required(nodes, n):
@@ -314,7 +460,7 @@ def matches(nodes, node, where):
     for key, want in where.items():
         wants = want if isinstance(want, list) else [want]
         if key == "type":
-            ok = any(strict_eq(node["type"], w) for w in wants)
+            ok = any(same_name(nodes, "type", node["type"], w) for w in wants)
         elif key == "plane":
             ok = any(strict_eq(node["plane"], w) for w in wants)
         elif key == "under":
@@ -394,7 +540,7 @@ def check_require_fields(node, names):
     return "pass" if ok else "fail"
 
 
-FIELD_IS_KEYS = {"in", "min", "max", "type", "optional", "min_items", "max_items", "unique"}
+FIELD_IS_KEYS = {"in", "min", "max", "type", "optional", "min_items", "max_items", "unique", "min_length", "max_length", "max_bytes"}
 
 
 def non_neg_int(v):
@@ -413,7 +559,10 @@ def unique_ok(items, by):
     return all(not any(strict_eq(j, k) for j in keys[:i]) for i, k in enumerate(keys))
 
 
-def check_field_is(node, spec_map):
+def check_field_is(node, spec_map, calc=None):
+    """`calc` is the node's calculated values by name ({name: text or list of text}); a name the node has no field of is read from there."""
+    own = {"id": node["id"], "title": node["title"]}   # a node's own id and title read like fields (title is the id when the file gives none)
+    fields = {**(calc or {}), **own, **node["fields"]}
     if not isinstance(spec_map, dict):
         return "bad"
     outcome = "pass"
@@ -424,7 +573,7 @@ def check_field_is(node, spec_map):
             return "bad"
         if any(k in spec and not is_number(spec[k]) for k in ("min", "max")):
             return "bad"
-        if any(k in spec and not non_neg_int(spec[k]) for k in ("min_items", "max_items")):
+        if any(k in spec and not non_neg_int(spec[k]) for k in ("min_items", "max_items", "min_length", "max_length", "max_bytes")):
             return "bad"
         if "unique" in spec:
             u = spec["unique"]
@@ -432,7 +581,10 @@ def check_field_is(node, spec_map):
                 return "bad"
         if "type" in spec and spec["type"] not in TYPES:
             return "bad"
-        slots = resolve(node["fields"], name)
+        if name not in node["fields"] and name not in own and isinstance((calc or {}).get(name), list):
+            slots = list(calc[name])   # a calculated name with several values is checked value by value
+        else:
+            slots = resolve(fields, name)
         if slots is None:
             return "bad"
         for v in slots:
@@ -453,6 +605,12 @@ def check_field_is(node, spec_map):
             if "max_items" in spec and not (isinstance(v, list) and len(v) <= spec["max_items"]):
                 outcome = "fail"
             if "unique" in spec and not (isinstance(v, list) and unique_ok(v, spec["unique"])):
+                outcome = "fail"
+            if "min_length" in spec and not (isinstance(v, str) and len(v) >= spec["min_length"]):
+                outcome = "fail"
+            if "max_length" in spec and not (isinstance(v, str) and len(v) <= spec["max_length"]):
+                outcome = "fail"
+            if "max_bytes" in spec and not (isinstance(v, str) and len(v.encode("utf-8")) <= spec["max_bytes"]):
                 outcome = "fail"
     return outcome
 
@@ -497,7 +655,7 @@ def check_compare_fields(node, items):
 
 def nearest_ancestor(nodes, nid, typ):
     for a in ancestors(nodes, nid)[1:]:
-        if nodes[a]["type"] == typ:
+        if same_name(nodes, "type", nodes[a]["type"], typ):
             return a
     return None
 
@@ -511,16 +669,16 @@ def count_links(nodes, inbound, node, item):
     """Links of this node (out) or to this node (in) that satisfy every filter in `item`."""
     t = item["type"]
     if item.get("dir", "out") == "out":
-        pairs = [(l, nodes.get(l["to"])) for l in node["links"] if l["type"] == t]
+        pairs = [(l, nodes.get(l["to"])) for l in node["links"] if same_name(nodes, "link-type", l["type"], t)]
     else:
-        pairs = [(l, nodes[src]) for src, l in inbound.get(node["id"], []) if l["type"] == t]
+        pairs = [(l, nodes[src]) for src, l in inbound.get(node["id"], []) if same_name(nodes, "link-type", l["type"], t)]
     ntype = item["node_type"] if "node_type" in item else item.get("to_type", ...)
     nplane = item["node_plane"] if "node_plane" in item else item.get("to_plane", ...)
     n = 0
     for l, other in pairs:
         if other is None:
             continue
-        if ntype is not ... and not strict_eq(other["type"], ntype):
+        if ntype is not ... and not same_name(nodes, "type", other["type"], ntype):
             continue
         if nplane is not ... and not strict_eq(other["plane"], nplane):
             continue
@@ -598,15 +756,15 @@ def step_valid(step):
 def step_targets(nodes, inbound, nid, step):
     """Ids at the other end of `nid`'s links of this step's type that exist and match the step's filters."""
     if step.get("dir", "out") == "out":
-        ends = [l["to"] for l in nodes[nid]["links"] if l["type"] == step["type"]]
+        ends = [l["to"] for l in nodes[nid]["links"] if same_name(nodes, "link-type", l["type"], step["type"])]
     else:
-        ends = [src for src, l in inbound.get(nid, []) if l["type"] == step["type"]]
+        ends = [src for src, l in inbound.get(nid, []) if same_name(nodes, "link-type", l["type"], step["type"])]
     out = set()
     for e in ends:
         o = nodes.get(e)
         if o is None:
             continue
-        if "node_type" in step and not strict_eq(o["type"], step["node_type"]):
+        if "node_type" in step and not same_name(nodes, "type", o["type"], step["node_type"]):
             continue
         if "node_plane" in step and not strict_eq(o["plane"], step["node_plane"]):
             continue
@@ -634,7 +792,7 @@ def check_acyclic(nodes, node, types):
     if not types or not all(is_str(t) and t for t in types):
         return "bad"
     for t in types:
-        seen, stack = set(), [l["to"] for l in node["links"] if l["type"] == t]
+        seen, stack = set(), [l["to"] for l in node["links"] if same_name(nodes, "link-type", l["type"], t)]
         while stack:
             cur = stack.pop()
             if cur == node["id"]:
@@ -642,7 +800,7 @@ def check_acyclic(nodes, node, types):
             if cur in seen or cur not in nodes:
                 continue
             seen.add(cur)
-            stack += [l["to"] for l in nodes[cur]["links"] if l["type"] == t]
+            stack += [l["to"] for l in nodes[cur]["links"] if same_name(nodes, "link-type", l["type"], t)]
     return "pass"
 
 
@@ -652,30 +810,30 @@ def check_require_link_fields(nodes, inbound, node, items):
         if not link_item_ok(it, ("type", "dir", "fields")) or not (isinstance(it.get("fields"), list) and all(isinstance(f, str) for f in it["fields"])):
             return "bad"
         if it.get("dir", "out") == "out":
-            links = [l for l in node["links"] if l["type"] == it["type"]]
+            links = [l for l in node["links"] if same_name(nodes, "link-type", l["type"], it["type"])]
         else:
-            links = [l for src, l in inbound.get(node["id"], []) if l["type"] == it["type"]]
+            links = [l for src, l in inbound.get(node["id"], []) if same_name(nodes, "link-type", l["type"], it["type"])]
         if not all(all(present((l.get("fields") or {}).get(f)) for f in it["fields"]) for l in links):
             outcome = "fail"
     return outcome
 
 
-def check_any_of(nodes, inbound, node, val):
+def check_any_of(nodes, inbound, node, val, calc=None):
     """A non-empty list of checks (each a non-empty map): passes if one passes. If none passes and one is not understood, the whole is not."""
     if not isinstance(val, list) or not val or not all(isinstance(it, dict) and it for it in val):
         return "bad"
-    results = [run_check(nodes, inbound, node, it) for it in val]
+    results = [run_check(nodes, inbound, node, it, calc) for it in val]
     return "pass" if "pass" in results else "bad" if "unsupported" in results else "fail"
 
 
-def run_check(nodes, inbound, node, check):
+def run_check(nodes, inbound, node, check, calc=None):
     """Returns pass, fail or unsupported. A check passes only if every part passes and every part is understood."""
     parts = []
     for key, val in check.items():
         if key == "require_fields":
             parts.append(check_require_fields(node, val))
         elif key == "field_is":
-            parts.append(check_field_is(node, val))
+            parts.append(check_field_is(node, val, calc))
         elif key == "compare_fields":
             parts.append(check_compare_fields(node, val))
         elif key == "require_link":
@@ -689,7 +847,7 @@ def run_check(nodes, inbound, node, check):
         elif key == "acyclic":
             parts.append(check_acyclic(nodes, node, val))
         elif key == "any_of":
-            parts.append(check_any_of(nodes, inbound, node, val))
+            parts.append(check_any_of(nodes, inbound, node, val, calc))
         else:
             parts.append("bad")
     return "fail" if "fail" in parts else "unsupported" if "bad" in parts else "pass"
@@ -712,13 +870,24 @@ def ghosts_for(nodes, inbound, node, rule_id, check):
     return out
 
 
-def evaluate(nodes):
+def calculated(derived):
+    """A node's derived values as plain values for rules: one value is text, several are a list. A name that could not be worked out is left out."""
+    out = {}
+    for nid, row in derived.items():
+        vals = {name: (d["values"][0] if len(d["values"]) == 1 else list(d["values"])) for name, d in row.items() if d.get("values")}
+        if vals:
+            out[nid] = vals
+    return out
+
+
+def evaluate(nodes, derived=None):
     rules = sorted((n for n in nodes.values() if n["type"] == "rule"), key=lambda n: n["id"])
     inbound = {}
     for src in sorted(nodes):
         for l in nodes[src]["links"]:
             inbound.setdefault(l["to"], []).append((src, l))
     results, ghosts = [], []
+    calc = calculated(derive(nodes) if derived is None else derived)
     for node in sorted(nodes.values(), key=lambda n: n["id"]):
         if node["type"] in RESERVED or scratch_of(nodes, node) is not None:
             continue
@@ -726,18 +895,20 @@ def evaluate(nodes):
             f = r["fields"]
             if f.get("enabled") is False:   # switched off: no results, no ghosts
                 continue
+            _CTX[0] = def_ns(r)
             if not matches(nodes, node, f.get("applies_to") or {}):
                 continue
             check = f.get("check")
             if not isinstance(check, dict) or not check:
                 status = "advisory"
             else:
-                status = run_check(nodes, inbound, node, check)
+                status = run_check(nodes, inbound, node, check, calc.get(node["id"]))
             sev = f.get("severity")
             sev = sev if sev in ("error", "warn", "info") else "warn"
             results.append({"node": node["id"], "rule": r["id"], "severity": sev, "status": status})
             if status == "fail":
                 ghosts += ghosts_for(nodes, inbound, node, r["id"], check)
+    _CTX[0] = None
     key = lambda x: (x["node"], x["rule"])
     return sorted(results, key=key), sorted(ghosts, key=key)
 
@@ -750,8 +921,199 @@ def unmatched_rules(nodes):
         where = f.get("applies_to")
         if f.get("enabled") is False or not isinstance(where, dict) or "id" not in where:
             continue
-        if not any(n["type"] not in RESERVED and scratch_of(nodes, n) is None and matches(nodes, n, where) for n in nodes.values()):
+        _CTX[0] = def_ns(r)
+        found = any(n["type"] not in RESERVED and scratch_of(nodes, n) is None and matches(nodes, n, where) for n in nodes.values())
+        _CTX[0] = None
+        if not found:
             out.append({"node": r["id"], "kind": "rule_matches_nothing", "ref": None})
+    return out
+
+
+# ---------- derived values ----------
+MAX_DERIVED = 64   # the most values one derived name gives a node
+MAX_PLACEHOLDERS = 32   # a template with more placeholders is unusable
+MAX_HOPS = 5   # a placeholder that follows more links than this makes the template unusable
+MAX_VALUE_CHARS = 1024   # a template that would build a longer value is unusable
+
+
+def parse_template(t):
+    """Split a template into ("lit", text) and ("ph", path) parts. `\\{`, `\\}` and `\\\\` are literal characters.
+    None if a brace is unbalanced or a placeholder is empty."""
+    parts, lit, i = [], "", 0
+    while i < len(t):
+        c = t[i]
+        if c == "\\":
+            if i + 1 < len(t) and t[i + 1] in "{}\\":
+                lit += t[i + 1]
+                i += 2
+            else:
+                lit += "\\"
+                i += 1
+        elif c == "{":
+            j = i + 1
+            while j < len(t) and t[j] not in "{}":
+                j += 1
+            if j >= len(t) or t[j] != "}" or j == i + 1:
+                return None
+            if lit:
+                parts.append(("lit", lit))
+                lit = ""
+            if sum(1 for k, _ in parts if k == "ph") >= MAX_PLACEHOLDERS:
+                return None
+            if t[i + 1:j].count("/") > MAX_HOPS:
+                return None
+            parts.append(("ph", t[i + 1:j]))
+            i = j + 1
+        elif c == "}":
+            return None
+        else:
+            lit += c
+            i += 1
+    if lit:
+        parts.append(("lit", lit))
+    return parts
+
+
+def derived_text(v):
+    if isinstance(v, bool):
+        return "true" if v else "false"
+    if isinstance(v, (int, float)):
+        return json.dumps(v)
+    if isinstance(v, str):
+        return v
+    return None
+
+
+def derived_read(node, path):
+    if path not in node["fields"]:
+        if path == "id":
+            return [node["id"]]
+        if path == "title":
+            return [node["title"]]
+        if path == "@type":
+            return [node["type"]] if node["type"] else []
+    slots = resolve(node["fields"], path) or []
+    return [t for t in (derived_text(s) for s in slots if s is not MISSING) if t is not None]
+
+
+def derived_reach(nodes, inbound, types, node, hops):
+    cur = {node["id"]: node}
+    for hop in hops:
+        nxt = {}
+        for n in cur.values():
+            if hop == "@type":
+                found = candidates(nodes, "type", n["type"])
+                t = found[0] if found else None
+                if t is not None:
+                    nxt[t["id"]] = t
+            elif hop.startswith("^"):
+                for src, l in inbound.get(n["id"], []):
+                    if same_name(nodes, "link-type", l["type"], hop[1:]):
+                        nxt[src] = nodes[src]
+            else:
+                for l in n["links"]:
+                    if same_name(nodes, "link-type", l["type"], hop) and l["to"] in nodes:
+                        nxt[l["to"]] = nodes[l["to"]]
+        cur = nxt
+    return [cur[k] for k in sorted(cur)]
+
+
+def derived_placeholder(nodes, inbound, types, node, ph):
+    segs = ph.split("/")
+    if any(s == "" for s in segs):
+        return []
+    reached = derived_reach(nodes, inbound, types, node, segs[:-1])
+    return [v for n in reached for v in derived_read(n, segs[-1])]
+
+
+def derived_evaluate(nodes, inbound, types, node, parts):
+    if not parts:
+        return {"missing": ["template"]}
+    results, missing = [""], []
+    for kind, val in parts:
+        if kind == "lit":
+            if any(len(r) + len(val) > MAX_VALUE_CHARS for r in results):
+                return {"missing": ["template"]}
+            results = [r + val for r in results]
+            continue
+        vals = derived_placeholder(nodes, inbound, types, node, val)
+        if not vals:
+            if val not in missing:
+                missing.append(val)
+            continue
+        nxt = []
+        for r in results:
+            for v in vals:
+                if len(nxt) >= MAX_DERIVED:
+                    break
+                if len(r) + len(v) > MAX_VALUE_CHARS:
+                    return {"missing": ["template"]}
+                nxt.append(r + v)
+            if len(nxt) >= MAX_DERIVED:
+                break
+        results = nxt
+    if missing:
+        return {"missing": missing}
+    seen = []
+    for r in results:
+        if r not in seen:
+            seen.append(r)
+    return {"values": seen}
+
+
+def derived_override(node, name, computed):
+    """What the node says its name is (`overrides: {name: "value"}` or a list of values) replaces the template; `computed` keeps what
+    the template gave (empty when it could not be resolved). Anything but non-empty strings is ignored."""
+    given = node["fields"].get("overrides")
+    given = given.get(name) if isinstance(given, dict) else None
+    given = given if isinstance(given, list) else [given]
+    values = []
+    for v in given:
+        if isinstance(v, str) and v != "" and v not in values and len(values) < 64:
+            values.append(v)
+    if not values:
+        return computed
+    return {"values": values, "override": True, "computed": computed.get("values", [])}
+
+
+def derive(nodes):
+    """Every node's derived values: {node id: {name: {"values": [...]} or {"missing": [...]}}}. Reserved nodes and nodes in a
+    scratch have none. For each name the most specific applicable definition wins (id 3, type 2, plane 1, other 0); ties go to the
+    lower definition id."""
+    defs = []
+    for d in sorted((n for n in nodes.values() if n["type"] == "derived"), key=lambda n: n["id"]):
+        f = d["fields"]
+        if f.get("enabled") is False or not is_str(f.get("name")) or not isinstance(f.get("template"), str):
+            continue
+        where = f.get("applies_to") if isinstance(f.get("applies_to"), dict) else {}
+        spec = 3 if "id" in where else 2 if "type" in where else 1 if "plane" in where else 0
+        # `name` is the definition's own; `field-name`, when set, is what the value is called on a node
+        defs.append((f["field-name"] if is_str(f.get("field-name")) else f["name"], parse_template(f["template"]), where, spec, def_ns(d)))
+    out = {}
+    if not defs:
+        return out
+    inbound = {}
+    for src in sorted(nodes):
+        for l in nodes[src]["links"]:
+            inbound.setdefault(l["to"], []).append((src, l))
+    types = None   # a node's type definition is found through `candidates`
+    for node in sorted(nodes.values(), key=lambda n: n["id"]):
+        if node["type"] in RESERVED or scratch_of(nodes, node) is not None:
+            continue
+        best = {}
+        for name, parts, where, spec, ns in defs:
+            _CTX[0] = ns
+            if not matches(nodes, node, where):
+                continue
+            if name not in best or spec > best[name][1]:
+                best[name] = (parts, spec, ns)
+        if best:
+            values = {}
+            for name in sorted(best):
+                _CTX[0] = best[name][2]
+                values[name] = derived_override(node, name, derived_evaluate(nodes, inbound, types, node, best[name][0]))
+            out[node["id"]] = values
+    _CTX[0] = None
     return out
 
 
@@ -760,10 +1122,11 @@ def check(root):
     nodes, load_errors = load(root)
     errors, warnings = structure(nodes)
     warnings = sorted(warnings + unmatched_rules(nodes), key=lambda f: (f["node"], f["kind"], f["ref"] or ""))
-    results, ghosts = evaluate(nodes)
+    derived = derive(nodes)
+    results, ghosts = evaluate(nodes, derived)
     return {
         "load_errors": sorted(load_errors, key=lambda e: (e["file"], e["kind"])),
-        "nodes": [nodes[i] for i in sorted(nodes)],
+        "nodes": [({**nodes[i], "derived": derived[i]} if i in derived else nodes[i]) for i in sorted(nodes)],
         "structure": {"errors": errors, "warnings": warnings},
         "results": results,
         "ghosts": ghosts,

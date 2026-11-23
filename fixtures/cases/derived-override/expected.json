@@ -1,0 +1,209 @@
+{
+ "ghosts": [],
+ "load_errors": [],
+ "nodes": [
+  {
+   "body": "",
+   "fields": {
+    "name": "label",
+    "template": "n-{id}"
+   },
+   "id": "d-label",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "d-label",
+   "type": "derived"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "thing"
+    },
+    "name": "other",
+    "template": "o-{id}"
+   },
+   "id": "d-other",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "d-other",
+   "type": "derived"
+  },
+  {
+   "body": "",
+   "derived": {
+    "label": {
+     "values": [
+      "n-junk"
+     ]
+    },
+    "other": {
+     "values": [
+      "o-junk"
+     ]
+    }
+   },
+   "fields": {
+    "overrides": {
+     "label": 7,
+     "nothing-defined": "x"
+    }
+   },
+   "id": "junk",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "junk",
+   "type": "thing"
+  },
+  {
+   "body": "",
+   "derived": {
+    "label": {
+     "values": [
+      "n-not-a-map"
+     ]
+    },
+    "other": {
+     "values": [
+      "o-not-a-map"
+     ]
+    }
+   },
+   "fields": {
+    "overrides": "not-a-map"
+   },
+   "id": "not-a-map",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "not-a-map",
+   "type": "thing"
+  },
+  {
+   "body": "",
+   "derived": {
+    "label": {
+     "computed": [
+      "n-odd"
+     ],
+     "override": true,
+     "values": [
+      "legacy-odd"
+     ]
+    },
+    "other": {
+     "values": [
+      "o-odd"
+     ]
+    }
+   },
+   "fields": {
+    "overrides": {
+     "label": "legacy-odd"
+    }
+   },
+   "id": "odd",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "odd",
+   "type": "thing"
+  },
+  {
+   "body": "",
+   "derived": {
+    "label": {
+     "values": [
+      "n-other-name"
+     ]
+    },
+    "other": {
+     "computed": [
+      "o-other-name"
+     ],
+     "override": true,
+     "values": [
+      "kept"
+     ]
+    }
+   },
+   "fields": {
+    "overrides": {
+     "other": "kept"
+    }
+   },
+   "id": "other-name",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "other-name",
+   "type": "thing"
+  },
+  {
+   "body": "",
+   "derived": {
+    "label": {
+     "values": [
+      "n-plain"
+     ]
+    },
+    "other": {
+     "values": [
+      "o-plain"
+     ]
+    }
+   },
+   "fields": {},
+   "id": "plain",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "plain",
+   "type": "thing"
+  },
+  {
+   "body": "",
+   "derived": {
+    "label": {
+     "computed": [
+      "n-two"
+     ],
+     "override": true,
+     "values": [
+      "b",
+      "a"
+     ]
+    },
+    "other": {
+     "values": [
+      "o-two"
+     ]
+    }
+   },
+   "fields": {
+    "overrides": {
+     "label": [
+      "b",
+      "a",
+      "b",
+      ""
+     ]
+    }
+   },
+   "id": "two",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "two",
+   "type": "thing"
+  }
+ ],
+ "results": [],
+ "structure": {
+  "errors": [],
+  "warnings": []
+ }
+}

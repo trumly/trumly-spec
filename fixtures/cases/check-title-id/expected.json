@@ -1,0 +1,219 @@
+{
+ "ghosts": [],
+ "load_errors": [],
+ "nodes": [
+  {
+   "body": "",
+   "fields": {},
+   "id": "longer-id",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "Ok",
+   "type": "t"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "n1",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "Short",
+   "type": "t"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "n2",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "Much too long",
+   "type": "t"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "n3",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "n3",
+   "type": "t"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "n4",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "ééééé",
+   "type": "t"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "t"
+    },
+    "check": {
+     "field_is": {
+      "title": {
+       "max_length": 5
+      }
+     }
+    },
+    "statement": "s"
+   },
+   "id": "r1",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r1",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "t"
+    },
+    "check": {
+     "field_is": {
+      "id": {
+       "max_bytes": 3
+      }
+     }
+    },
+    "statement": "s"
+   },
+   "id": "r2",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r2",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "t"
+    },
+    "check": {
+     "field_is": {
+      "title": {
+       "max_bytes": 5,
+       "min_length": 2
+      }
+     }
+    },
+    "statement": "s"
+   },
+   "id": "r3",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r3",
+   "type": "rule"
+  }
+ ],
+ "results": [
+  {
+   "node": "longer-id",
+   "rule": "r1",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "longer-id",
+   "rule": "r2",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "longer-id",
+   "rule": "r3",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "n1",
+   "rule": "r1",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "n1",
+   "rule": "r2",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "n1",
+   "rule": "r3",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "n2",
+   "rule": "r1",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "n2",
+   "rule": "r2",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "n2",
+   "rule": "r3",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "n3",
+   "rule": "r1",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "n3",
+   "rule": "r2",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "n3",
+   "rule": "r3",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "n4",
+   "rule": "r1",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "n4",
+   "rule": "r2",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "n4",
+   "rule": "r3",
+   "severity": "warn",
+   "status": "fail"
+  }
+ ],
+ "structure": {
+  "errors": [],
+  "warnings": []
+ }
+}

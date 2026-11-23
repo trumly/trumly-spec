@@ -1,0 +1,343 @@
+{
+ "ghosts": [],
+ "load_errors": [],
+ "nodes": [
+  {
+   "body": "",
+   "fields": {
+    "name": "hot"
+   },
+   "id": "cache-hot",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "cache-hot",
+   "type": "cache"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "rds"
+    },
+    "name": "aws-name",
+    "template": "{env}-{region}-{details/@type/^stands-for/value}"
+   },
+   "id": "d-aws",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "d-aws",
+   "type": "derived"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "id": "ds-orders"
+    },
+    "name": "back",
+    "template": "{^details/@type/name}"
+   },
+   "id": "d-back",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "d-back",
+   "type": "derived"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "id": "ds-orders"
+    },
+    "name": "first",
+    "template": "{@type/^stands-for/value}"
+   },
+   "id": "d-first",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "d-first",
+   "type": "derived"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "id": "rds-orders"
+    },
+    "name": "meta",
+    "template": "{details/@type/@type/^stands-for/value}"
+   },
+   "id": "d-meta",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "d-meta",
+   "type": "derived"
+  },
+  {
+   "body": "",
+   "fields": {
+    "name": "audit"
+   },
+   "id": "ds-audit",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "ds-audit",
+   "type": "datastore"
+  },
+  {
+   "body": "",
+   "derived": {
+    "back": {
+     "values": [
+      "rds"
+     ]
+    },
+    "first": {
+     "values": [
+      "db"
+     ]
+    }
+   },
+   "fields": {
+    "name": "orders"
+   },
+   "id": "ds-orders",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "ds-orders",
+   "type": "datastore"
+  },
+  {
+   "body": "",
+   "derived": {
+    "aws-name": {
+     "values": [
+      "prod-euw2-cache",
+      "prod-euw2-db"
+     ]
+    }
+   },
+   "fields": {
+    "env": "prod",
+    "region": "euw2"
+   },
+   "id": "rds-both",
+   "links": [
+    {
+     "to": "ds-orders",
+     "type": "details"
+    },
+    {
+     "to": "ds-audit",
+     "type": "details"
+    },
+    {
+     "to": "cache-hot",
+     "type": "details"
+    }
+   ],
+   "parent": null,
+   "plane": null,
+   "title": "rds-both",
+   "type": "rds"
+  },
+  {
+   "body": "",
+   "derived": {
+    "aws-name": {
+     "missing": [
+      "details/@type/^stands-for/value"
+     ]
+    }
+   },
+   "fields": {
+    "env": "dev",
+    "region": "euw2"
+   },
+   "id": "rds-lone",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "rds-lone",
+   "type": "rds"
+  },
+  {
+   "body": "",
+   "derived": {
+    "aws-name": {
+     "missing": [
+      "details/@type/^stands-for/value"
+     ]
+    }
+   },
+   "fields": {
+    "env": "dev",
+    "region": "euw2"
+   },
+   "id": "rds-nodef",
+   "links": [
+    {
+     "to": "thing-1",
+     "type": "details"
+    }
+   ],
+   "parent": null,
+   "plane": null,
+   "title": "rds-nodef",
+   "type": "rds"
+  },
+  {
+   "body": "",
+   "derived": {
+    "aws-name": {
+     "values": [
+      "prod-euw2-db"
+     ]
+    },
+    "meta": {
+     "values": [
+      "meta"
+     ]
+    }
+   },
+   "fields": {
+    "env": "prod",
+    "region": "euw2"
+   },
+   "id": "rds-orders",
+   "links": [
+    {
+     "to": "ds-orders",
+     "type": "details"
+    }
+   ],
+   "parent": null,
+   "plane": null,
+   "title": "rds-orders",
+   "type": "rds"
+  },
+  {
+   "body": "",
+   "fields": {
+    "name": "cache"
+   },
+   "id": "t-cache",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "t-cache",
+   "type": "type"
+  },
+  {
+   "body": "",
+   "fields": {
+    "name": "datastore"
+   },
+   "id": "t-datastore",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "t-datastore",
+   "type": "type"
+  },
+  {
+   "body": "",
+   "fields": {
+    "name": "rds"
+   },
+   "id": "t-rds",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "t-rds",
+   "type": "type"
+  },
+  {
+   "body": "",
+   "fields": {
+    "name": "type"
+   },
+   "id": "t-type",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "t-type",
+   "type": "type"
+  },
+  {
+   "body": "",
+   "fields": {
+    "name": "gizmo"
+   },
+   "id": "thing-1",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "thing-1",
+   "type": "widget"
+  },
+  {
+   "body": "",
+   "fields": {
+    "value": "cache"
+   },
+   "id": "tok-cache",
+   "links": [
+    {
+     "to": "t-cache",
+     "type": "stands-for"
+    }
+   ],
+   "parent": null,
+   "plane": null,
+   "title": "tok-cache",
+   "type": "token"
+  },
+  {
+   "body": "",
+   "fields": {
+    "value": "db"
+   },
+   "id": "tok-datastore",
+   "links": [
+    {
+     "to": "t-datastore",
+     "type": "stands-for"
+    }
+   ],
+   "parent": null,
+   "plane": null,
+   "title": "tok-datastore",
+   "type": "token"
+  },
+  {
+   "body": "",
+   "fields": {
+    "value": "meta"
+   },
+   "id": "tok-type",
+   "links": [
+    {
+     "to": "t-type",
+     "type": "stands-for"
+    }
+   ],
+   "parent": null,
+   "plane": null,
+   "title": "tok-type",
+   "type": "token"
+  }
+ ],
+ "results": [],
+ "structure": {
+  "errors": [],
+  "warnings": []
+ }
+}

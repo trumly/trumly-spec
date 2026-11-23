@@ -1,0 +1,58 @@
+{
+ "ghosts": [],
+ "load_errors": [],
+ "nodes": [
+  {
+   "body": "",
+   "fields": {},
+   "id": "bare",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "bare",
+   "type": "thing"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "qualified",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "qualified",
+   "type": "x:thing"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "x:thing"
+    },
+    "check": {
+     "require_fields": [
+      "owner"
+     ]
+    },
+    "severity": "warn"
+   },
+   "id": "thing-rule",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "thing-rule",
+   "type": "rule"
+  }
+ ],
+ "results": [
+  {
+   "node": "qualified",
+   "rule": "thing-rule",
+   "severity": "warn",
+   "status": "fail"
+  }
+ ],
+ "structure": {
+  "errors": [],
+  "warnings": []
+ }
+}

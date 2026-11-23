@@ -1,0 +1,177 @@
+{
+ "ghosts": [],
+ "load_errors": [],
+ "nodes": [
+  {
+   "body": "",
+   "fields": {},
+   "id": "c1",
+   "links": [
+    {
+     "to": "v1",
+     "type": "mounts"
+    }
+   ],
+   "parent": null,
+   "plane": null,
+   "title": "c1",
+   "type": "container"
+  },
+  {
+   "body": "",
+   "fields": {
+    "from": [
+     "container",
+     "workload"
+    ],
+    "name": "mounts",
+    "pack": "containers@1.0.0",
+    "to": [
+     "volume"
+    ]
+   },
+   "id": "ctr--link-mounts",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "ctr--link-mounts",
+   "type": "link-type"
+  },
+  {
+   "body": "",
+   "fields": {
+    "name": "containers",
+    "namespace": "ctr",
+    "optional": [
+     "kubernetes@^1.0.0"
+    ],
+    "pack": "containers@1.0.0",
+    "version": "1.0.0"
+   },
+   "id": "ctr--pack",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "ctr--pack",
+   "type": "pack"
+  },
+  {
+   "body": "",
+   "fields": {
+    "name": "container",
+    "pack": "containers@1.0.0"
+   },
+   "id": "ctr--type-container",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "ctr--type-container",
+   "type": "type"
+  },
+  {
+   "body": "",
+   "fields": {
+    "name": "volume",
+    "pack": "containers@1.0.0"
+   },
+   "id": "ctr--type-volume",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "ctr--type-volume",
+   "type": "type"
+  },
+  {
+   "body": "",
+   "fields": {
+    "name": "other",
+    "namespace": "ot",
+    "pack": "other@1.0.0",
+    "version": "1.0.0"
+   },
+   "id": "ot--pack",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "ot--pack",
+   "type": "pack"
+  },
+  {
+   "body": "",
+   "fields": {
+    "name": "workload",
+    "pack": "other@1.0.0"
+   },
+   "id": "ot--type-workload",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "ot--type-workload",
+   "type": "type"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "v1",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "v1",
+   "type": "ctr:volume"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "w-ot",
+   "links": [
+    {
+     "to": "v1",
+     "type": "mounts"
+    }
+   ],
+   "parent": null,
+   "plane": null,
+   "title": "w-ot",
+   "type": "ot:workload"
+  },
+  {
+   "body": "",
+   "fields": {
+    "name": "zed",
+    "namespace": "zz",
+    "pack": "zed@1.0.0",
+    "version": "1.0.0"
+   },
+   "id": "zz--pack",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "zz--pack",
+   "type": "pack"
+  },
+  {
+   "body": "",
+   "fields": {
+    "name": "workload",
+    "pack": "zed@1.0.0"
+   },
+   "id": "zz--type-workload",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "zz--type-workload",
+   "type": "type"
+  }
+ ],
+ "results": [],
+ "structure": {
+  "errors": [],
+  "warnings": [
+   {
+    "kind": "ambiguous_type",
+    "node": "ctr--link-mounts",
+    "ref": "workload"
+   }
+  ]
+ }
+}

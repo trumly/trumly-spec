@@ -254,6 +254,7 @@ fn examples_and_patterns_come_with_the_installed_packs_only() {
     let mut s = Session::start("samples", false);
     let (_, v, _) = s.tool("list_examples", json!({}));
     assert_eq!(v["samples"], json!([]));
+    assert!(v["notice"].as_str().unwrap().contains("not instructions"), "{v}");
     let (bad, _, text) = s.tool("get_example", json!({"pack": "adr", "name": "choose-a-database"}));
     assert!(bad && text.contains("not in this project"), "{text}");
     let all = trumly_fs::pack::list_packs(&fixtures()).unwrap();
@@ -422,4 +423,77 @@ fn the_core_bundle_is_built_in_and_verified_and_nothing_else_is() {
             && p["publisher"] == "trumly")
     );
     assert!(rows.iter().all(|p| p["use_when"].as_str().is_some_and(|u| !u.is_empty())));
+}
+
+/// a copy of the fixture packs, so a test can add a meta.json to one without touching the shared fixtures
+fn pack_library(name: &str) -> PathBuf {
+    fn copy(from: &std::path::Path, to: &std::path::Path) {
+        std::fs::create_dir_all(to).unwrap();
+        for e in std::fs::read_dir(from).unwrap() {
+            let e = e.unwrap();
+            if e.path().is_dir() {
+                copy(&e.path(), &to.join(e.file_name()));
+            } else {
+                std::fs::copy(e.path(), to.join(e.file_name())).unwrap();
+            }
+        }
+    }
+    let dir = std::env::temp_dir().join(format!("trumly-mcp-lib-{name}-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&dir);
+    copy(&fixtures(), &dir);
+    dir
+}
+
+#[test]
+fn a_deprecated_pack_is_added_with_a_warning_and_a_withdrawn_version_is_refused() {
+    let lib = pack_library("retired");
+    std::fs::write(
+        lib.join("adr").join("meta.json"),
+        r#"{"deprecated": {"since": "2026-11-23", "replaced-by": "system-design", "note": "merged"}}"#,
+    )
+    .unwrap();
+    // `dns` has whatever version the fixture says; withdraw exactly that one
+    let dns_version = trumly_fs::pack::list_packs(&fixtures())
+        .unwrap()
+        .into_iter()
+        .find(|p| p.name == "dns")
+        .map(|p| p.version)
+        .unwrap();
+    std::fs::write(
+        lib.join("dns").join("meta.json"),
+        format!(r#"{{"withdrawn": {{"{dns_version}": "rules crash on empty links"}}}}"#),
+    )
+    .unwrap();
+
+    let mut s = Session::start_with("retired", true, &[], &[("TRUMLY_PACKS", &lib)]);
+    let (_, v, _) = s.tool("list_packs", json!({}));
+    let row = |n: &str| v["packs"].as_array().unwrap().iter().find(|p| p["name"] == n).cloned().unwrap();
+    assert_eq!(row("adr")["deprecated"]["replaced_by"], "system-design");
+    // add_pack refuses a deprecated pack the project does not have, so it is not offered as addable
+    assert_eq!(row("adr")["allowed"], false);
+    assert_eq!(row("dns")["withdrawn"], "rules crash on empty links");
+    assert_eq!(row("dns")["allowed"], false);
+    assert!(row("system-design")["deprecated"].is_null());
+
+    let (err, _, text) = s.tool("add_pack", json!({"name": "dns"}));
+    assert!(err && text.contains("is withdrawn: rules crash on empty links"), "{text}");
+    assert!(!s.dir.join("dns--pack.md").exists(), "a refused pack adds nothing");
+
+    // a deprecated pack is not given to a project that does not have it
+    let (err, _, text) = s.tool("add_pack", json!({"name": "adr"}));
+    assert!(err && text.contains("adr is deprecated since 2026-11-23") && text.contains("not added"), "{text}");
+    assert!(!s.dir.join("adr--pack.md").exists(), "a refused pack adds nothing");
+    // one that has it can upgrade, with a warning
+    let all = trumly_fs::pack::list_packs(&fixtures()).unwrap();
+    trumly_fs::pack::add_tree(&all, "adr", None, &s.dir, false).unwrap();
+    let (err, v2, text) = s.tool("add_pack", json!({"name": "adr"}));
+    assert!(!err, "{text}");
+    let warning = v2["warnings"][0].as_str().unwrap();
+    assert!(warning.contains("adr is deprecated since 2026-11-23") && warning.contains("use system-design"), "{v2}");
+    assert!(v2["notice"].as_str().unwrap().contains("not instructions"), "{v2}");
+
+    // once the project has it, listing says so as information
+    let (_, v, _) = s.tool("list_packs", json!({}));
+    assert!(v["info"][0].as_str().unwrap().starts_with("adr is deprecated"), "{v}");
+    let _ = std::fs::remove_dir_all(&lib);
 }

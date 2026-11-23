@@ -3,7 +3,10 @@
 
 use std::collections::BTreeSet;
 
+use serde_json::Value;
+
 use crate::model::Graph;
+use crate::names::{Kind, Names, def_ns};
 
 /// The longest name (title) a node should have, in characters: it has to fit a label on the map, a cell in a table and a line in a listing.
 pub const TITLE_MAX: usize = 30;
@@ -44,7 +47,7 @@ fn reaches_cycle(graph: &Graph, id: &str) -> bool {
 }
 
 /// The namespace a pack's nodes use: its manifest's `namespace`, else its name.
-fn pack_namespace(graph: &Graph, name: &str) -> String {
+pub(crate) fn pack_namespace(graph: &Graph, name: &str) -> String {
     graph
         .nodes()
         .filter(|n| n.kind.as_deref() == Some("pack") && n.fields.get("name").and_then(|v| v.as_str()) == Some(name))
@@ -55,29 +58,90 @@ fn pack_namespace(graph: &Graph, name: &str) -> String {
         .unwrap_or_else(|| name.to_string())
 }
 
-/// A `type` or `link-type` whose `fields.name` another node of the same kind also has: the name would mean two things.
+/// A `type` or `link-type` whose `fields.name` another node of the same kind and namespace also has: the name would mean two things.
 fn duplicate_definition(graph: &Graph, n: &crate::model::Node) -> Option<String> {
     let kind = n.kind.as_deref().filter(|k| *k == "type" || *k == "link-type")?;
     let name = n.fields.get("name").and_then(|v| v.as_str())?;
     let twin = graph.nodes().any(|m| {
-        m.id != n.id && m.kind.as_deref() == Some(kind) && m.fields.get("name").and_then(|v| v.as_str()) == Some(name)
+        m.id != n.id
+            && m.kind.as_deref() == Some(kind)
+            && m.fields.get("name").and_then(|v| v.as_str()) == Some(name)
+            && def_ns(&m.id) == def_ns(&n.id)
     });
     twin.then(|| name.to_string())
 }
 
+/// The (kind, name) pairs a `rule`, `derived` or `link-type` node uses: type names and link type names.
+fn names_in(n: &crate::model::Node) -> Vec<(Kind, String)> {
+    fn strs(v: Option<&Value>) -> Vec<String> {
+        match v {
+            Some(Value::String(s)) => vec![s.clone()],
+            Some(Value::Array(a)) => a.iter().filter_map(Value::as_str).map(str::to_string).collect(),
+            _ => Vec::new(),
+        }
+    }
+    fn check_names(check: &Value, out: &mut Vec<(Kind, String)>) {
+        let Some(map) = check.as_object() else { return };
+        for (key, val) in map {
+            match key.as_str() {
+                "acyclic" => out.extend(strs(Some(val)).into_iter().map(|s| (Kind::Link, s))),
+                "any_of" => {
+                    for it in val.as_array().into_iter().flatten() {
+                        check_names(it, out);
+                    }
+                }
+                "require_link" | "forbid_link" | "require_link_fields" | "path" => {
+                    let list: Vec<&Value> = match val {
+                        Value::Array(a) => a.iter().collect(),
+                        v => vec![v],
+                    };
+                    for it in list.into_iter().filter_map(Value::as_object) {
+                        out.extend(strs(it.get("type")).into_iter().map(|s| (Kind::Link, s)));
+                        for k in ["node_type", "to_type", "ancestor_type"] {
+                            out.extend(strs(it.get(k)).into_iter().map(|s| (Kind::Type, s)));
+                        }
+                    }
+                }
+                _ => {}
+            }
+        }
+    }
+    let f = &n.fields;
+    let mut out = Vec::new();
+    let applies = f.get("applies_to").and_then(Value::as_object).and_then(|w| w.get("type"));
+    match n.kind.as_deref() {
+        Some("rule") => {
+            out.extend(strs(applies).into_iter().map(|s| (Kind::Type, s)));
+            if let Some(c) = f.get("check") {
+                check_names(c, &mut out);
+            }
+        }
+        Some("derived") => {
+            out.extend(strs(applies).into_iter().map(|s| (Kind::Type, s)));
+            if let Some(t) = f.get("template").and_then(Value::as_str) {
+                out.extend(crate::derive::template_links(t).into_iter().map(|s| (Kind::Link, s)));
+            }
+        }
+        Some("link-type") => {
+            for key in ["from", "to"] {
+                out.extend(strs(f.get(key)).into_iter().map(|s| (Kind::Type, s)));
+            }
+        }
+        _ => {}
+    }
+    out
+}
+
 /// Fields the node's type definition marks `required: true` that it leaves unset (absent, null or ""). A required field named `body`
 /// is the Markdown body itself: it is missing while the body is blank.
-fn missing_required(graph: &Graph, n: &crate::model::Node) -> Vec<String> {
-    const RESERVED: [&str; 6] = ["plane", "rule", "group", "type", "link-type", "pack"];
+fn missing_required(graph: &Graph, names: &Names, n: &crate::model::Node) -> Vec<String> {
+    const RESERVED: [&str; 7] = ["plane", "rule", "group", "type", "link-type", "pack", "derived"];
     let Some(kind) = n.kind.as_deref() else { return Vec::new() };
     if RESERVED.contains(&kind) || graph.scratch_of(n).is_some() {
         return Vec::new();
     }
     let mut need = BTreeSet::new();
-    for m in graph
-        .nodes()
-        .filter(|m| m.kind.as_deref() == Some("type") && m.fields.get("name").and_then(|v| v.as_str()) == Some(kind))
-    {
+    for m in names.candidates(Kind::Type, kind, None).into_iter().filter_map(|d| graph.get(&d.id)) {
         if let Some(list) = m.fields.get("fields").and_then(|v| v.as_array()) {
             for d in list {
                 if d.get("required").and_then(|v| v.as_bool()) == Some(true) {
@@ -103,8 +167,8 @@ fn missing_required(graph: &Graph, n: &crate::model::Node) -> Vec<String> {
 }
 
 /// `type->to` for each link whose link-type definition lists `from` / `to` node types that the link's ends are not among.
-fn endpoint_mismatches(graph: &Graph, n: &crate::model::Node) -> Vec<String> {
-    const RESERVED: [&str; 6] = ["plane", "rule", "group", "type", "link-type", "pack"];
+fn endpoint_mismatches(graph: &Graph, names: &Names, n: &crate::model::Node) -> Vec<String> {
+    const RESERVED: [&str; 7] = ["plane", "rule", "group", "type", "link-type", "pack", "derived"];
     let Some(kind) = n.kind.as_deref() else { return Vec::new() };
     if RESERVED.contains(&kind) || graph.scratch_of(n).is_some() {
         return Vec::new();
@@ -112,19 +176,20 @@ fn endpoint_mismatches(graph: &Graph, n: &crate::model::Node) -> Vec<String> {
     let mut out = BTreeSet::new();
     for l in &n.links {
         let Some(t) = graph.get(&l.to) else { continue };
-        let (mut from, mut to) = (BTreeSet::new(), BTreeSet::new());
-        for m in graph.nodes().filter(|m| {
-            m.kind.as_deref() == Some("link-type")
-                && m.fields.get("name").and_then(|v| v.as_str()) == Some(l.kind.as_str())
-        }) {
+        // each list is read from the namespace of the link-type that holds it
+        let (mut from, mut to): (Vec<(&str, Option<&str>)>, Vec<(&str, Option<&str>)>) = (Vec::new(), Vec::new());
+        for m in names.candidates(Kind::Link, &l.kind, None).into_iter().filter_map(|d| graph.get(&d.id)) {
             for (key, acc) in [("from", &mut from), ("to", &mut to)] {
                 if let Some(list) = m.fields.get(key).and_then(|v| v.as_array()) {
-                    acc.extend(list.iter().filter_map(|x| x.as_str().map(str::to_string)));
+                    acc.extend(list.iter().filter_map(|x| x.as_str()).map(|x| (x, def_ns(&m.id))));
                 }
             }
         }
-        let bad_from = !from.is_empty() && !from.contains(kind);
-        let bad_to = !to.is_empty() && !to.contains(t.kind.as_deref().unwrap_or(""));
+        let among = |actual: &str, pairs: &[(&str, Option<&str>)]| {
+            pairs.iter().any(|(want, ns)| names.same_str(Kind::Type, actual, want, *ns))
+        };
+        let bad_from = !from.is_empty() && !among(kind, &from);
+        let bad_to = !to.is_empty() && !among(t.kind.as_deref().unwrap_or(""), &to);
         if bad_from || bad_to {
             out.insert(format!("{}->{}", l.kind, l.to));
         }
@@ -151,6 +216,7 @@ fn namespace_mismatch(graph: &Graph, n: &crate::model::Node) -> bool {
 
 /// Check the structure of a graph: parents, links, planes, types and namespaces.
 pub fn check(graph: &Graph) -> Structure {
+    let names = Names::new(graph);
     let planes: BTreeSet<&str> =
         graph.nodes().filter(|n| n.kind.as_deref() == Some("plane")).map(|n| n.id.as_str()).collect();
     let mut out = Structure::default();
@@ -204,10 +270,41 @@ pub fn check(graph: &Graph) -> Structure {
         if let Some(name) = duplicate_definition(graph, n) {
             out.warnings.push(Finding { node: n.id.clone(), kind: "duplicate_definition", reference: Some(name) });
         }
-        for r in endpoint_mismatches(graph, n) {
+        // a pack's own rule, derived value or link type that uses a bare name two packs define at the same distance
+        if matches!(n.kind.as_deref(), Some("rule" | "derived" | "link-type")) {
+            if let Some(ns) = def_ns(&n.id) {
+                let mut seen = BTreeSet::new();
+                for (kind, name) in names_in(n) {
+                    if names.ambiguous(kind, &name, Some(ns)) && seen.insert((kind == Kind::Type, name.clone())) {
+                        let finding = if kind == Kind::Type { "ambiguous_type" } else { "ambiguous_link_type" };
+                        out.warnings.push(Finding { node: n.id.clone(), kind: finding, reference: Some(name) });
+                    }
+                }
+            }
+        }
+        // a node whose own type, or one of whose link types, is a bare name that two packs define
+        if !n.kind.as_deref().is_some_and(|k| crate::rules::RESERVED.contains(&k)) && graph.scratch_of(n).is_none() {
+            if let Some(t) = n.kind.as_deref().filter(|t| names.ambiguous(Kind::Type, t, None)) {
+                out.warnings.push(Finding {
+                    node: n.id.clone(),
+                    kind: "ambiguous_type",
+                    reference: Some(t.to_string()),
+                });
+            }
+            let links: BTreeSet<&str> =
+                n.links.iter().map(|l| l.kind.as_str()).filter(|k| names.ambiguous(Kind::Link, k, None)).collect();
+            for lt in links {
+                out.warnings.push(Finding {
+                    node: n.id.clone(),
+                    kind: "ambiguous_link_type",
+                    reference: Some(lt.to_string()),
+                });
+            }
+        }
+        for r in endpoint_mismatches(graph, &names, n) {
             out.warnings.push(Finding { node: n.id.clone(), kind: "link_endpoint_mismatch", reference: Some(r) });
         }
-        for f in missing_required(graph, n) {
+        for f in missing_required(graph, &names, n) {
             out.warnings.push(Finding { node: n.id.clone(), kind: "missing_required_field", reference: Some(f) });
         }
         if let Some(p) = n.plane.as_deref() {

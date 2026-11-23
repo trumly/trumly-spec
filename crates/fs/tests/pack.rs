@@ -386,35 +386,18 @@ fn tiny_pack(root: &Path, name: &str, ns: &str, type_name: &str) {
 }
 
 #[test]
-fn two_packs_defining_the_same_name_can_use_the_existing_one_or_replace_it() {
+fn two_packs_may_define_the_same_name_but_your_own_definition_still_clashes() {
     use trumly_fs::pack::{Clash, add_tree_with};
     let lib = scratch("clash-lib");
     tiny_pack(&lib, "first", "fst", "service");
     tiny_pack(&lib, "second", "snd", "service");
     let all = list_packs(&lib).unwrap();
 
-    // refused by default, with a message that says it is a name clash
+    // two packs may share a name: each keeps its own definition and a project says `fst:service` or `snd:service`
     let model = scratch("clash-model");
     add_tree_with(&all, "first", None, &model, false, Clash::Refuse).unwrap();
-    let err = add_tree_with(&all, "second", None, &model, false, Clash::Refuse).unwrap_err();
-    assert!(err.contains("name clash") && err.contains("service"), "{err}");
-    assert!(!model.join("snd--pack.md").exists(), "a refused add writes nothing");
-
-    // use the existing definition: the second pack leaves its own out and the first stays
-    let r = add_tree_with(&all, "second", None, &model, false, Clash::Skip).unwrap();
-    assert_eq!(r[0].1.skipped, ["snd--type-service"]);
-    assert!(
-        model.join("fst--type-service.md").exists()
-            && !model.join("snd--type-service.md").exists()
-            && model.join("snd--pack.md").exists()
-    );
-
-    // replace: the definition already there goes, the pack's comes in
-    let model = scratch("clash-model2");
-    add_tree_with(&all, "first", None, &model, false, Clash::Refuse).unwrap();
-    let r = add_tree_with(&all, "second", None, &model, false, Clash::Replace).unwrap();
-    assert_eq!(r[0].1.replaced, ["fst--type-service"]);
-    assert!(!model.join("fst--type-service.md").exists() && model.join("snd--type-service.md").exists());
+    add_tree_with(&all, "second", None, &model, false, Clash::Refuse).unwrap();
+    assert!(model.join("fst--type-service.md").exists() && model.join("snd--type-service.md").exists());
 
     // a definition of your own counts too
     let model = scratch("clash-model3");
@@ -482,4 +465,24 @@ fn the_pin_lists_exactly_what_is_built_in() {
     pinned.sort();
     baked.sort();
     assert_eq!(pinned, baked, "packs/core.pin and the folders under packs/ must agree; run scripts/sync-core.mjs");
+}
+
+#[test]
+fn a_sample_lists_the_packs_it_also_uses_and_one_that_is_not_in_the_library_is_warned_about() {
+    use trumly_fs::pack::{check_samples, pack_from_texts};
+    let manifest = "---\nid: t--pack\ntype: pack\nfields:\n  name: t\n  namespace: t\n  version: '1'\n  license: MIT\n  publisher: tests\n---\n".to_string();
+    let items = vec![
+        ("t--pack".to_string(), manifest),
+        (
+            "examples/one/example".to_string(),
+            "---\nid: example\ntype: example\ntitle: One\nfields:\n  description: Shows it\n  requires: [t]\n  optional: [ghost]\n---\n"
+                .to_string(),
+        ),
+        ("examples/one/thing".to_string(), "---\nid: thing\ntype: unknown\ntitle: A thing\n---\n".to_string()),
+    ];
+    let p = pack_from_texts("t", items).unwrap();
+    assert_eq!(p.samples[0].optional, vec!["ghost".to_string()]);
+    assert_eq!(p.samples[0].summary()["optional"][0], "ghost");
+    let out = check_samples(&[p]);
+    assert!(out.iter().any(|p| p.severity == "warning" && p.message.contains("“ghost” in optional")), "{out:?}");
 }
