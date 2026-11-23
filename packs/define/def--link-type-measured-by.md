@@ -9,5 +9,5 @@ fields:
   inverse: measures
   from: []
   to: []
-  pack: define@1.1.0
+  pack: define@1.2.0
 ---

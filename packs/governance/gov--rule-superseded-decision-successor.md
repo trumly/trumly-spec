@@ -14,7 +14,7 @@ fields:
       dir: in
       min: 1
       type: supersedes
-  pack: governance@1.1.0
+  pack: governance@1.2.0
 ---
 **Why:** the reader needs to know what replaced it.
 

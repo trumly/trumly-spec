@@ -40,7 +40,7 @@ fields:
   - name: accepted-on
     kind: text
     label: Accepted on (date)
-  pack: define@1.1.0
+  pack: define@1.2.0
 ---
 **Ask:** What is fixed that we did not choose? Who set it? What does it limit?
 

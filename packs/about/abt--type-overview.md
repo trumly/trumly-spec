@@ -33,7 +33,7 @@ fields:
   - name: source-of-truth
     kind: text
     label: Where code, backlog and other sources live
-  pack: about@1.0.0
+  pack: about@1.1.0
 ---
 **Ask:** In one sentence, what is being built and for whom? Who will read this design, and who owns it? Which stage is it in? Where do the code, backlog and other documents live?
 

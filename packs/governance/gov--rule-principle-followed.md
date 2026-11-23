@@ -16,7 +16,7 @@ fields:
     - require_link:
         dir: in
         type: departs-from
-  pack: governance@1.1.0
+  pack: governance@1.2.0
 ---
 Advisory. A principle no decision follows or departs from may be unused or too vague to test.
 

@@ -14,7 +14,7 @@ fields:
       min: 1
       node_type: decision
       type: governs
-  pack: governance@1.1.0
+  pack: governance@1.2.0
 ---
 Advisory. Choosing where data lives is usually costly to reverse, so someone will ask why.
 

@@ -12,7 +12,7 @@ fields:
   check:
     require_fields:
     - answer
-  pack: define@1.1.0
+  pack: define@1.2.0
 ---
 **Why:** the answer is the point. Without it the affected nodes cannot be updated.
 

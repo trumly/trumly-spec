@@ -14,7 +14,7 @@ fields:
         scope: out
       node_type: capability
       type: derives-from
-  pack: define@1.1.0
+  pack: define@1.2.0
 ---
 **Why:** out of scope means nobody should design or build it yet.
 

@@ -14,7 +14,7 @@ fields:
       min: 1
       node_type: capability
       type: derives-from
-  pack: define@1.1.0
+  pack: define@1.2.0
 ---
 **Why:** a goal with no capability has no plan behind it.
 

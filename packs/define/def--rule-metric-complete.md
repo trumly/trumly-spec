@@ -13,7 +13,7 @@ fields:
     - unit
     - target
     - how-measured
-  pack: define@1.1.0
+  pack: define@1.2.0
 ---
 **Why:** a target with no unit or method cannot be checked.
 

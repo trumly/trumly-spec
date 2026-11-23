@@ -14,7 +14,7 @@ fields:
       min: 1
       node_type: requirement
       type: verified-by
-  pack: define@1.1.0
+  pack: define@1.2.0
 ---
 **Why:** an orphan test proves nothing anyone asked for.
 

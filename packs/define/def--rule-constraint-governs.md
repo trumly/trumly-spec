@@ -12,7 +12,7 @@ fields:
     require_link:
       min: 1
       type: governs
-  pack: define@1.1.0
+  pack: define@1.2.0
 ---
 **Why:** a constraint that limits nothing is noise.
 

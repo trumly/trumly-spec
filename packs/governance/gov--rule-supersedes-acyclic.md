@@ -10,7 +10,7 @@ fields:
     type: decision
   check:
     acyclic: supersedes
-  pack: governance@1.1.0
+  pack: governance@1.2.0
 ---
 **Why:** a loop means no decision is current.
 

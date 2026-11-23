@@ -13,7 +13,7 @@ fields:
     require_link:
       min: 1
       type: governs
-  pack: governance@1.1.0
+  pack: governance@1.2.0
 ---
 **Why:** a decision that governs nothing cannot be followed or broken.
 

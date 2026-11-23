@@ -13,7 +13,7 @@ fields:
       min: 1
       node_type: metric
       type: measured-by
-  pack: define@1.1.0
+  pack: define@1.2.0
 ---
 **Why:** a goal nobody can measure cannot be seen to succeed or fail.
 

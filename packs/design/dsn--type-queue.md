@@ -27,7 +27,7 @@ fields:
     kind: text
     label: Description
     required: true
-  pack: design@1.0.0
+  pack: design@1.1.0
 ---
 **Ask:** What needs to be handed from one part to another without waiting for an answer?
 

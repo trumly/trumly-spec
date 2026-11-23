@@ -12,7 +12,7 @@ fields:
   check:
     require_fields:
     - quality-attribute
-  pack: define@1.1.0
+  pack: define@1.2.0
 ---
 **Why:** the attribute (performance, security, reliability...) tells readers which design decisions it will shape.
 

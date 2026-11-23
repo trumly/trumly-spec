@@ -20,7 +20,7 @@ fields:
     kind: text
     label: Description
     required: true
-  pack: design@1.0.0
+  pack: design@1.1.0
 ---
 **Ask:** Where does it run? Production, a test copy, a developer's machine?
 

@@ -11,6 +11,6 @@ fields:
   shapes:
     acceptance-criterion: square
     requirement: document
-  pack: define@1.1.0
+  pack: define@1.2.0
 ---
 The precise, testable statements behind each capability, and the criteria that prove them.

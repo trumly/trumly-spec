@@ -11,6 +11,6 @@ fields:
   shapes:
     convention: document up
     overview: circle 3d
-  pack: about@1.0.0
+  pack: about@1.1.0
 ---
 What this model is: why it exists, who it is for, who owns it and how to read it. Every reader and every agent sees this first.

@@ -14,6 +14,6 @@ fields:
     goal: star
     metric: chevron
     question: diamond
-  pack: define@1.1.0
+  pack: define@1.2.0
 ---
 Why the system exists and the boundaries around it: the outcomes it must achieve, how success is measured, what cannot change, what is assumed and what is still undecided.

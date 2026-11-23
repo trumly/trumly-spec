@@ -13,7 +13,7 @@ fields:
       dir: in
       min: 1
       type: runs-in
-  pack: design@1.0.0
+  pack: design@1.1.0
 ---
 **Why:** an environment nothing runs in is an unused place.
 

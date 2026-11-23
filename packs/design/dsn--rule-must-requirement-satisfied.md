@@ -15,7 +15,7 @@ fields:
       dir: in
       min: 1
       type: satisfies
-  pack: design@1.0.0
+  pack: design@1.1.0
 ---
 **Why:** an accepted must-have that nothing in the design satisfies is a promise nobody is keeping.
 

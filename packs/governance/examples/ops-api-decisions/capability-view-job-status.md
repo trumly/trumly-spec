@@ -9,10 +9,10 @@ fields:
   priority: must
   status: proposed
 links:
-- type: derives-from
-  to: goal-timely-visibility
 - type: performed-by
   to: actor-ops-staff
+- type: derives-from
+  to: goal-timely-visibility
 - type: refers-to
   to: concept-job
 - type: relies-on

@@ -14,7 +14,7 @@ fields:
       min: 1
       node_type: acceptance-criterion
       type: verified-by
-  pack: define@1.1.0
+  pack: define@1.2.0
 ---
 **Why:** if you cannot say how you would prove it, it is not clear enough.
 

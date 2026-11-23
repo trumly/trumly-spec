@@ -24,7 +24,7 @@ fields:
     kind: text
     label: Description
     required: true
-  pack: design@1.0.0
+  pack: design@1.1.0
 ---
 **Ask:** What do other things talk to? Who calls it, and in what style?
 

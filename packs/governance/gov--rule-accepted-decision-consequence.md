@@ -14,7 +14,7 @@ fields:
       min: 1
       node_type: consequence
       type: has-consequence
-  pack: governance@1.1.0
+  pack: governance@1.2.0
 ---
 **Why:** the consequences are what a later reader needs, especially the negative ones.
 

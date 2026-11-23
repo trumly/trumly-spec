@@ -13,7 +13,7 @@ fields:
       dir: in
       min: 1
       type: refers-to
-  pack: define@1.1.0
+  pack: define@1.2.0
 ---
 Advisory. A glossary term that nothing refers to may be unnecessary, or the nodes that use it may be missing links.
 

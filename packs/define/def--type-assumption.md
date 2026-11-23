@@ -27,7 +27,7 @@ fields:
     - invalidated
   - name: evidence
     kind: text
-  pack: define@1.1.0
+  pack: define@1.2.0
 ---
 **Ask:** What are we taking for granted? What would change if it were wrong? How and when will we find out, and who will?
 

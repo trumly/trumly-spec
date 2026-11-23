@@ -1,7 +1,7 @@
 ---
 id: goal-timely-visibility
 type: goal
-title: Timely visibility
+title: Timely ops visibility
 plane: def--intent
 fields:
   statement: Operations staff see the state of every job within a minute.

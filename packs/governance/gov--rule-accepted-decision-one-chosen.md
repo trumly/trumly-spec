@@ -17,7 +17,7 @@ fields:
         chosen: true
       node_type: decision-option
       type: considers
-  pack: governance@1.1.0
+  pack: governance@1.2.0
 ---
 **Why:** accepted means the choice has been made.
 

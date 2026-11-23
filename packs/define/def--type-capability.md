@@ -45,7 +45,7 @@ fields:
   - name: accepted-on
     kind: text
     label: Accepted on (date)
-  pack: define@1.1.0
+  pack: define@1.2.0
 ---
 **Ask:** What does the actor need to be able to do? Why, which goal does it serve? Is it in scope now, later or never?
 

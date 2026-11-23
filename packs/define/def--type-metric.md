@@ -41,7 +41,7 @@ fields:
   - name: review-by
     kind: text
     label: Review by (date)
-  pack: define@1.1.0
+  pack: define@1.2.0
 ---
 **Ask:** What number would tell you? Where does it come from? What value is good enough, and what value means the design needs to change?
 

@@ -2,8 +2,8 @@
 # `node scripts/sync-core.mjs` copies exactly these versions into this folder, and `--check` fails when they have drifted.
 core@1.0.0
 links@1.0.0
-about@1.0.0
-define@1.1.0
-design@1.0.0
+about@1.1.0
+define@1.2.0
+design@1.1.0
 plan@1.0.0
-governance@1.1.0
+governance@1.2.0

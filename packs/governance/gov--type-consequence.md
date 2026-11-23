@@ -19,7 +19,7 @@ fields:
     kind: text
     label: Description
     required: true
-  pack: governance@1.1.0
+  pack: governance@1.2.0
 ---
 **Ask:** What gets easier, harder or different because of this choice?
 

@@ -13,7 +13,7 @@ fields:
       min: 1
       node_type: actor
       type: performed-by
-  pack: define@1.1.0
+  pack: define@1.2.0
 ---
 **Why:** if nobody uses it, it is not a capability.
 

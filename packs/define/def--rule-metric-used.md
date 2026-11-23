@@ -13,7 +13,7 @@ fields:
       dir: in
       min: 1
       type: measured-by
-  pack: define@1.1.0
+  pack: define@1.2.0
 ---
 **Why:** a metric nothing refers to is a number nobody asked for.
 

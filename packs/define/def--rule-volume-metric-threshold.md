@@ -12,7 +12,7 @@ fields:
   check:
     require_fields:
     - threshold
-  pack: define@1.1.0
+  pack: define@1.2.0
 ---
 **Why:** the threshold is the point at which the design should change; later change sets can watch it.
 

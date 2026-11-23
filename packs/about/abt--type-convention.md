@@ -14,7 +14,7 @@ fields:
     kind: text
     label: Detail
     required: true
-  pack: about@1.0.0
+  pack: about@1.1.0
 ---
 **Ask:** What rule of thumb would you want a newcomer, or an AI, to follow without being told each time?
 

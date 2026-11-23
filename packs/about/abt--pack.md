@@ -5,7 +5,7 @@ title: About
 fields:
   name: about
   namespace: abt
-  version: 1.0.0
+  version: 1.1.0
   description: 'Say what a model is for: the overview every reader and agent sees first, and the conventions
     that say how the model is written. Two small types on their own About layer.'
   license: Apache-2.0

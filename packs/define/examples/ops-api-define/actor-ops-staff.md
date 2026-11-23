@@ -1,6 +1,6 @@
 ---
 id: actor-ops-staff
 type: actor
-title: Operations staff
+title: Ops staff
 plane: def--capabilities
 ---

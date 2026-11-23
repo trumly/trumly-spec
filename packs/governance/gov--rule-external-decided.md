@@ -14,7 +14,7 @@ fields:
       min: 1
       node_type: decision
       type: governs
-  pack: governance@1.1.0
+  pack: governance@1.2.0
 ---
 Advisory. Depending on something we do not control is a choice worth explaining.
 

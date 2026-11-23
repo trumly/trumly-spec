@@ -29,7 +29,7 @@ fields:
     kind: text
     label: Description
     required: true
-  pack: governance@1.1.0
+  pack: governance@1.2.0
 ---
 **Ask:** What was chosen, and what else was on the table? Why this one? What does it commit us to? What would make us revisit it?
 

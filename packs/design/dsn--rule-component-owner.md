@@ -11,7 +11,7 @@ fields:
   check:
     require_fields:
     - owner
-  pack: design@1.0.0
+  pack: design@1.1.0
 ---
 **Why:** someone has to answer for it when it breaks or needs to change.
 

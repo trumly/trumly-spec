@@ -14,7 +14,7 @@ fields:
       min: 1
       node_type: decision
       type: has-consequence
-  pack: governance@1.1.0
+  pack: governance@1.2.0
 ---
 **Why:** a consequence only means something against the decision that caused it.
 

@@ -13,7 +13,7 @@ fields:
       min: 1
       node_type: environment
       type: runs-in
-  pack: design@1.0.0
+  pack: design@1.1.0
 ---
 **Why:** a part that runs nowhere cannot be built or tested. Libraries and functions are the exception; they are shipped inside another component, so turn this off or ignore it for them.
 

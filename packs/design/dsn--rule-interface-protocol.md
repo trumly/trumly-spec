@@ -11,7 +11,7 @@ fields:
   check:
     require_fields:
     - protocol
-  pack: design@1.0.0
+  pack: design@1.1.0
 ---
 **Why:** the protocol family decides what can talk to it.
 

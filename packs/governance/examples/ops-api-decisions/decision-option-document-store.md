@@ -7,4 +7,4 @@ fields:
   chosen: false
   summary: Documents, managed
 ---
-Scales out easily but the reports would need joins in code.
+Scales out easily but the job list would need joins in code.

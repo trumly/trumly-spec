@@ -1,22 +1,21 @@
 ---
 id: component-ops-api
 type: component
-title: Ops API service
+title: Ops API
 plane: dsn--design
 fields:
   kind: service
-  owner: Platform team
+  owner: Platform
   status: planned
 links:
-- type: exposes
-  to: interface-ops-api
+- type: satisfies
+  to: requirement-list-jobs
 - type: writes
   to: datastore-ops-db
-- type: publishes
-  to: queue-job-events
 - type: runs-in
   to: environment-production
-- type: satisfies
-  to: requirement-status-freshness
+- type: exposes
+  to: interface-ops-api
 ---
-Serves job status to operations staff and records state changes.
+
+Serves the list of jobs and their status to operations staff.

@@ -66,7 +66,7 @@ fields:
     label: Accepted on (date)
   - name: rationale
     kind: text
-  pack: define@1.1.0
+  pack: define@1.2.0
 ---
 **Ask:** What exactly must the system do or be? Can one test or measurement settle whether it is met? Is it one thing, not two?
 

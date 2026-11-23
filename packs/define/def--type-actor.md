@@ -9,7 +9,7 @@ fields:
     by an actor.
   shape: person
   fields: []
-  pack: define@1.1.0
+  pack: define@1.2.0
 ---
 **Ask:** Who uses it? Who runs it?
 
