@@ -1,0 +1,5 @@
+---
+id: e--pack
+type: pack
+fields: {"name": "e", "version": "1.0.0", "pack": "e@1.0.0"}
+---

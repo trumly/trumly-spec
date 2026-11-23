@@ -82,7 +82,7 @@ Unknown top-level keys are ignored. A wrong type for a known key is `invalid_fro
 **Link**: `type` and `to` (non-empty strings), optional `key` (string, distinguishes parallel links of
 one type to one target) and `fields` (map). A link is stored on its source node only. Inbound links are derived.
 
-**Reserved types**: `plane` (`fields.order`), `rule`, `group` (containment only), and the three definition kinds
+**Reserved types**: `plane` (`fields.order`), `rule`, `group` (containment only), `derived` (section 7a), and the three definition kinds
 below (`type`, `link-type` and `pack`). Reserved nodes are never subject to rules. All other types are free.
 
 **Definition kinds** describe the vocabulary a project uses. They are ordinary nodes, so they are versioned,
@@ -190,9 +190,14 @@ timestamps). Integers beyond i64 become floats.
 
 ## 4. Packs
 
-A pack is a set of nodes (planes, types, link types, rules) that can be added to a project. Every node it provides carries
+A pack is a set of nodes (planes, types, link types, rules, derived values) that can be added to a project. Every node it provides carries
 `fields.pack: <name>@<version>`, which records where the node came from so imported and local content can be told apart and
-a pack can be updated. A pack carries definitions only, never ordinary nodes.
+a pack can be updated. A pack carries definitions only, never ordinary nodes: the definition kinds are `type`, `link-type`,
+`rule`, `plane` and `derived`. A pack ships a `derived` definition for a fact about its own types (an endpoint's address, an
+image's reference); a scheme a customer might choose differently (how AWS resources are named) is better left to a pattern,
+which they opt into. Its id uses the pack's namespace like the others (`api--derived-url`), and it is checked like a rule: the
+type in its `applies_to`, and the links its template follows, should be defined by the pack or by the packs it requires or
+lists as `optional` (a warning otherwise). The `derived` type itself stays a reserved core type that no pack defines.
 
 A pack is described by a manifest, a node of type `pack`, whose id is `<namespace>--pack`:
 
@@ -201,11 +206,17 @@ A pack is described by a manifest, a node of type `pack`, whose id is `<namespac
 - `requires`: a list of pack names that must be present. An entry is a name or `name@range` (`^0.2.0`, `~1.2.3`,
   `>=1.0.0 <2.0.0`, an exact version). A short version is a compatible range, so `core@1` is `core@^1.0.0` and `core@1.2` is
   `core@^1.2.0`.
+- `optional`: a list of packs this one works with when the project has them, in the same form as `requires`. They are never
+  installed by adding this pack and never needed for it to load, so two packs may name each other (`containers` works with
+  `kubernetes`, which requires `containers`). Names the pack uses that one of them defines are known to the lint, and resolve
+  to it when it is present (section 4a).
 - `includes`: a list of child packs the pack bundles. A collection may hold only a manifest.
 - `role`: `core` (one of the bundle every project starts from, built into the tools and published only by trumly) or
   `enrichment` (everything else, the default).
 - `publisher`: who made the pack and answers for it.
 - `use-when`: one sentence, at most 200 characters, on when to reach for the pack. Lists and agents show it.
+- `default-pattern`: optional. The name of one of the pack's patterns (a folder under `patterns/`) to lift as "another one" when the pack is used many times in one project: a flow per scenario, a lifecycle per thing with states. Tools offer it as "Add another" and give it a fresh id prefix and title each time. It must name a pattern the pack has.
+- `starter-patterns`: optional list. The names of patterns the pack has that tools offer as "Include starter patterns" when someone adds the pack: ready-made starting points. When it is empty, the `default-pattern` alone is offered. Each must name a pattern the pack has.
 - `license`: optional. The licence the pack is published under, as an SPDX identifier such as `Apache-2.0`.
 - `enriches`: the core packs an enrichment pack adds detail to (`design`, `plan`...). It helps people and agents choose and is
   not a dependency. An enrichment pack `requires` the core (`core@1`) so its definitions have core nodes to attach to.
@@ -233,13 +244,43 @@ fields:
 ---
 ```
 
-Type and link type names are global to a project, so a pack SHOULD prefix its own names with its namespace (`data-table`)
-unless it shares a name on purpose with a pack it requires or includes.
+A pack SHOULD still prefix its own type and link type names with its namespace (`data-table`), so that bare names stay unique
+without help. Names that two unrelated packs share are allowed; section 4a says how they are told apart.
 
 A tool that checks packs SHOULD report: a role other than `core` or `enrichment`; a `core` pack not published by trumly; an
 enrichment pack with no `use-when`, or one that does not require the core; an `enriches` entry that is not a core pack it can
 reach; an ordinary node in a pack; a name two unrelated packs both define; and a type a pack names but nothing it relies on
 defines. Every pack, core or not, ships at least one example that checks clean.
+
+## 4a. Name resolution
+
+A type or link type name is **bare** (`service`) or **qualified** by a pack namespace, `<namespace>:<name>` (`k8s:service`). The
+part before the first `:` is a namespace as in section 4; the rest is the definition's `fields.name`. A definition belongs to the
+namespace in its id (`k8s--type-service`); one whose id has no `--` belongs to no namespace and is reached by its bare name only.
+
+A name appears in a node's `type`, a link's `type`, a rule's `applies_to`, `node_type`, `to_type`, `ancestor_type`, link and
+step `type` and `types`, a `link-type`'s `from` and `to`, and a derived value's `applies_to` and link hops. All of them resolve
+the same way, to the definitions the name can mean:
+
+1. A qualified name means the definitions of that name in that namespace.
+2. A bare name means every definition of that name in the project. Inside a pack (a `rule`, `derived` or `link-type` node whose id
+   has a namespace) the nearest level that has a definition wins: the pack's own, else those of the packs it `requires` and of
+   the packs it lists as `optional` that the project has, else those of the packs they in turn require or work with, and so on
+   down the chain. A level is a set; a namespace counts at its nearest level only, and cycles do no harm. An `optional` pack the
+   project does not have adds nothing. If no level has one, every definition in the project is meant. A pack's rules therefore
+   target its own types first, and containers' `workload` means kubernetes' when that pack is present.
+3. A name with no definition stays a plain string and is compared by equality, so a node of an undefined type, or one that an older
+   reader does not understand (`k8s:service` with no k8s pack), still works.
+
+Two names denote the same thing when their definitions overlap; when either has none, when the strings are equal. Rules and links
+match on that, not on the strings.
+
+A bare name that still has definitions in two or more namespaces after that is ambiguous. A node whose `type` is such a name, or
+whose link `type` is, gets `ambiguous_type` or `ambiguous_link_type`; so does a pack's `rule`, `derived` or `link-type` node that
+uses one (in `applies_to`, a check, a template's link hops, or `from` / `to`) when two packs at the winning level define it, which
+is two packs it requires directly, or two unrelated packs when nothing nearer has it. The finding names the bare name; the fix is to
+write the qualified name (`b:widget`). Nothing fails to load: an ambiguous name matches the definitions of every namespace it
+names, which is what happens today. Two definitions of one name inside one namespace remain `duplicate_definition`.
 
 ## 5. Load errors
 
@@ -266,6 +307,8 @@ A file that fails to load is reported and skipped; the rest still load.
 | `namespace_mismatch` | warning | none |
 | `title_too_long` | warning | the title's length in characters |
 | `duplicate_definition` | warning | the name |
+| `ambiguous_type` | warning | the bare type name |
+| `ambiguous_link_type` | warning | the bare link type name; one per name |
 | `missing_required_field` | warning | the field name |
 | `link_endpoint_mismatch` | warning | `type->to` |
 | `rule_matches_nothing` | warning | none |
@@ -277,9 +320,10 @@ Details:
 - `scratch_boundary`: The node and its target are not in the same scratch (see Scratch planes below).
 - `namespace_mismatch`: An id with `--` and no `fields.pack`; a `fields.pack` with no `--` id; a prefix that is not the pack's namespace; or a `pack` manifest whose id prefix is not its namespace.
 - `title_too_long`: A `title` that the file sets, other than the id itself, is longer than 30 characters. A name has to fit a map label, a table cell and a file listing; put the longer text in the body.
-- `duplicate_definition`: Two or more `type` nodes, or two or more `link-type` nodes, share the same string `fields.name`.
+- `duplicate_definition`: Two or more `type` nodes, or two or more `link-type` nodes, in the same namespace (or both in none) share the same string `fields.name`.
+- `ambiguous_type`, `ambiguous_link_type`: See section 4a. On nodes, only non-reserved nodes outside a scratch are checked; on definitions, only `rule`, `derived` and `link-type` nodes that have a pack namespace.
 - `missing_required_field`: The node's type has a `type` definition listing that field with `required: true`, and the node leaves it unset: absent, `null` or `""`. `0` and `false` count as set. One finding per missing field.
-- `link_endpoint_mismatch`: The link's type has a `link-type` definition whose non-empty `from` does not list the source node's type, or whose non-empty `to` does not list the target's type. Only links from non-reserved nodes outside a scratch, to nodes that exist, are checked. If several definitions share the name, their lists are combined.
+- `link_endpoint_mismatch`: The link's type has a `link-type` definition whose non-empty `from` does not list the source node's type, or whose non-empty `to` does not list the target's type. Only links from non-reserved nodes outside a scratch, to nodes that exist, are checked. If several definitions share the name, their lists are combined, and each list is read from the namespace of the definition it is in.
 - `rule_matches_nothing`: Reported on the rule: it is enabled, its `applies_to` has an `id` key, and no non-reserved node matches.
 
 **Stacks.** A `plane` node may carry `fields.stack`, a non-empty string naming the stack (tower) it belongs to. Without it a plane belongs to the stack named by its pack (`fields.pack` up to the `@`), else to `main`; a scratch is always in `main` unless it names a stack. `fields.order` ranks planes only against others in the same stack, and a viewer is expected to draw each stack as its own tower. A plane may also carry `fields.stack_at`, `[column, row]` (two whole numbers from 0), where a viewer should put its stack among the others: stacks sit in columns, and `row` orders them top to bottom within a column. Planes of one stack should carry the same value; a viewer reads the first plane that has one, and places stacks that have none wherever it likes. Like `stack`, it is display only. A stack is only a way of grouping planes for display: the checker, rules and links ignore it, and a link may join nodes on planes of different stacks.
@@ -364,9 +408,10 @@ Where a value is "one or a list", a single item means a one-item list.
 **Field checks**
 
 - `require_fields: [paths]`: every field present (not null, not `""`; an empty list or map counts as present, use `min_items` for that).
-- `field_is: {path: {in?, min?, max?, type?, optional?, min_items?, max_items?, unique?}}`: the field must satisfy every given constraint.
+- `field_is: {path: {in?, min?, max?, type?, optional?, min_items?, max_items?, min_length?, max_length?, max_bytes?, unique?}}`: the field must satisfy every given constraint.
   A missing field fails unless `optional: true`. `type` is one of string, number, integer, boolean, list, map, null.
   Numbers compare exactly for integers, as floats otherwise. `min_items` / `max_items` (non-negative integers) bound the length of a list; a value that is not a list fails them.
+  `min_length` / `max_length` (non-negative integers) bound the length of text in characters, and `max_bytes` bounds its length in UTF-8 bytes (a limit stated in bytes, such as PostgreSQL's 63, differs from one in characters for accented text); a value that is not text fails them. A name the node has no field of is read from the node's own `id` and `title` (so `title: {max_length: 30}` holds a node's name to a length; a node with no title has its id as the title), then from its derived values (section 7a), so a rule can check a calculated name the same way: `field_is: {handle: {max_length: 63, optional: true}}`. A real field of that name wins. A name that could not be worked out counts as a missing field (hence `optional: true`). A name that gives several values is checked value by value.
   `unique` needs a list: `true` means no two items are equal (JSON equality); a field path (no `[]`) means no two items hold the same value there. Items lacking that field are not compared. Any other `unique` is `unsupported`.
 - `compare_fields: one or a list of {left, op, right | value}`: `op` is `== != < <= > >=`. `left` and `right` are field paths;
   `value` is a literal. A missing field fails. Ordering works on number pairs and string pairs only. `left` may use `[]` (every item is compared); `right` must reach exactly one place or the check is `unsupported`.
@@ -416,11 +461,51 @@ Without that link the result would be `"status": "fail"`, and the project would 
 { "node": "component-ops-api", "rule": "dsn--rule-component-satisfies", "link": "satisfies", "to_type": "requirement", "plane": "dsn--design" }
 ```
 
+## 7a. Derived values
+
+A **derived value** is a read-only value a node has but nobody writes: it is worked out from a template over the node's own
+fields and the nodes it links to. The first use is a calculated name (`psql-ops-prod-uks-001`) built from facts the model already holds. The core
+knows nothing about names; it only resolves fields and links, and a pack supplies the templates.
+
+A `derived` node defines one. Its `fields` are:
+
+| key | meaning |
+|---|---|
+| `name` | The definition's own name (`namespace-handle`). Required, a non-empty string. It is also the name of the value on a node unless `field-name` says otherwise. |
+| `field-name` | Optional. What the value is called on a node (`handle`). Several definitions, each for its own kind of node, can share one, and tools list it once. Overrides, search and tables use this name. |
+| `template` | The text to build, with `{placeholders}`. Required, a string. |
+| `applies_to` | A filter, as for rules (section 7): absent or empty means every non-reserved node. |
+| `enabled` | `false` switches the definition off, as for rules. |
+
+A definition without a string `name` and `template` is ignored. Derived nodes are reserved: rules never apply to them, and they have no derived values of their own. Nodes in a scratch have none either.
+
+**Template.** Text with `{placeholders}`. `\{`, `\}` and `\\` write a literal `{`, `}` and `\`. An unbalanced brace or an empty `{}` makes the whole template unusable (`missing: ["template"]`, below), as does an empty template, one with more than 32 placeholders, one with a placeholder that follows more than 5 links, or one that would build a value longer than 1024 characters.
+
+**Placeholder.** Split on `/`. Every segment but the last is a hop through the graph, and the last is the field to read:
+
+- `{workload}`: no slash, so a field of the node itself. A field path is read as in rules (`a.b`, `list[].x`). `id`, `title` and `@type` (the node's type name, as written) read the node's own when no field has that name.
+- `{runs-in/token}`: follow links of type `runs-in` out of the node, then read `token` from each node reached.
+- `{^used-in/token}`: a `^` before a link type follows links of that type *into* the node.
+- `{runs-in/@type}`: `@type` as the last segment is not a hop but a read: the type name of each node reached (`{@type}` alone is this node's own). Used as a hop, with something after it, it is the type definition, as follows.
+- `{@type/^stands-for/token}`: `@type` is the type definition of each node reached so far (the first `type` node by id whose `name` is that node's type). Here it leads to the tokens that stand for the node's type. It can come at any hop, so `{details/@type/^stands-for/token}` reaches the token for the type of the node a `details` link points at. A node whose type has no definition reaches nothing.
+
+Hops can be chained. The nodes reached are taken once each, in id order; a link to a node that does not exist reaches nothing. Only strings, numbers and booleans are read, as text: strings as they are, numbers as JSON writes them, booleans as `true` and `false`. A list, a map, `null` or an absent field gives nothing. A malformed placeholder (an empty segment) reaches nothing.
+
+**Values.** A placeholder that reaches several values gives several, and the template is built once for each combination, the first placeholder varying slowest. Repeats are dropped, and at most 64 values are kept.
+
+**Which definition.** For one node and one value name (`field-name`, else `name`), the definitions that apply are compared by what their `applies_to` names: `id` (most specific), then `type`, then `plane`, then anything else or nothing. The most specific wins; a tie goes to the lower definition id. Definitions with different field names (or, without one, different names) do not compete: each gives its own value.
+
+**Result.** A node that any definition applies to gets, for each name, either `{"values": [...]}` (every placeholder reached something) or `{"missing": [...]}`, listing the placeholders, as written between the braces, that reached nothing (`["template"]` for an unusable template). Missing is not a finding: nothing fails and nothing is reported. A model with no `derived` nodes has no derived values, and a reader that does not know them ignores them.
+
+**Overrides.** A node that is an exception says what its value really is, in an ordinary field: `overrides: {<name>: "value"}`, or a list of values. For a `name` a definition applies to, non-empty string values there replace the template's, in the order written, repeats dropped, at most 64. The result then also has `"override": true` and `"computed"`, the values the template gave (an empty list if it could not be resolved): `{"values": ["legacy-psql"], "override": true, "computed": ["psql-ops-prod-uks-001"]}`. Anything else in `overrides` is ignored: a value that is not a string, a name no definition applies to, or an `overrides` that is not a map. An override gives a node a derived value only where a definition applies, so a search for a name finds the node by the real value, not the one the template would have made.
+
+Derived values are computed, never stored: they are not written to a node's file, so they cannot go stale. A rule reads one through `field_is` (section 7), where a name the node has no field of is looked up here, an override standing in for the template's value; nothing else in a rule reads them.
+
 ## 8. `check --json`
 
 ```
 { load_errors: [{file, kind}],
-  nodes: [full node, sorted by id; includes body],
+  nodes: [full node, sorted by id; includes body; a node with derived values also has `derived`, section 7a],
   structure: {errors: [{node, kind, ref}], warnings: [...]},
   results: [...], ghosts: [...] }
 ```

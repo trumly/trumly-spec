@@ -23,6 +23,58 @@ pub struct Entry {
     pub pack: Pack,
     /// `custom`, `project`, `yours`, `community` or `built-in`
     pub source: &'static str,
+    /// from the pack's `meta.json`, which sits outside what is checksummed, so it can change after a version is locked
+    pub retired: Retired,
+}
+
+/// A pack its publisher has retired: it keeps working where it is, but is no longer offered.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Deprecated {
+    pub since: String,
+    pub replaced_by: Option<String>,
+    pub note: Option<String>,
+}
+
+/// What a pack's `meta.json` says about its life: deprecated as a whole, or this version withdrawn because it is defective.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct Retired {
+    pub deprecated: Option<Deprecated>,
+    /// why this version was withdrawn
+    pub withdrawn: Option<String>,
+}
+
+impl Retired {
+    /// Read `<dir>/<pack name>/meta.json` for this version. A missing or unreadable file, or a field of the wrong shape, retires nothing.
+    pub fn read(dir: &Path, name: &str, version: &str) -> Retired {
+        let Some(meta) = fs::read_to_string(dir.join(name).join("meta.json"))
+            .ok()
+            .and_then(|t| serde_json::from_str::<serde_json::Value>(&t).ok())
+        else {
+            return Retired::default();
+        };
+        let text = |v: &serde_json::Value, k: &str| v.get(k).and_then(|x| x.as_str()).map(str::to_string);
+        let deprecated = meta.get("deprecated").filter(|d| d.is_object()).and_then(|d| {
+            Some(Deprecated { since: text(d, "since")?, replaced_by: text(d, "replaced-by"), note: text(d, "note") })
+        });
+        let withdrawn = meta.get("withdrawn").and_then(|w| w.get(version)).and_then(|w| w.as_str()).map(str::to_string);
+        Retired { deprecated, withdrawn }
+    }
+
+    /// The sentence that says it, for a person or an agent.
+    pub fn say(&self, name: &str) -> Option<String> {
+        if let Some(why) = &self.withdrawn {
+            return Some(format!("{name} is withdrawn: {why}"));
+        }
+        let d = self.deprecated.as_ref()?;
+        let mut s = format!("{name} is deprecated since {}", d.since);
+        if let Some(n) = &d.note {
+            s.push_str(&format!(" ({n})"));
+        }
+        if let Some(r) = &d.replaced_by {
+            s.push_str(&format!(", use {r}"));
+        }
+        Some(s)
+    }
 }
 
 #[derive(Debug)]
@@ -35,6 +87,9 @@ pub struct Library {
 impl Library {
     pub fn packs(&self) -> Vec<Pack> {
         self.entries.iter().map(|e| e.pack.clone()).collect()
+    }
+    pub fn retired_of(&self, name: &str) -> Retired {
+        self.entries.iter().find(|e| e.pack.name == name).map(|e| e.retired.clone()).unwrap_or_default()
     }
     pub fn source_of(&self, name: &str) -> Option<&'static str> {
         self.entries.iter().find(|e| e.pack.name == name).map(|e| e.source)
@@ -85,7 +140,8 @@ pub fn load(explicit: Option<&Path>) -> Result<Library, String> {
         if dir.is_dir() {
             for pack in list_packs(dir)? {
                 if !entries.iter().any(|e| e.pack.name == pack.name) {
-                    entries.push(Entry { pack, source });
+                    let retired = Retired::read(dir, &pack.name, &pack.version);
+                    entries.push(Entry { pack, source, retired });
                 }
             }
         }
@@ -94,7 +150,7 @@ pub fn load(explicit: Option<&Path>) -> Result<Library, String> {
     if std::env::var_os("TRUMLY_NO_BUILTIN").is_none_or(|v| v.is_empty() || v == "0") {
         for pack in builtin()? {
             if !entries.iter().any(|e| e.pack.name == pack.name) {
-                entries.push(Entry { pack, source: "built-in" });
+                entries.push(Entry { pack, source: "built-in", retired: Retired::default() });
             }
         }
     }

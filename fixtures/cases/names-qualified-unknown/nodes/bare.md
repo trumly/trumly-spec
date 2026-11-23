@@ -1,0 +1,4 @@
+---
+id: bare
+type: thing
+---

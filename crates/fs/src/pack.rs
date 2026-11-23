@@ -38,8 +38,14 @@ pub struct Pack {
     pub enriches: Vec<String>,
     /// one sentence on when to reach for this pack, shown wherever packs are listed
     pub use_when: String,
+    /// the pattern (a folder under `patterns/`) to lift as "another one" when the pack is used many times in a project: a flow, a lifecycle
+    pub default_pattern: Option<String>,
+    /// the patterns offered with "Include starter patterns" when the pack is added; the default pattern alone when empty
+    pub starter_patterns: Vec<String>,
     /// packs that must already be in the project (or come along in the same add)
     pub requires: Vec<String>,
+    /// packs this one works with when the project has them: never installed by adding this pack, never needed for it to load
+    pub optional: Vec<String>,
     /// child packs this one bundles: adding it brings them in too (a collection has only a manifest)
     pub includes: Vec<String>,
     /// (node id, file text), the manifest included
@@ -62,6 +68,8 @@ pub struct Sample {
     pub usage: String,
     /// packs it needs to check clean, the owning pack included
     pub requires: Vec<String>,
+    /// packs it also uses when the project has them: the nodes that need one are left out of a project without it
+    pub optional: Vec<String>,
     /// patterns only: the node the rest hangs from
     pub root: Option<String>,
     /// patterns only: the id prefix used when it is inserted
@@ -89,6 +97,9 @@ impl Pack {
                     "statement": text(&n, "statement"), "plane": n.plane,
                     "order": n.fields.get("order").and_then(|v| v.as_i64()),
                     "from": n.fields.get("from"), "to": n.fields.get("to"), "inverse": text(&n, "inverse"),
+                    "template": text(&n, "template"), "stack": text(&n, "stack"), "severity": text(&n, "severity"),
+                    "layer": text(&n, "plane"), "shape": text(&n, "shape"), "shapes": n.fields.get("shapes"),
+                    "applies": n.fields.get("applies_to").and_then(|a| a.get("type")).and_then(|v| v.as_str()),
                 })
             })
             .collect();
@@ -108,7 +119,7 @@ pub struct Problem {
 }
 
 /// What a pack may carry: its own definitions, never ordinary nodes.
-const DEFINITION_KINDS: [&str; 4] = ["type", "link-type", "rule", "plane"];
+const DEFINITION_KINDS: [&str; 5] = ["type", "link-type", "rule", "plane", "derived"];
 
 fn defined(pack: &Pack, kind: &str) -> Vec<String> {
     pack.files
@@ -199,24 +210,12 @@ fn near(a: &str, b: &str) -> bool {
     prev[b.len()] <= 2
 }
 
-/// Names that clash between packs: the same name for two meanings, or names so alike they are easy to mix up. Types and link
-/// types are compared together, since a type and a link type that look alike are the confusing case. Names inside one pack are
-/// its own business: a noun and its verb (decision / considers) is the convention.
+/// Names so alike that they are easy to mix up. Types and link types are compared together, since a type and a link type that look
+/// alike are the confusing case. Names inside one pack are its own business: a noun and its verb (decision / considers) is the
+/// convention. The same name in two packs is not a problem: a project tells them apart with `<namespace>:<name>`.
 fn lint_names(all: &[Pack]) -> Vec<Problem> {
     let mut out = Vec::new();
     for p in all {
-        let mine = reach(all, &p.name);
-        for kind in ["type", "link-type"] {
-            let label = if kind == "type" { "type" } else { "link type" };
-            for name in defined(p, kind) {
-                for q in all.iter().filter(|q| q.name != p.name && defined(q, kind).contains(&name)) {
-                    if mine.contains(&q.name) || reach(all, &q.name).contains(&p.name) {
-                        continue; // related packs share on purpose
-                    }
-                    out.push(Problem { pack: p.name.clone(), severity: "warning", code: "collision", message: format!("The {label} “{name}” is also defined by {}, which this pack does not bring. Two meanings for one name in a project; prefix yours (for example {}-{name}) or share a base pack.", q.name, p.namespace) });
-                }
-            }
-        }
         let names: Vec<(String, &str)> = defined(p, "type")
             .into_iter()
             .map(|n| (n, "type"))
@@ -245,6 +244,28 @@ pub const USE_WHEN_MAX: usize = 200;
 /// binary, so only trumly may publish one. Every other pack is an `enrichment`: it adds detail to the core, says when to reach
 /// for it, and needs the core (`requires: core@1`) so its definitions have something to attach to.
 fn manifest_problems(all: &[Pack], p: &Pack, push: &mut impl FnMut(&'static str, String)) {
+    if let Some(d) = &p.default_pattern {
+        if !p.samples.iter().any(|s| s.kind == "pattern" && s.name == *d) {
+            push(
+                "error",
+                format!("default-pattern names “{d}”, which is not one of its patterns (a folder under patterns/)."),
+            );
+        }
+    }
+    for s in &p.starter_patterns {
+        if !p.samples.iter().any(|x| x.kind == "pattern" && x.name == *s) {
+            push(
+                "error",
+                format!("starter-patterns names “{s}”, which is not one of its patterns (a folder under patterns/)."),
+            );
+        }
+    }
+    for r in &p.optional {
+        let n = split_req(r).0;
+        if n != p.name && !all.iter().any(|q| q.name == n) {
+            push("warning", format!("optional names “{n}”, which is not a pack in the library."));
+        }
+    }
     match p.role.as_str() {
         "core" => {
             if p.publisher.trim() != "trumly" {
@@ -320,7 +341,7 @@ pub fn lint(all: &[Pack]) -> Vec<Problem> {
                 push(
                     "error",
                     format!(
-                        "“{}” is an ordinary node (type {}). A pack carries definitions only: types, link types, rules and planes.",
+                        "“{}” is an ordinary node (type {}). A pack carries definitions only: types, link types, rules, planes and derived values.",
                         n.id,
                         if k.is_empty() { "none" } else { k }
                     ),
@@ -367,12 +388,22 @@ pub fn lint(all: &[Pack]) -> Vec<Problem> {
         }
         let mine = reach(all, &p.name);
         let mut known: BTreeSet<String> = defined(p, "type").into_iter().collect();
-        for q in all.iter().filter(|q| mine.contains(&q.name)) {
+        let works_with: BTreeSet<String> = p.optional.iter().map(|r| split_req(r).0.to_string()).collect();
+        let mut known_links: BTreeSet<String> = defined(p, "link-type").into_iter().collect();
+        for q in all.iter().filter(|q| mine.contains(&q.name) || works_with.contains(&q.name)) {
             known.extend(defined(q, "type"));
+            known_links.extend(defined(q, "link-type"));
         }
+        // `<namespace>:<name>` is known when the pack with that namespace defines the name
+        let qualified = |t: &str| {
+            t.split_once(':').is_some_and(|(ns, n)| {
+                all.iter().any(|q| q.namespace == ns && defined(q, "type").iter().any(|d| d == n))
+            })
+        };
         let mut seen = BTreeSet::new();
+        let mut unknown_links: Vec<(String, String)> = Vec::new();
         let mut missing = |what: &str, t: &str| {
-            if !t.is_empty() && !known.contains(t) && seen.insert(format!("{what}/{t}")) {
+            if !t.is_empty() && !known.contains(t) && !qualified(t) && seen.insert(format!("{what}/{t}")) {
                 push(
                     "warning",
                     format!("{what} names the type “{t}”, which neither this pack nor the packs it relies on define."),
@@ -415,11 +446,51 @@ pub fn lint(all: &[Pack]) -> Vec<Problem> {
                         missing(&what, &t);
                     }
                 }
+                Some("derived") => {
+                    let what = format!("The derived value “{name}”");
+                    if let Some(t) = n.fields.get("applies_to").and_then(|a| a.get("type")).and_then(Value::as_str) {
+                        missing(&what, t);
+                    }
+                    // the links a template follows: `{runs-in/code}`, `{^belongs-to/runs-in/value}`; the last part is a field
+                    let template = n.fields.get("template").and_then(Value::as_str).unwrap_or("");
+                    for l in template_links(template) {
+                        let known = known_links.contains(&l)
+                            || l.split_once(':').is_some_and(|(ns, b)| {
+                                all.iter().any(|q| q.namespace == ns && defined(q, "link-type").iter().any(|d| d == b))
+                            });
+                        if !known && !unknown_links.contains(&(what.clone(), l.clone())) {
+                            unknown_links.push((what.clone(), l));
+                        }
+                    }
+                }
                 _ => {}
             }
         }
+        for (what, l) in unknown_links {
+            push(
+                "warning",
+                format!("{what} follows the link “{l}”, which neither this pack nor the packs it relies on define."),
+            );
+        }
     }
     out.extend(lint_names(all));
+    out
+}
+
+/// The link names a derived template follows: every part of a `{a/b/field}` placeholder but the last, without a leading `^`;
+/// `@type` is not a link.
+fn template_links(template: &str) -> Vec<String> {
+    let mut out = Vec::new();
+    for chunk in template.split('{').skip(1) {
+        let Some((inner, _)) = chunk.split_once('}') else { continue };
+        let parts: Vec<&str> = inner.split('/').collect();
+        for part in parts.iter().take(parts.len().saturating_sub(1)) {
+            let l = part.trim_start_matches('^');
+            if !l.is_empty() && l != "@type" && !out.iter().any(|o| o == l) {
+                out.push(l.to_string());
+            }
+        }
+    }
     out
 }
 
@@ -579,6 +650,13 @@ pub fn valid_namespace(ns: &str) -> bool {
         && ns.split('-').all(|w| !w.is_empty() && w.chars().all(|c| c.is_ascii_lowercase() || c.is_ascii_digit()))
 }
 
+/// A pack's name: lowercase words joined by single hyphens. It is never used as a path, but it is checked all the same.
+pub fn valid_pack_name(name: &str) -> bool {
+    !name.is_empty()
+        && name.len() <= 48
+        && name.split('-').all(|w| !w.is_empty() && w.chars().all(|c| c.is_ascii_lowercase() || c.is_ascii_digit()))
+}
+
 /// Read one pack folder and check it hangs together.
 pub fn read_pack(dir: &Path) -> Result<Pack, String> {
     let mut items = Vec::new();
@@ -649,6 +727,14 @@ pub fn pack_from_texts(label: &str, items: Vec<(String, String)>) -> Result<Pack
             .unwrap_or_default()
     };
     let (requires, includes, enriches) = (names("requires"), names("includes"), names("enriches"));
+    let optional = names("optional");
+    let starter_patterns = names("starter-patterns");
+    if !valid_pack_name(&name) {
+        return Err(format!(
+            "{}: the pack name '{name}' must be lowercase letters, digits and single hyphens, at most 48 characters",
+            dir.display()
+        ));
+    }
     let namespace = text("namespace").unwrap_or_else(|| name.clone());
     if !valid_namespace(&namespace) {
         return Err(format!(
@@ -681,10 +767,13 @@ pub fn pack_from_texts(label: &str, items: Vec<(String, String)>) -> Result<Pack
         role: text("role").unwrap_or_else(|| "enrichment".to_string()),
         enriches,
         use_when: text("use-when").unwrap_or_default(),
+        default_pattern: text("default-pattern").filter(|d| !d.trim().is_empty()),
+        starter_patterns,
         name,
         version,
         namespace,
         requires,
+        optional,
         includes,
         files: files.into_iter().map(|(n, t)| (n.id, t)).collect(),
         samples,
@@ -694,7 +783,7 @@ pub fn pack_from_texts(label: &str, items: Vec<(String, String)>) -> Result<Pack
 impl Sample {
     /// enough to list and choose from
     pub fn summary(&self) -> Value {
-        json!({"kind": self.kind, "name": self.name, "title": self.title, "description": self.description, "use": self.usage, "requires": self.requires, "root": self.root, "nodes": self.files.len()})
+        json!({"kind": self.kind, "name": self.name, "title": self.title, "description": self.description, "use": self.usage, "requires": self.requires, "optional": self.optional, "root": self.root, "nodes": self.files.len()})
     }
     /// the summary plus every node, in the shape `get_node` and `put_node` use
     pub fn full(&self) -> Value {
@@ -712,6 +801,10 @@ impl Pack {
     }
     pub fn sample(&self, kind: &str, name: &str) -> Option<&Sample> {
         self.samples.iter().find(|s| s.kind == kind && s.name == name)
+    }
+    /// the pattern to lift as "another one" (`default-pattern` in the manifest), if the pack names one that it has
+    pub fn default_pattern(&self) -> Option<&Sample> {
+        self.default_pattern.as_deref().and_then(|d| self.sample("pattern", d))
     }
 }
 
@@ -761,6 +854,7 @@ fn read_samples(label: &str, items: Vec<(String, String, String)>) -> Result<Vec
             description: text("description").unwrap_or_default(),
             usage,
             requires: list("requires"),
+            optional: list("optional"),
             root,
             prefix: text("prefix"),
             files,
@@ -792,6 +886,17 @@ pub fn check_samples(all: &[Pack]) -> Vec<Problem> {
             if p.includes.is_empty() && !s.requires.iter().any(|r| split_req(r).0 == p.name) {
                 push("warning", format!("The {label} should list its own pack ({}) in requires.", p.name));
             }
+            for o in &s.optional {
+                if !all.iter().any(|q| q.name == split_req(o).0) {
+                    push(
+                        "warning",
+                        format!(
+                            "The {label} lists “{}” in optional, which is not a pack in the library.",
+                            split_req(o).0
+                        ),
+                    );
+                }
+            }
             match run_sample(all, p, s) {
                 Ok(msgs) => {
                     for m in msgs {
@@ -807,12 +912,18 @@ pub fn check_samples(all: &[Pack]) -> Vec<Problem> {
 
 fn run_sample(all: &[Pack], pack: &Pack, s: &Sample) -> Result<Vec<String>, String> {
     use trumly_core::rules::Status;
-    let dir =
-        std::env::temp_dir().join(format!("trumly-sample-{}-{}-{}-{}", std::process::id(), pack.name, s.kind, s.name));
+    // a counter as well as the process id: two checks of the same sample at once (tests, a server) must not share a folder
+    static RUN: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
+    let run = RUN.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+    // the folder name holds only numbers: a pack's name and a sample's folder come from files someone else wrote, and must not shape a path
+    let dir = std::env::temp_dir().join(format!("trumly-sample-{}-{run}", std::process::id()));
     let _ = fs::remove_dir_all(&dir);
     fs::create_dir_all(&dir).map_err(|e| e.to_string())?;
     let result = (|| {
-        for r in &s.requires {
+        // a sample checks clean with every pack it names present; the ones it only works with are left out by whoever lifts it
+        // (an optional pack the library lacks is warned about by `check_samples`, not built)
+        let known = |r: &&String| all.iter().any(|q| q.name == split_req(r).0);
+        for r in s.requires.iter().chain(s.optional.iter().filter(known)) {
             let (name, _) = split_req(r);
             add_tree(all, name, None, &dir, false)?;
         }
@@ -1044,7 +1155,8 @@ pub fn add_tree_with(
                 }
             }
         }
-        // a type or link type with the same name from anyone else would make the name ambiguous
+        // a type or link type with the same name that the project defined itself would make the name ambiguous; another pack's is
+        // told apart by its namespace (`k8s:service`), so it is not a clash
         for (_, text) in &pack.files {
             let Ok(n) = parse_node(text) else { continue };
             let (Some(kind), Some(dn)) = (
@@ -1054,7 +1166,7 @@ pub fn add_tree_with(
                 continue;
             };
             if let Some((_, _, from, eid, epath)) =
-                defs.iter().find(|(k, nm, from, _, _)| *k == kind && nm == dn && !same(from))
+                defs.iter().find(|(k, nm, from, _, _)| *k == kind && nm == dn && from.is_none())
             {
                 match clash {
                     Clash::Skip => plan_skip.entry(pack.name.clone()).or_default().push(n.id.clone()),
@@ -1492,5 +1604,178 @@ pub fn export(model: &Path, packs: &Path, name: &str) -> Result<usize, String> {
             let _ = fs::remove_dir_all(&tmp);
             Err(e)
         }
+    }
+}
+
+/// Where each pattern that has been lifted into the project stands. A lifted node carries `from-pattern: <pack>/<name>`;
+/// for every pattern with some nodes here and some not, this says how many are here (`present`), how many of the rest
+/// could be added now (`fits`), and which nodes are waiting on what (`waiting`: a link or parent that is neither in the
+/// pattern nor in the project, and anything hanging from such a node).
+pub fn lifted_patterns(graph: &trumly_core::model::Graph, packs: &[Pack]) -> Vec<Value> {
+    let samples: Vec<(String, Vec<Node>)> = packs
+        .iter()
+        .flat_map(|p| {
+            p.samples.iter().filter(|s| s.kind == "pattern").map(move |s| {
+                (format!("{}/{}", p.name, s.name), s.files.iter().filter_map(|(_, t)| parse_node(t).ok()).collect())
+            })
+        })
+        .collect();
+    lifted(graph, &samples, &[])
+}
+
+/// What `lifted_patterns` says, narrowed to what the packs in `added` just made possible: the nodes that fit now but
+/// would not have fitted had those packs' definitions (ids `<namespace>--...`) not been there. A layer someone left
+/// out on purpose is not offered again just because another pack was added. `fits` counts only those nodes, and
+/// `fits_ids` names them; patterns with none are left out.
+pub fn lifted_patterns_after(graph: &trumly_core::model::Graph, packs: &[Pack], added: &[String]) -> Vec<Value> {
+    let spaces: Vec<String> =
+        added.iter().filter_map(|a| packs.iter().find(|p| &p.name == a)).map(|p| p.namespace.clone()).collect();
+    if spaces.is_empty() {
+        return Vec::new();
+    }
+    let samples: Vec<(String, Vec<Node>)> = packs
+        .iter()
+        .flat_map(|p| {
+            p.samples.iter().filter(|s| s.kind == "pattern").map(move |s| {
+                (format!("{}/{}", p.name, s.name), s.files.iter().filter_map(|(_, t)| parse_node(t).ok()).collect())
+            })
+        })
+        .collect();
+    let before = lifted(graph, &samples, &spaces);
+    let ids_of = |v: &Value| -> BTreeSet<String> {
+        v["fits_ids"]
+            .as_array()
+            .map(|a| a.iter().filter_map(|x| x.as_str().map(str::to_string)).collect())
+            .unwrap_or_default()
+    };
+    let mut out = Vec::new();
+    for mut now in lifted(graph, &samples, &[]) {
+        let had = before.iter().find(|b| b["pattern"] == now["pattern"]).map(ids_of).unwrap_or_default();
+        let fresh: Vec<String> = ids_of(&now).into_iter().filter(|i| !had.contains(i)).collect();
+        if !fresh.is_empty() {
+            now["fits"] = json!(fresh.len());
+            now["fits_ids"] = json!(fresh);
+            out.push(now);
+        }
+    }
+    out
+}
+
+/// `without`: pack namespaces whose definitions are treated as not being in the project
+fn lifted(graph: &trumly_core::model::Graph, samples: &[(String, Vec<Node>)], without: &[String]) -> Vec<Value> {
+    let ids: BTreeSet<&str> = graph
+        .nodes()
+        .map(|n| n.id.as_str())
+        .filter(|id| !without.iter().any(|ns| id.strip_prefix(ns.as_str()).is_some_and(|r| r.starts_with("--"))))
+        .collect();
+    let mut out = Vec::new();
+    for (pattern, nodes) in samples {
+        let here: Vec<&Node> = graph
+            .nodes()
+            .filter(|n| n.fields.get("from-pattern").and_then(Value::as_str) == Some(pattern.as_str()))
+            .collect();
+        if here.is_empty() {
+            continue;
+        }
+        let mine: BTreeSet<&str> = nodes.iter().map(|n| n.id.as_str()).collect();
+        let is_here = |pid: &str| here.iter().any(|h| h.id == pid || h.id.ends_with(&format!("-{pid}")));
+        let rest: Vec<&Node> = nodes.iter().filter(|n| !is_here(&n.id)).collect();
+        if rest.is_empty() {
+            continue;
+        }
+        let mut blocked: BTreeMap<&str, BTreeSet<String>> = BTreeMap::new();
+        loop {
+            let mut grew = false;
+            for n in &rest {
+                if blocked.contains_key(n.id.as_str()) {
+                    continue;
+                }
+                let mut needs = BTreeSet::new();
+                for t in n.links.iter().map(|l| l.to.as_str()).chain(n.parent.as_deref()) {
+                    if blocked.contains_key(t) {
+                        needs.extend(blocked[t].iter().cloned());
+                    } else if !mine.contains(t) && !ids.contains(t) {
+                        needs.insert(t.to_string());
+                    }
+                }
+                if !needs.is_empty() {
+                    blocked.insert(n.id.as_str(), needs);
+                    grew = true;
+                }
+            }
+            if !grew {
+                break;
+            }
+        }
+        let waiting: Vec<Value> =
+            blocked.iter().map(|(id, needs)| json!({"node": id, "needs": needs.iter().collect::<Vec<_>>()})).collect();
+        let mut fits_ids: Vec<&str> =
+            rest.iter().map(|n| n.id.as_str()).filter(|id| !blocked.contains_key(id)).collect();
+        fits_ids.sort_unstable();
+        out.push(json!({
+            "pattern": pattern, "present": here.len(), "total": nodes.len(),
+            "fits": fits_ids.len(), "fits_ids": fits_ids, "waiting": waiting,
+        }));
+    }
+    out
+}
+
+#[cfg(test)]
+mod lifted_tests {
+    use super::*;
+
+    fn n(text: &str) -> Node {
+        parse_node(text).expect("a node")
+    }
+
+    #[test]
+    fn a_lifted_pattern_says_what_fits_now_and_what_is_waiting() {
+        let pattern = vec![
+            n("---\nid: root\ntype: t\n---\n"),
+            n("---\nid: a\ntype: t\nlinks:\n  - {type: uses, to: root}\n---\n"),
+            n("---\nid: b\ntype: t\nlinks:\n  - {type: uses, to: far-away}\n---\n"),
+            n("---\nid: c\ntype: t\nparent: b\n---\n"),
+            n("---\nid: d\ntype: t\nlinks:\n  - {type: uses, to: x-known}\n---\n"),
+        ];
+        let mut g = trumly_core::model::Graph::new();
+        assert!(g.insert(n("---\nid: p-root\ntype: t\nfields:\n  from-pattern: pk/pat\n---\n")).is_ok());
+        assert!(g.insert(n("---\nid: x-known\ntype: t\n---\n")).is_ok());
+        let out = lifted(&g, &[("pk/pat".into(), pattern.clone()), ("pk/other".into(), pattern)], &[]);
+        assert_eq!(out.len(), 1, "only the pattern that was lifted is listed");
+        assert_eq!(out[0]["present"], 1);
+        assert_eq!(out[0]["total"], 5);
+        assert_eq!(out[0]["fits"], 2); // a and d
+        let waiting: Vec<&str> =
+            out[0]["waiting"].as_array().unwrap().iter().map(|w| w["node"].as_str().unwrap()).collect();
+        assert_eq!(waiting, ["b", "c"]);
+        assert_eq!(out[0]["waiting"][1]["needs"][0], "far-away");
+    }
+
+    #[test]
+    fn only_what_a_new_pack_made_possible_is_offered() {
+        // a needs the pack's definition `nw--thing`; d needs something that was always there; b waits on nothing here
+        let pattern = vec![
+            n("---\nid: root\ntype: t\n---\n"),
+            n("---\nid: a\ntype: t\nlinks:\n  - {type: uses, to: nw--thing}\n---\n"),
+            n("---\nid: d\ntype: t\nlinks:\n  - {type: uses, to: old-known}\n---\n"),
+        ];
+        let mut g = trumly_core::model::Graph::new();
+        assert!(g.insert(n("---\nid: p-root\ntype: t\nfields:\n  from-pattern: pk/pat\n---\n")).is_ok());
+        assert!(g.insert(n("---\nid: old-known\ntype: t\n---\n")).is_ok());
+        assert!(g.insert(n("---\nid: nw--thing\ntype: t\n---\n")).is_ok());
+        let samples = vec![("pk/pat".to_string(), pattern)];
+        let all = lifted(&g, &samples, &[]);
+        assert_eq!(all[0]["fits_ids"], serde_json::json!(["a", "d"]));
+        let without = lifted(&g, &samples, &["nw".to_string()]);
+        assert_eq!(without[0]["fits_ids"], serde_json::json!(["d"]), "before the pack, only d fitted");
+        assert_eq!(without[0]["waiting"][0]["needs"][0], "nw--thing");
+    }
+
+    #[test]
+    fn a_complete_lift_is_not_listed() {
+        let pattern = vec![n("---\nid: root\ntype: t\n---\n")];
+        let mut g = trumly_core::model::Graph::new();
+        assert!(g.insert(n("---\nid: root\ntype: t\nfields:\n  from-pattern: pk/pat\n---\n")).is_ok());
+        assert!(lifted(&g, &[("pk/pat".into(), pattern)], &[]).is_empty());
     }
 }

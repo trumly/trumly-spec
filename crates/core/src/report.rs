@@ -3,9 +3,10 @@
 
 use serde_json::{Value, json};
 
+use crate::derive::{DerivedMap, derive_all, row_to_json};
 use crate::load::{LoadError, load};
 use crate::model::{Graph, Node};
-use crate::rules::{Evaluation, Status, evaluate, unmatched_rules};
+use crate::rules::{Evaluation, Status, evaluate_with, unmatched_rules};
 use crate::structure::{self, Finding, Structure};
 
 /// The result of [`check`]: the loaded graph and everything found in it.
@@ -18,6 +19,8 @@ pub struct Report {
     pub structure: Structure,
     /// Rule results and ghosts.
     pub evaluation: Evaluation,
+    /// Derived values by node id, for the nodes that have any.
+    pub derived: DerivedMap,
 }
 
 /// Load, validate and run the rules over `(path, text)` pairs.
@@ -28,8 +31,9 @@ pub fn check(files: Vec<(String, String)>) -> Report {
         structure.warnings.push(Finding { node: id, kind: "rule_matches_nothing", reference: None });
     }
     structure.warnings.sort_by_key(|f| (f.node.clone(), f.kind, f.reference.clone().unwrap_or_default()));
-    let evaluation = evaluate(&graph);
-    Report { graph, load_errors, structure, evaluation }
+    let derived = derive_all(&graph);
+    let evaluation = evaluate_with(&graph, &derived);
+    Report { graph, load_errors, structure, evaluation, derived }
 }
 
 /// A node as the JSON object used in `check --json`.
@@ -61,7 +65,14 @@ impl Report {
     pub fn to_json(&self) -> Value {
         json!({
             "load_errors": self.load_errors.iter().map(|e| json!({"file": e.file, "kind": e.kind})).collect::<Vec<_>>(),
-            "nodes": self.graph.nodes().map(node_to_json).collect::<Vec<_>>(),
+            "nodes": self.graph.nodes().map(|n| {
+                let mut j = node_to_json(n);
+                // only nodes that have derived values carry the key, so projects without any look as they always did
+                if let Some(row) = self.derived.get(&n.id) {
+                    j["derived"] = row_to_json(row);
+                }
+                j
+            }).collect::<Vec<_>>(),
             "structure": {
                 "errors": findings_to_json(&self.structure.errors),
                 "warnings": findings_to_json(&self.structure.warnings),
@@ -224,7 +235,7 @@ impl Report {
         let content: Vec<&Node> = nodes
             .iter()
             .copied()
-            .filter(|n| !["plane", "group", "rule", "type", "link-type", "pack"].iter().any(|k| is(n, k)))
+            .filter(|n| !["plane", "group", "rule", "type", "link-type", "pack", "derived"].iter().any(|k| is(n, k)))
             .collect();
         let failing: usize = self.evaluation.results.iter().filter(|r| r.status == Status::Fail).count();
 
@@ -374,6 +385,24 @@ impl Report {
                     r.fields.get("statement").and_then(Value::as_str).unwrap_or(&r.title),
                     sev,
                     state
+                ));
+            }
+        }
+
+        // calculated names (spec 7a): what each is called and the template it is built from, so an agent knows they exist
+        let defs: Vec<&Node> = nodes.iter().copied().filter(|n| is(n, "derived")).collect();
+        if !defs.is_empty() {
+            out.push_str("\n## Derived values\n\n");
+            for d in &defs {
+                let on = d.fields.get("enabled").and_then(Value::as_bool) != Some(false);
+                let field = d.fields.get("field-name").and_then(Value::as_str).filter(|s| !s.is_empty());
+                out.push_str(&format!(
+                    "- `{}` {}{}: `{}`{}\n",
+                    d.id,
+                    d.fields.get("name").and_then(Value::as_str).unwrap_or(&d.title),
+                    field.map(|f| format!(" (value `{f}`)")).unwrap_or_default(),
+                    d.fields.get("template").and_then(Value::as_str).unwrap_or(""),
+                    if on { "" } else { " (off)" }
                 ));
             }
         }

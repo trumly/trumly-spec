@@ -1,0 +1,184 @@
+{
+ "ghosts": [
+  {
+   "link": "aws:runs-on",
+   "node": "c",
+   "plane": null,
+   "rule": "needs-aws-link",
+   "to_type": null
+  }
+ ],
+ "load_errors": [],
+ "nodes": [
+  {
+   "body": "",
+   "fields": {},
+   "id": "a",
+   "links": [
+    {
+     "to": "b",
+     "type": "aws:runs-on"
+    }
+   ],
+   "parent": null,
+   "plane": null,
+   "title": "a",
+   "type": "k8s:service"
+  },
+  {
+   "body": "",
+   "fields": {
+    "from": [
+     "service"
+    ],
+    "name": "runs-on",
+    "pack": "aws@1.0.0",
+    "to": [
+     "service"
+    ]
+   },
+   "id": "aws--link-runs-on",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "aws--link-runs-on",
+   "type": "link-type"
+  },
+  {
+   "body": "",
+   "fields": {
+    "name": "aws",
+    "pack": "aws@1.0.0",
+    "version": "1.0.0"
+   },
+   "id": "aws--pack",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "aws--pack",
+   "type": "pack"
+  },
+  {
+   "body": "",
+   "fields": {
+    "name": "service",
+    "pack": "aws@1.0.0"
+   },
+   "id": "aws--type-service",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "aws--type-service",
+   "type": "type"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "b",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "b",
+   "type": "aws:service"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "c",
+   "links": [
+    {
+     "to": "b",
+     "type": "k8s:runs-on"
+    }
+   ],
+   "parent": null,
+   "plane": null,
+   "title": "c",
+   "type": "k8s:service"
+  },
+  {
+   "body": "",
+   "fields": {
+    "name": "runs-on",
+    "pack": "k8s@1.0.0"
+   },
+   "id": "k8s--link-runs-on",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "k8s--link-runs-on",
+   "type": "link-type"
+  },
+  {
+   "body": "",
+   "fields": {
+    "name": "k8s",
+    "pack": "k8s@1.0.0",
+    "version": "1.0.0"
+   },
+   "id": "k8s--pack",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "k8s--pack",
+   "type": "pack"
+  },
+  {
+   "body": "",
+   "fields": {
+    "name": "service",
+    "pack": "k8s@1.0.0"
+   },
+   "id": "k8s--type-service",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "k8s--type-service",
+   "type": "type"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "k8s:service"
+    },
+    "check": {
+     "require_link": {
+      "type": "aws:runs-on"
+     }
+    },
+    "severity": "warn"
+   },
+   "id": "needs-aws-link",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "needs-aws-link",
+   "type": "rule"
+  }
+ ],
+ "results": [
+  {
+   "node": "a",
+   "rule": "needs-aws-link",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "c",
+   "rule": "needs-aws-link",
+   "severity": "warn",
+   "status": "fail"
+  }
+ ],
+ "structure": {
+  "errors": [],
+  "warnings": [
+   {
+    "kind": "link_endpoint_mismatch",
+    "node": "a",
+    "ref": "aws:runs-on->b"
+   }
+  ]
+ }
+}

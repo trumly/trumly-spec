@@ -1,0 +1,201 @@
+{
+ "ghosts": [],
+ "load_errors": [],
+ "nodes": [
+  {
+   "body": "",
+   "fields": {
+    "name": "name",
+    "template": "all"
+   },
+   "id": "a-all",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "a-all",
+   "type": "derived"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "plane": "p1"
+    },
+    "name": "name",
+    "template": "plane"
+   },
+   "id": "b-plane",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "b-plane",
+   "type": "derived"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "db"
+    },
+    "name": "name",
+    "template": "type"
+   },
+   "id": "c-type",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "c-type",
+   "type": "derived"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "id": "x"
+    },
+    "name": "name",
+    "template": "one"
+   },
+   "id": "d-one",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "d-one",
+   "type": "derived"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "id": "x"
+    },
+    "name": "name",
+    "template": "tie"
+   },
+   "id": "d-tie",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "d-tie",
+   "type": "derived"
+  },
+  {
+   "body": "",
+   "fields": {
+    "name": "label",
+    "template": "other"
+   },
+   "id": "e-other",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "e-other",
+   "type": "derived"
+  },
+  {
+   "body": "",
+   "fields": {
+    "order": 1
+   },
+   "id": "p1",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "p1",
+   "type": "plane"
+  },
+  {
+   "body": "",
+   "derived": {
+    "label": {
+     "values": [
+      "other"
+     ]
+    },
+    "name": {
+     "values": [
+      "all"
+     ]
+    }
+   },
+   "fields": {},
+   "id": "w",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "w",
+   "type": "other"
+  },
+  {
+   "body": "",
+   "derived": {
+    "label": {
+     "values": [
+      "other"
+     ]
+    },
+    "name": {
+     "values": [
+      "one"
+     ]
+    }
+   },
+   "fields": {},
+   "id": "x",
+   "links": [],
+   "parent": null,
+   "plane": "p1",
+   "title": "x",
+   "type": "db"
+  },
+  {
+   "body": "",
+   "derived": {
+    "label": {
+     "values": [
+      "other"
+     ]
+    },
+    "name": {
+     "values": [
+      "type"
+     ]
+    }
+   },
+   "fields": {},
+   "id": "y",
+   "links": [],
+   "parent": null,
+   "plane": "p1",
+   "title": "y",
+   "type": "db"
+  },
+  {
+   "body": "",
+   "derived": {
+    "label": {
+     "values": [
+      "other"
+     ]
+    },
+    "name": {
+     "values": [
+      "plane"
+     ]
+    }
+   },
+   "fields": {},
+   "id": "z",
+   "links": [],
+   "parent": null,
+   "plane": "p1",
+   "title": "z",
+   "type": "other"
+  }
+ ],
+ "results": [],
+ "structure": {
+  "errors": [],
+  "warnings": []
+ }
+}

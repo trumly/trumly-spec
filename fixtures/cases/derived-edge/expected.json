@@ -1,0 +1,201 @@
+{
+ "ghosts": [],
+ "load_errors": [],
+ "nodes": [
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "id": "n1"
+    },
+    "name": "bad",
+    "template": "{open"
+   },
+   "id": "d-bad",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "d-bad",
+   "type": "derived"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "id": "n1"
+    },
+    "name": "empty",
+    "template": ""
+   },
+   "id": "d-empty",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "d-empty",
+   "type": "derived"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "id": "n1"
+    },
+    "name": "esc",
+    "template": "a\\{b\\}\\\\{title}"
+   },
+   "id": "d-esc",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "d-esc",
+   "type": "derived"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "id": "n1"
+    },
+    "name": "hop",
+    "template": "{uses/@type/x}|{a//b}"
+   },
+   "id": "d-hop",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "d-hop",
+   "type": "derived"
+  },
+  {
+   "body": "",
+   "fields": {
+    "template": "nope"
+   },
+   "id": "d-noname",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "d-noname",
+   "type": "derived"
+  },
+  {
+   "body": "",
+   "fields": {
+    "enabled": false,
+    "name": "off",
+    "template": "nope"
+   },
+   "id": "d-off",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "d-off",
+   "type": "derived"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "id": "n2"
+    },
+    "name": "types",
+    "template": "{n}-{b}-{f}-{l}-{m}"
+   },
+   "id": "d-types",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "d-types",
+   "type": "derived"
+  },
+  {
+   "body": "",
+   "derived": {
+    "bad": {
+     "missing": [
+      "template"
+     ]
+    },
+    "empty": {
+     "missing": [
+      "template"
+     ]
+    },
+    "esc": {
+     "values": [
+      "a{b}\\One"
+     ]
+    },
+    "hop": {
+     "missing": [
+      "uses/@type/x",
+      "a//b"
+     ]
+    }
+   },
+   "fields": {},
+   "id": "n1",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "One",
+   "type": "thing"
+  },
+  {
+   "body": "",
+   "derived": {
+    "types": {
+     "missing": [
+      "l",
+      "m"
+     ]
+    }
+   },
+   "fields": {
+    "b": true,
+    "f": 1.5,
+    "l": [
+     "a"
+    ],
+    "m": {
+     "k": "v"
+    },
+    "n": 7
+   },
+   "id": "n2",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "n2",
+   "type": "thing"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "n3",
+   "links": [],
+   "parent": null,
+   "plane": "sp",
+   "title": "n3",
+   "type": "thing"
+  },
+  {
+   "body": "",
+   "fields": {
+    "order": 1,
+    "scratch": true
+   },
+   "id": "sp",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "sp",
+   "type": "plane"
+  }
+ ],
+ "results": [],
+ "structure": {
+  "errors": [],
+  "warnings": []
+ }
+}

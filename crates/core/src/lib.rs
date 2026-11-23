@@ -24,9 +24,11 @@
 //! Where to start: [`report::check`] does the whole job; [`load`], [`structure`] and [`rules`] are
 //! its stages; [`ops`] holds edits such as renaming a node and rewriting every link to it.
 
+pub mod derive;
 pub mod format;
 pub mod load;
 pub mod model;
+pub mod names;
 pub mod ops;
 pub mod parse;
 pub mod report;

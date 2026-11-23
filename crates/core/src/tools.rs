@@ -87,7 +87,11 @@ fn get_node(report: &Report, args: &Value) -> Result<Value, String> {
         .filter(|r| r.node == id)
         .map(|r| json!({"rule": r.rule, "severity": r.severity, "status": r.status.as_str()}))
         .collect();
-    Ok(json!({"node": node_to_json(node), "inbound": inbound, "rules": rules}))
+    let mut out = json!({"node": node_to_json(node), "inbound": inbound, "rules": rules});
+    if let Some(row) = report.derived.get(id) {
+        out["derived"] = crate::derive::row_to_json(row);
+    }
+    Ok(out)
 }
 
 fn is_under<'a>(report: &'a Report, mut id: &'a str, ancestor: &str) -> bool {
@@ -158,6 +162,25 @@ fn search(report: &Report, args: &Value) -> Result<Value, String> {
         if let Some(at) = contains_ci(&fields, &query) {
             matched.push("fields");
             snip.get_or_insert_with(|| snippet(&fields, at, query.chars().count()));
+        }
+        // derived values (a calculated name) are searched too, so a real name found in a console or an alert finds its node
+        let derived = report
+            .derived
+            .get(&n.id)
+            .map(|row| {
+                row.values()
+                    .filter_map(|d| match d {
+                        crate::derive::Derived::Values(v) => Some(v.join("\n")),
+                        crate::derive::Derived::Overridden { values, .. } => Some(values.join("\n")),
+                        _ => None,
+                    })
+                    .collect::<Vec<_>>()
+                    .join("\n")
+            })
+            .unwrap_or_default();
+        if let Some(at) = contains_ci(&derived, &query) {
+            matched.push("derived");
+            snip.get_or_insert_with(|| snippet(&derived, at, query.chars().count()));
         }
         if let Some(at) = contains_ci(&n.body, &query) {
             matched.push("body");

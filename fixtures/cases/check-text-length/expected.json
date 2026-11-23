@@ -1,0 +1,433 @@
+{
+ "ghosts": [],
+ "load_errors": [],
+ "nodes": [
+  {
+   "body": "",
+   "fields": {
+    "slug": "abcd"
+   },
+   "id": "a",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "a",
+   "type": "t"
+  },
+  {
+   "body": "",
+   "fields": {
+    "slug": "abcdefgh"
+   },
+   "id": "b",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "b",
+   "type": "t"
+  },
+  {
+   "body": "",
+   "fields": {
+    "slug": "ééééé"
+   },
+   "id": "c",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "c",
+   "type": "t"
+  },
+  {
+   "body": "",
+   "fields": {
+    "slug": 42
+   },
+   "id": "d",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "d",
+   "type": "t"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "e",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "e",
+   "type": "t"
+  },
+  {
+   "body": "",
+   "fields": {
+    "slug": ""
+   },
+   "id": "f",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "f",
+   "type": "t"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "t"
+    },
+    "check": {
+     "field_is": {
+      "slug": {
+       "max_length": 5
+      }
+     }
+    },
+    "statement": "s"
+   },
+   "id": "r1",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r1",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "t"
+    },
+    "check": {
+     "field_is": {
+      "slug": {
+       "min_length": 2,
+       "optional": true
+      }
+     }
+    },
+    "statement": "s"
+   },
+   "id": "r2",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r2",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "t"
+    },
+    "check": {
+     "field_is": {
+      "slug": {
+       "max_bytes": 6
+      }
+     }
+    },
+    "statement": "s"
+   },
+   "id": "r3",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r3",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "t"
+    },
+    "check": {
+     "field_is": {
+      "slug": {
+       "max_length": -1
+      }
+     }
+    },
+    "statement": "s"
+   },
+   "id": "r4",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r4",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "t"
+    },
+    "check": {
+     "field_is": {
+      "slug": {
+       "max_length": "5"
+      }
+     }
+    },
+    "statement": "s"
+   },
+   "id": "r5",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r5",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "t"
+    },
+    "check": {
+     "field_is": {
+      "slug": {
+       "max_length": 5,
+       "min_length": 3,
+       "optional": true
+      }
+     }
+    },
+    "statement": "s"
+   },
+   "id": "r6",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "r6",
+   "type": "rule"
+  }
+ ],
+ "results": [
+  {
+   "node": "a",
+   "rule": "r1",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "a",
+   "rule": "r2",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "a",
+   "rule": "r3",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "a",
+   "rule": "r4",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "a",
+   "rule": "r5",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "a",
+   "rule": "r6",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "b",
+   "rule": "r1",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "b",
+   "rule": "r2",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "b",
+   "rule": "r3",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "b",
+   "rule": "r4",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "b",
+   "rule": "r5",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "b",
+   "rule": "r6",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "c",
+   "rule": "r1",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "c",
+   "rule": "r2",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "c",
+   "rule": "r3",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "c",
+   "rule": "r4",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "c",
+   "rule": "r5",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "c",
+   "rule": "r6",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "d",
+   "rule": "r1",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "d",
+   "rule": "r2",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "d",
+   "rule": "r3",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "d",
+   "rule": "r4",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "d",
+   "rule": "r5",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "d",
+   "rule": "r6",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "e",
+   "rule": "r1",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "e",
+   "rule": "r2",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "e",
+   "rule": "r3",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "e",
+   "rule": "r4",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "e",
+   "rule": "r5",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "e",
+   "rule": "r6",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "f",
+   "rule": "r1",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "f",
+   "rule": "r2",
+   "severity": "warn",
+   "status": "fail"
+  },
+  {
+   "node": "f",
+   "rule": "r3",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "f",
+   "rule": "r4",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "f",
+   "rule": "r5",
+   "severity": "warn",
+   "status": "unsupported"
+  },
+  {
+   "node": "f",
+   "rule": "r6",
+   "severity": "warn",
+   "status": "fail"
+  }
+ ],
+ "structure": {
+  "errors": [],
+  "warnings": []
+ }
+}

@@ -1,0 +1,151 @@
+{
+  "ghosts": [],
+  "load_errors": [],
+  "nodes": [
+    {
+      "body": "",
+      "fields": {
+        "applies_to": {
+          "id": "n1"
+        },
+        "name": "hopsmany",
+        "template": "{a/a/a/a/a/a/title}"
+      },
+      "id": "d-hops-many",
+      "links": [],
+      "parent": null,
+      "plane": null,
+      "title": "d-hops-many",
+      "type": "derived"
+    },
+    {
+      "body": "",
+      "fields": {
+        "applies_to": {
+          "id": "n1"
+        },
+        "name": "hopsok",
+        "template": "{a/a/a/a/a/title}"
+      },
+      "id": "d-hops-ok",
+      "links": [],
+      "parent": null,
+      "plane": null,
+      "title": "d-hops-ok",
+      "type": "derived"
+    },
+    {
+      "body": "",
+      "fields": {
+        "applies_to": {
+          "id": "n1"
+        },
+        "name": "long",
+        "template": "{big}{big}"
+      },
+      "id": "d-long",
+      "links": [],
+      "parent": null,
+      "plane": null,
+      "title": "d-long",
+      "type": "derived"
+    },
+    {
+      "body": "",
+      "fields": {
+        "applies_to": {
+          "id": "n1"
+        },
+        "name": "many",
+        "template": "{title}{title}{title}{title}{title}{title}{title}{title}{title}{title}{title}{title}{title}{title}{title}{title}{title}{title}{title}{title}{title}{title}{title}{title}{title}{title}{title}{title}{title}{title}{title}{title}{title}"
+      },
+      "id": "d-many",
+      "links": [],
+      "parent": null,
+      "plane": null,
+      "title": "d-many",
+      "type": "derived"
+    },
+    {
+      "body": "",
+      "fields": {
+        "applies_to": {
+          "id": "n1"
+        },
+        "name": "max",
+        "template": "{title}{title}{title}{title}{title}{title}{title}{title}{title}{title}{title}{title}{title}{title}{title}{title}{title}{title}{title}{title}{title}{title}{title}{title}{title}{title}{title}{title}{title}{title}{title}{title}"
+      },
+      "id": "d-max",
+      "links": [],
+      "parent": null,
+      "plane": null,
+      "title": "d-max",
+      "type": "derived"
+    },
+    {
+      "body": "",
+      "fields": {
+        "applies_to": {
+          "id": "n1"
+        },
+        "name": "ok",
+        "template": "{big}"
+      },
+      "id": "d-ok",
+      "links": [],
+      "parent": null,
+      "plane": null,
+      "title": "d-ok",
+      "type": "derived"
+    },
+    {
+      "body": "",
+      "derived": {
+        "hopsmany": {
+          "missing": [
+            "template"
+          ]
+        },
+        "hopsok": {
+          "missing": [
+            "a/a/a/a/a/title"
+          ]
+        },
+        "long": {
+          "missing": [
+            "template"
+          ]
+        },
+        "many": {
+          "missing": [
+            "template"
+          ]
+        },
+        "max": {
+          "values": [
+            "OneOneOneOneOneOneOneOneOneOneOneOneOneOneOneOneOneOneOneOneOneOneOneOneOneOneOneOneOneOneOneOne"
+          ]
+        },
+        "ok": {
+          "values": [
+            "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+          ]
+        }
+      },
+      "fields": {
+        "big": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      },
+      "id": "n1",
+      "links": [],
+      "parent": null,
+      "plane": null,
+      "title": "One",
+      "type": "thing"
+    }
+  ],
+  "results": [],
+  "structure": {
+    "errors": [],
+    "warnings": []
+  }
+}

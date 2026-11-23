@@ -27,11 +27,10 @@ fn flags_an_ordinary_node() {
 }
 
 #[test]
-fn flags_a_name_two_unrelated_packs_define() {
+fn unrelated_packs_may_define_the_same_name() {
+    // spec 4a: a node says which with `<namespace>:<name>`, so two packs sharing a name is not a lint finding
     let (a, b) = (pack("a", "a", &[], &[("t", &t("table"))]), pack("b", "b", &[], &[("t", &t("table"))]));
-    let out = lint(&[a, b]);
-    assert_eq!(out.len(), 2, "{out:?}");
-    assert!(out.iter().all(|p| p.severity == "warning" && p.message.contains("also defined")));
+    assert!(lint(&[a, b]).is_empty());
 }
 
 #[test]
@@ -108,10 +107,10 @@ fn flags_names_that_are_easy_to_mix_up_across_packs_but_not_within_one() {
     let one =
         pack("c", "c", &[], &[("t", &t("decision")), ("l", "type: link-type\nfields: {name: decisions, pack: PACK}")]);
     assert!(lint(&[one]).iter().all(|p| p.code != "near-name"));
-    // the same name in unrelated packs is a collision
+    // the same name in unrelated packs is allowed: a project tells them apart with `<namespace>:<name>`
     let x = pack("x", "x", &[], &[("w", &t("widget"))]);
     let y = pack("y", "y", &[], &[("w", &t("widget"))]);
-    assert!(lint(&[x, y]).iter().any(|p| p.code == "collision"));
+    assert!(lint(&[x, y]).iter().all(|p| p.code != "collision"));
 }
 
 fn manifest(name: &str, ns: &str, extra: &str) -> Pack {
@@ -241,4 +240,52 @@ fn enriches_may_name_a_type_the_core_defines() {
         !lint(&[core.clone(), mk("component")]).iter().any(|p| p.pack == "hosting" && p.message.contains("enriches"))
     );
     assert!(says(&lint(&[core, mk("gadget")]), "hosting", "neither a core pack nor a type"));
+}
+
+fn with_pattern(default: &str) -> Pack {
+    let manifest = format!(
+        "---\nid: w--pack\ntype: pack\nfields:\n  name: w\n  namespace: w\n  version: 1.0.0\n  license: MIT\n  publisher: Acme\n  use-when: when a thing happens many times\n  requires: [core@1]\n{default}---\n"
+    );
+    let items = vec![
+        ("w--pack".to_string(), manifest),
+        (
+            "patterns/flow/pattern".to_string(),
+            "---\nid: pattern\ntype: pattern\ntitle: A flow\nfields:\n  root: start\n  description: A start and an end\n---\n".to_string(),
+        ),
+        ("patterns/flow/start".to_string(), "---\nid: start\ntype: component\ntitle: Start\n---\n".to_string()),
+    ];
+    pack_from_texts("w", items).expect("a valid pack")
+}
+
+#[test]
+fn a_default_pattern_must_be_one_of_the_packs_patterns() {
+    let ok = with_pattern("  default-pattern: flow\n");
+    assert_eq!(ok.default_pattern.as_deref(), Some("flow"));
+    assert_eq!(ok.default_pattern().map(|s| s.name.as_str()), Some("flow"));
+    assert!(!lint(&[ok]).iter().any(|p| p.message.contains("default-pattern")));
+    let bad = with_pattern("  default-pattern: nope\n");
+    assert!(says(&lint(&[bad]), "w", "default-pattern names “nope”"));
+    let none = with_pattern("");
+    assert!(none.default_pattern.is_none() && none.default_pattern().is_none());
+}
+
+#[test]
+fn a_pack_may_ship_a_derived_value_and_its_links_and_types_are_checked() {
+    let d = |template: &str| {
+        format!(
+            "type: derived\nfields: {{name: handle, template: '{template}', applies_to: {{type: widget}}, pack: PACK}}"
+        )
+    };
+    // the type is the pack's own and the link is defined by it: nothing to say
+    let link = "type: link-type\nfields: {name: runs-in, pack: PACK}";
+    let ok = pack("a", "a", &[], &[("w", &t("widget")), ("l", link), ("d", &d("{runs-in/code}"))]);
+    assert!(lint(&[ok]).is_empty());
+    // a link nobody defines is a warning, and a field in the template is not mistaken for one
+    let bad = pack("a", "a", &[], &[("w", &t("widget")), ("d", &d("{title}-{^lives-in/code}"))]);
+    let out = lint(&[bad]);
+    assert_eq!(out.len(), 1, "{out:?}");
+    assert!(out[0].severity == "warning" && out[0].message.contains("“lives-in”"), "{out:?}");
+    // a type nobody defines
+    let lonely = pack("b", "b", &[], &[("d", &d("{title}"))]);
+    assert!(lint(&[lonely]).iter().any(|p| p.message.contains("“widget”")));
 }

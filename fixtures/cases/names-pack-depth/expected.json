@@ -1,0 +1,351 @@
+{
+ "ghosts": [],
+ "load_errors": [],
+ "nodes": [
+  {
+   "body": "",
+   "fields": {
+    "name": "a",
+    "pack": "a@1.0.0",
+    "requires": [
+     "b@^1",
+     "d@^1"
+    ],
+    "version": "1.0.0"
+   },
+   "id": "a--pack",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "a--pack",
+   "type": "pack"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "thing"
+    },
+    "check": {
+     "require_fields": [
+      "x"
+     ]
+    },
+    "pack": "a@1.0.0",
+    "severity": "warn"
+   },
+   "id": "a--rule-thing",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "a--rule-thing",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "widget"
+    },
+    "check": {
+     "require_fields": [
+      "x"
+     ]
+    },
+    "pack": "a@1.0.0",
+    "severity": "warn"
+   },
+   "id": "a--rule-widget",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "a--rule-widget",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "name": "b",
+    "pack": "b@1.0.0",
+    "requires": [
+     "c@^1"
+    ],
+    "version": "1.0.0"
+   },
+   "id": "b--pack",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "b--pack",
+   "type": "pack"
+  },
+  {
+   "body": "",
+   "fields": {
+    "name": "thing",
+    "pack": "b@1.0.0"
+   },
+   "id": "b--type-thing",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "b--type-thing",
+   "type": "type"
+  },
+  {
+   "body": "",
+   "fields": {
+    "name": "widget",
+    "pack": "b@1.0.0"
+   },
+   "id": "b--type-widget",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "b--type-widget",
+   "type": "type"
+  },
+  {
+   "body": "",
+   "fields": {
+    "name": "c",
+    "pack": "c@1.0.0",
+    "version": "1.0.0"
+   },
+   "id": "c--pack",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "c--pack",
+   "type": "pack"
+  },
+  {
+   "body": "",
+   "fields": {
+    "name": "thing",
+    "pack": "c@1.0.0"
+   },
+   "id": "c--type-thing",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "c--type-thing",
+   "type": "type"
+  },
+  {
+   "body": "",
+   "fields": {
+    "name": "d",
+    "pack": "d@1.0.0",
+    "version": "1.0.0"
+   },
+   "id": "d--pack",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "d--pack",
+   "type": "pack"
+  },
+  {
+   "body": "",
+   "fields": {
+    "name": "widget",
+    "pack": "d@1.0.0"
+   },
+   "id": "d--type-widget",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "d--type-widget",
+   "type": "type"
+  },
+  {
+   "body": "",
+   "fields": {
+    "name": "e",
+    "pack": "e@1.0.0",
+    "version": "1.0.0"
+   },
+   "id": "e--pack",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "e--pack",
+   "type": "pack"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "gadget"
+    },
+    "check": {
+     "require_fields": [
+      "x"
+     ]
+    },
+    "pack": "e@1.0.0",
+    "severity": "warn"
+   },
+   "id": "e--rule-gadget",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "e--rule-gadget",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "gizmo"
+    },
+    "check": {
+     "require_fields": [
+      "x"
+     ]
+    },
+    "pack": "e@1.0.0",
+    "severity": "warn"
+   },
+   "id": "e--rule-gizmo",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "e--rule-gizmo",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "name": "f",
+    "pack": "f@1.0.0",
+    "version": "1.0.0"
+   },
+   "id": "f--pack",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "f--pack",
+   "type": "pack"
+  },
+  {
+   "body": "",
+   "fields": {
+    "name": "gadget",
+    "pack": "f@1.0.0"
+   },
+   "id": "f--type-gadget",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "f--type-gadget",
+   "type": "type"
+  },
+  {
+   "body": "",
+   "fields": {
+    "name": "gizmo",
+    "pack": "f@1.0.0"
+   },
+   "id": "f--type-gizmo",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "f--type-gizmo",
+   "type": "type"
+  },
+  {
+   "body": "",
+   "fields": {
+    "name": "g",
+    "pack": "g@1.0.0",
+    "version": "1.0.0"
+   },
+   "id": "g--pack",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "g--pack",
+   "type": "pack"
+  },
+  {
+   "body": "",
+   "fields": {
+    "name": "gadget",
+    "pack": "g@1.0.0"
+   },
+   "id": "g--type-gadget",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "g--type-gadget",
+   "type": "type"
+  },
+  {
+   "body": "",
+   "fields": {
+    "x": 1
+   },
+   "id": "n-b-thing",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "n-b-thing",
+   "type": "b:thing"
+  },
+  {
+   "body": "",
+   "fields": {
+    "x": 1
+   },
+   "id": "n-c-thing",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "n-c-thing",
+   "type": "c:thing"
+  },
+  {
+   "body": "",
+   "fields": {
+    "x": 1
+   },
+   "id": "n-f-gizmo",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "n-f-gizmo",
+   "type": "f:gizmo"
+  }
+ ],
+ "results": [
+  {
+   "node": "n-b-thing",
+   "rule": "a--rule-thing",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "n-f-gizmo",
+   "rule": "e--rule-gizmo",
+   "severity": "warn",
+   "status": "pass"
+  }
+ ],
+ "structure": {
+  "errors": [],
+  "warnings": [
+   {
+    "kind": "ambiguous_type",
+    "node": "a--rule-widget",
+    "ref": "widget"
+   },
+   {
+    "kind": "ambiguous_type",
+    "node": "e--rule-gadget",
+    "ref": "gadget"
+   }
+  ]
+ }
+}

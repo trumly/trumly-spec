@@ -1,0 +1,140 @@
+{
+ "ghosts": [],
+ "load_errors": [],
+ "nodes": [
+  {
+   "body": "",
+   "fields": {
+    "name": "name",
+    "template": "{@type/^stands-for/token}-{workload}-{runs-in/token}-{runs-in/in-region/token}-{instance}"
+   },
+   "id": "d-name",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "d-name",
+   "type": "derived"
+  },
+  {
+   "body": "",
+   "derived": {
+    "name": {
+     "missing": [
+      "@type/^stands-for/token",
+      "workload",
+      "runs-in/token",
+      "runs-in/in-region/token",
+      "instance"
+     ]
+    }
+   },
+   "fields": {
+    "token": "prod"
+   },
+   "id": "env-prod",
+   "links": [
+    {
+     "to": "reg-uks",
+     "type": "in-region"
+    }
+   ],
+   "parent": null,
+   "plane": null,
+   "title": "env-prod",
+   "type": "env"
+  },
+  {
+   "body": "",
+   "derived": {
+    "name": {
+     "values": [
+      "psql-ops-prod-uks-1"
+     ]
+    }
+   },
+   "fields": {
+    "instance": 1,
+    "workload": "ops"
+   },
+   "id": "ops",
+   "links": [
+    {
+     "to": "env-prod",
+     "type": "runs-in"
+    }
+   ],
+   "parent": null,
+   "plane": null,
+   "title": "ops",
+   "type": "db"
+  },
+  {
+   "body": "",
+   "derived": {
+    "name": {
+     "missing": [
+      "@type/^stands-for/token",
+      "workload",
+      "runs-in/token",
+      "runs-in/in-region/token",
+      "instance"
+     ]
+    }
+   },
+   "fields": {
+    "token": "uks"
+   },
+   "id": "reg-uks",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "reg-uks",
+   "type": "region"
+  },
+  {
+   "body": "",
+   "fields": {
+    "name": "db"
+   },
+   "id": "t-db",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "t-db",
+   "type": "type"
+  },
+  {
+   "body": "",
+   "derived": {
+    "name": {
+     "missing": [
+      "@type/^stands-for/token",
+      "workload",
+      "runs-in/token",
+      "runs-in/in-region/token",
+      "instance"
+     ]
+    }
+   },
+   "fields": {
+    "token": "psql"
+   },
+   "id": "tok-psql",
+   "links": [
+    {
+     "to": "t-db",
+     "type": "stands-for"
+    }
+   ],
+   "parent": null,
+   "plane": null,
+   "title": "tok-psql",
+   "type": "token"
+  }
+ ],
+ "results": [],
+ "structure": {
+  "errors": [],
+  "warnings": []
+ }
+}

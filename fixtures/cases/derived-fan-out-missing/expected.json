@@ -1,0 +1,155 @@
+{
+ "ghosts": [],
+ "load_errors": [],
+ "nodes": [
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "db"
+    },
+    "name": "name",
+    "template": "{id}-{runs-in/token}"
+   },
+   "id": "d-name",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "d-name",
+   "type": "derived"
+  },
+  {
+   "body": "",
+   "derived": {
+    "name": {
+     "missing": [
+      "runs-in/token"
+     ]
+    }
+   },
+   "fields": {},
+   "id": "dangling",
+   "links": [
+    {
+     "to": "nowhere",
+     "type": "runs-in"
+    }
+   ],
+   "parent": null,
+   "plane": null,
+   "title": "dangling",
+   "type": "db"
+  },
+  {
+   "body": "",
+   "fields": {
+    "token": "dev"
+   },
+   "id": "e1",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "e1",
+   "type": "env"
+  },
+  {
+   "body": "",
+   "fields": {
+    "token": "prod"
+   },
+   "id": "e2",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "e2",
+   "type": "env"
+  },
+  {
+   "body": "",
+   "fields": {},
+   "id": "no-token",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "no-token",
+   "type": "env"
+  },
+  {
+   "body": "",
+   "derived": {
+    "name": {
+     "missing": [
+      "runs-in/token"
+     ]
+    }
+   },
+   "fields": {},
+   "id": "none",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "none",
+   "type": "db"
+  },
+  {
+   "body": "",
+   "derived": {
+    "name": {
+     "values": [
+      "two-dev",
+      "two-prod"
+     ]
+    }
+   },
+   "fields": {},
+   "id": "two",
+   "links": [
+    {
+     "to": "e2",
+     "type": "runs-in"
+    },
+    {
+     "to": "e1",
+     "type": "runs-in"
+    }
+   ],
+   "parent": null,
+   "plane": null,
+   "title": "two",
+   "type": "db"
+  },
+  {
+   "body": "",
+   "derived": {
+    "name": {
+     "missing": [
+      "runs-in/token"
+     ]
+    }
+   },
+   "fields": {},
+   "id": "wrong-end",
+   "links": [
+    {
+     "to": "no-token",
+     "type": "runs-in"
+    }
+   ],
+   "parent": null,
+   "plane": null,
+   "title": "wrong-end",
+   "type": "db"
+  }
+ ],
+ "results": [],
+ "structure": {
+  "errors": [
+   {
+    "kind": "missing_link_target",
+    "node": "dangling",
+    "ref": "runs-in->nowhere"
+   }
+  ],
+  "warnings": []
+ }
+}

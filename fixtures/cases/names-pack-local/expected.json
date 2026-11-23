@@ -1,0 +1,201 @@
+{
+ "ghosts": [],
+ "load_errors": [],
+ "nodes": [
+  {
+   "body": "",
+   "fields": {
+    "name": "aws",
+    "pack": "aws@1.0.0",
+    "version": "1.0.0"
+   },
+   "id": "aws--pack",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "aws--pack",
+   "type": "pack"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "service"
+    },
+    "check": {
+     "require_fields": [
+      "region"
+     ]
+    },
+    "pack": "aws@1.0.0",
+    "severity": "warn"
+   },
+   "id": "aws--rule-region",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "aws--rule-region",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "name": "service",
+    "pack": "aws@1.0.0"
+   },
+   "id": "aws--type-service",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "aws--type-service",
+   "type": "type"
+  },
+  {
+   "body": "",
+   "fields": {
+    "name": "k8s",
+    "pack": "k8s@1.0.0",
+    "version": "1.0.0"
+   },
+   "id": "k8s--pack",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "k8s--pack",
+   "type": "pack"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "service"
+    },
+    "check": {
+     "require_fields": [
+      "namespace"
+     ]
+    },
+    "pack": "k8s@1.0.0",
+    "severity": "warn"
+   },
+   "id": "k8s--rule-ns",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "k8s--rule-ns",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "name": "service",
+    "pack": "k8s@1.0.0"
+   },
+   "id": "k8s--type-service",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "k8s--type-service",
+   "type": "type"
+  },
+  {
+   "body": "",
+   "fields": {
+    "name": "mesh",
+    "pack": "mesh@1.0.0",
+    "requires": [
+     "k8s@^1.0.0"
+    ],
+    "version": "1.0.0"
+   },
+   "id": "mesh--pack",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "mesh--pack",
+   "type": "pack"
+  },
+  {
+   "body": "",
+   "fields": {
+    "applies_to": {
+     "type": "service"
+    },
+    "check": {
+     "require_fields": [
+      "mesh-id"
+     ]
+    },
+    "pack": "mesh@1.0.0",
+    "severity": "warn"
+   },
+   "id": "mesh--rule-mesh-id",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "mesh--rule-mesh-id",
+   "type": "rule"
+  },
+  {
+   "body": "",
+   "fields": {
+    "name": "sidecar",
+    "pack": "mesh@1.0.0"
+   },
+   "id": "mesh--type-sidecar",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "mesh--type-sidecar",
+   "type": "type"
+  },
+  {
+   "body": "",
+   "fields": {
+    "region": "eu-west-2"
+   },
+   "id": "svc-aws",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "svc-aws",
+   "type": "aws:service"
+  },
+  {
+   "body": "",
+   "fields": {
+    "namespace": "prod"
+   },
+   "id": "svc-k8s",
+   "links": [],
+   "parent": null,
+   "plane": null,
+   "title": "svc-k8s",
+   "type": "k8s:service"
+  }
+ ],
+ "results": [
+  {
+   "node": "svc-aws",
+   "rule": "aws--rule-region",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "svc-k8s",
+   "rule": "k8s--rule-ns",
+   "severity": "warn",
+   "status": "pass"
+  },
+  {
+   "node": "svc-k8s",
+   "rule": "mesh--rule-mesh-id",
+   "severity": "warn",
+   "status": "fail"
+  }
+ ],
+ "structure": {
+  "errors": [],
+  "warnings": []
+ }
+}
