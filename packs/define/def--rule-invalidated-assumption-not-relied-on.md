@@ -15,7 +15,7 @@ fields:
       node_fields:
         status: accepted
       type: relies-on
-  pack: define@1.1.0
+  pack: define@1.2.0
 ---
 **Why:** an accepted decision built on an invalidated assumption needs revisiting.
 

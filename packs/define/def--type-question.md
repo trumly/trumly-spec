@@ -24,7 +24,7 @@ fields:
     kind: text
     label: Description
     required: true
-  pack: define@1.1.0
+  pack: define@1.2.0
 ---
 **Ask (the AI asks itself):** Am I about to guess? If a decision is the person's to make, record it here instead of choosing.
 

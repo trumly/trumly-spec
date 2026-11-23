@@ -1,7 +1,7 @@
 ---
-id: question-report-recipients
+id: question-who-sees-jobs
 type: question
-title: Report recipients
+title: Who else sees jobs
 plane: def--intent
 fields:
   state: open
@@ -10,4 +10,4 @@ links:
 - type: about
   to: capability-view-job-status
 ---
-Who should receive the nightly report, and should it also be emailed?
+Should staff outside operations be able to see the job list, or only ops staff?

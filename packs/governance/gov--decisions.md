@@ -13,6 +13,6 @@ fields:
     decision: diamond
     decision-option: hexagon 2d
     principle: shield
-  pack: governance@1.1.0
+  pack: governance@1.2.0
 ---
 Why the design is the way it is: the choices made, the options weighed, what followed, and the standing principles choices are checked against.

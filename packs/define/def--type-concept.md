@@ -12,7 +12,7 @@ fields:
   - name: definition
     kind: text
     required: true
-  pack: define@1.1.0
+  pack: define@1.2.0
 ---
 **Ask:** Which words does the team use that an outsider would misread? What do they mean here?
 

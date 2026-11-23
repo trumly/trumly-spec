@@ -282,6 +282,56 @@ is two packs it requires directly, or two unrelated packs when nothing nearer ha
 write the qualified name (`b:widget`). Nothing fails to load: an ambiguous name matches the definitions of every namespace it
 names, which is what happens today. Two definitions of one name inside one namespace remain `duplicate_definition`.
 
+## 4b. What a pack folder holds
+
+A pack is a folder. The manifest and the definitions sit at the top, and two folders beside them show how the pack is used:
+
+```
+<pack>/
+  <ns>--pack.md                  the manifest
+  <ns>--<kind>-<name>.md         the definitions: planes, types, link types, rules and derived values
+  patterns/<name>/pattern.md     a pattern: its description, and
+  patterns/<name>/<node>.md      the nodes it adds to a project
+  examples/<name>/example.md     an example: its description, and
+  examples/<name>/<node>.md      a whole project that uses the pack
+```
+
+Only the files at the top are the pack's definitions (section 4). The nodes inside `patterns/` and `examples/` are ordinary nodes: they are
+not loaded with the pack, are never added to a project by adding it, and carry no `pack` tag.
+
+**Patterns.** A pattern is a small, ready-made piece of a design that someone adds to a project and then makes their own: a flow, a naming
+scheme, a starter layer. `pattern.md` is a node with `id: pattern` and `type: pattern`, and these fields:
+
+| Field | |
+| --- | --- |
+| `title`, `description` | What it is called and what it gives you. |
+| `use` | `starter` (copy it and carry on) or `inspiration` (read it through). |
+| `requires` | The packs it needs, the owning pack included. |
+| `optional` | Packs it also uses when the project has them. Nodes that need one are left out of a project without it. |
+| `root` | The id of the node in the folder that the rest hang from. It must be one of the pattern's nodes. |
+| `prefix` | The id prefix suggested when the pattern is added. |
+
+The other nodes in the folder are the pattern's content; the ones that belong under the root name it as their `parent`. When a pattern is
+added, its nodes get new ids built from the prefix, the links between them follow, and each records where it came from in
+`from-pattern: <pack>/<pattern>`, so a tool can tell which patterns a project has used and offer the ones that now have more to add.
+A pack's manifest names its `default-pattern` and `starter-patterns` (section 4).
+
+**Examples.** An example shows the pack in use: `example.md` is a node with `id: example` and `type: example`, with `title`, `description`,
+`use` (as above) and `requires`, and the rest of the folder is a whole small project. An example, with the packs it requires, MUST check
+clean: no rule failing at `error` level, and no load or structure error. Every pack ships at least one. The core packs share one worked
+example, a status API for operations staff.
+
+**Published packs.** A registry keeps each version of a pack in its own folder, `packs/<name>/<version>/`, and a version never changes after
+it is published: a fix is a new version. What a registry knows about the pack as a whole sits beside the version folders, outside what a
+version's checksum covers, so it can change after publishing: `packs/<name>/meta.json` holds the `tier` (`verified` or `community`),
+an optional `repo` and `homepage` (https addresses), and the two ways to retire a pack: `deprecated: { since, replaced-by, note }`, which
+tells people to use something else (the editor and the MCP servers do not add it to a project that does not have it), and `withdrawn: { <version>: reason }`,
+which marks one version as defective. A project that already has a retired pack keeps working. Tests for a pack's rules sit in
+`packs/<name>/tests/<rule-id>.json`, and the checksum of every published version in `registry.lock.json` at the root. The
+[trumly-packs](https://github.com/trumly/trumly-packs) repository describes all of this and the commands that work with it.
+
+A tool that checks packs SHOULD also report: a pattern whose `root` is not one of its nodes, and a pack with no example.
+
 ## 5. Load errors
 
 A file that fails to load is reported and skipped; the rest still load.

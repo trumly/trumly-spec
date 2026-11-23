@@ -22,7 +22,7 @@ fields:
     - require_link:
         dir: in
         type: consumes
-  pack: design@1.0.0
+  pack: design@1.1.0
 ---
 A service nothing calls and that offers nothing may be dead.
 

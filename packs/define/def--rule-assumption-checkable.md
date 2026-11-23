@@ -12,7 +12,7 @@ fields:
     require_fields:
     - how-to-check
     - owner
-  pack: define@1.1.0
+  pack: define@1.2.0
 ---
 **Why:** an assumption nobody owns or tests quietly becomes a fact.
 

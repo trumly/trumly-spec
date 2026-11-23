@@ -18,10 +18,10 @@ links:
 - type: governs
   to: datastore-ops-db
 - type: derives-from
-  to: requirement-status-freshness
+  to: requirement-list-jobs
 - type: complies-with
   to: principle-prefer-managed
 - type: relies-on
   to: assumption-job-volume
 ---
-Use a managed relational database. Job data is highly structured and the reports need joins.
+Use a managed relational database. Job data is highly structured and listing jobs needs joins.

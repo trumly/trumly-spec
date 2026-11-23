@@ -24,7 +24,7 @@ fields:
     - inspection
     - demonstration
     - analysis
-  pack: define@1.1.0
+  pack: define@1.2.0
 ---
 **Ask:** How would we show this is met? What would we set up, what would we do, what must we see?
 

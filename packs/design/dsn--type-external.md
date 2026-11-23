@@ -16,7 +16,7 @@ fields:
     kind: text
     label: Description
     required: true
-  pack: design@1.0.0
+  pack: design@1.1.0
 ---
 **Ask:** What do we rely on that we do not build or run? Who owns it?
 

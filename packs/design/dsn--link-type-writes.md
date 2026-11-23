@@ -10,5 +10,5 @@ fields:
   - component
   to:
   - datastore
-  pack: design@1.0.0
+  pack: design@1.1.0
 ---

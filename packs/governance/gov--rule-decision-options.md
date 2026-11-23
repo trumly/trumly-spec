@@ -13,7 +13,7 @@ fields:
       min: 2
       node_type: decision-option
       type: considers
-  pack: governance@1.1.0
+  pack: governance@1.2.0
 ---
 **Why:** with one option there was no decision.
 

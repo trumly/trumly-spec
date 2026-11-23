@@ -12,7 +12,7 @@ fields:
   check:
     require_fields:
     - review-by
-  pack: governance@1.1.0
+  pack: governance@1.2.0
 ---
 **Why:** circumstances change. A date keeps old decisions from becoming unquestioned habit.
 

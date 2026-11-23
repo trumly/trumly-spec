@@ -14,7 +14,7 @@ fields:
       min: 1
       node_type: decision
       type: considers
-  pack: governance@1.1.0
+  pack: governance@1.2.0
 ---
 **Why:** an option nobody considered is noise.
 

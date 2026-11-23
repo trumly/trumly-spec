@@ -13,7 +13,7 @@ fields:
       min: 1
       node_type: capability
       type: derives-from
-  pack: define@1.1.0
+  pack: define@1.2.0
 ---
 **Why:** requirements need a reason to exist.
 

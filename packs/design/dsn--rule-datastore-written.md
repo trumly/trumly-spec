@@ -14,7 +14,7 @@ fields:
       min: 1
       node_type: component
       type: writes
-  pack: design@1.0.0
+  pack: design@1.1.0
 ---
 **Why:** a store nothing writes to is either unused or has an undrawn writer.
 

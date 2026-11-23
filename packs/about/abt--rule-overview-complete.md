@@ -14,7 +14,7 @@ fields:
     - audience
     - owner
     - stage
-  pack: about@1.0.0
+  pack: about@1.1.0
 ---
 **Why:** every reader, human or AI, starts here.
 

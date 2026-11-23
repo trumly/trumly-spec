@@ -13,7 +13,7 @@ fields:
       min: 1
       node_type: requirement
       type: satisfies
-  pack: design@1.0.0
+  pack: design@1.1.0
 ---
 **Why:** a part that satisfies no requirement is either missing its requirement or not needed.
 

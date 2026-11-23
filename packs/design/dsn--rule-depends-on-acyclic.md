@@ -10,7 +10,7 @@ fields:
     type: component
   check:
     acyclic: depends-on
-  pack: design@1.0.0
+  pack: design@1.1.0
 ---
 **Why:** if A needs B and B needs A, neither can start first.
 

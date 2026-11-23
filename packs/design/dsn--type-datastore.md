@@ -27,7 +27,7 @@ fields:
     kind: text
     label: Description
     required: true
-  pack: design@1.0.0
+  pack: design@1.1.0
 ---
 **Ask:** Where does data live between runs? Who owns it? What would hurt to lose?
 

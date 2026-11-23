@@ -7,6 +7,7 @@ All notable changes to trumly. The format is before 1.0 (see the README): change
 ### Upgrading
 
 - **`derived` is now a reserved node type**, like `plane`, `rule` and `type`. A project with its own node type called `derived` will find those nodes exempt from rules, required fields and link-end checks, and listed apart from its content. Rename the type if that is not what you want.
+- **The core bundle built into the command line is newer:** `about` 1.1.0, `define` 1.2.0, `design` 1.1.0 and `governance` 1.2.0 (it was 1.0.0, 1.1.0, 1.0.0 and 1.1.0), so it matches the registry.
 - **The `deployment` pack is removed.** Its types and link types (`region`, `network-zone`, `placed-in`, `in-region`, `connects-to`) are in `hosting`, which a project that used it should add instead.
 - Rebuild the wasm (`scripts/build-wasm.sh`) and sync it to the editor and cloud to get derived values there.
 
@@ -14,6 +15,8 @@ All notable changes to trumly. The format is before 1.0 (see the README): change
 - **A pack's `name` must be lowercase letters, digits and single hyphens (48 characters at most)**, as its namespace already had to be. `trumly pack check` also no longer puts a pack's name in the scratch folder it builds samples in.
 
 ### Added
+
+- **The specification describes what a pack folder holds** (section 4b): patterns and examples, what a registry keeps beside each pack (`meta.json`, tests, the lock file), and how a pack is retired.
 
 - **Naming pack tidy-up.** The `name-pattern` type no longer has `separator` or `body` fields (the pattern text already holds the separator, and every node has a Markdown body), and `slot` on a `name-token` is optional. Patterns in the hosting, api, containers, kubernetes, data-model and dns packs no longer carry `separator`.
 - **Pack tooling.** `npm run mint -- <pack>` starts the next version of a pack, `npm run status` lists which versions are locked and which packs are retired, and `scripts/check-examples.mjs` runs every rule over every pack example.

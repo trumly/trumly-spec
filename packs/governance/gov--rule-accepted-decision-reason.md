@@ -13,7 +13,7 @@ fields:
     require_link:
       min: 1
       type: derives-from
-  pack: governance@1.1.0
+  pack: governance@1.2.0
 ---
 **Why:** a decision with no driver is a preference. Link it to the requirement, constraint or principle behind it.
 

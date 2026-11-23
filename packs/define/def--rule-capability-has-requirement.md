@@ -15,7 +15,7 @@ fields:
       min: 1
       node_type: requirement
       type: derives-from
-  pack: define@1.1.0
+  pack: define@1.2.0
 ---
 **Why:** a capability with no requirement is not yet precise enough to build or test.
 

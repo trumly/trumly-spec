@@ -12,7 +12,7 @@ fields:
   check:
     require_fields:
     - evidence
-  pack: define@1.1.0
+  pack: define@1.2.0
 ---
 **Why:** see what showed it was wrong.
 

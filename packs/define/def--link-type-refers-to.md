@@ -12,5 +12,5 @@ fields:
   - requirement
   to:
   - concept
-  pack: define@1.1.0
+  pack: define@1.2.0
 ---

@@ -14,7 +14,7 @@ fields:
       node_fields:
         state: open
       type: about
-  pack: define@1.1.0
+  pack: define@1.2.0
 ---
 **Why:** an open question means the node is not settled.
 

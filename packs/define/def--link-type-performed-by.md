@@ -10,5 +10,5 @@ fields:
   - capability
   to:
   - actor
-  pack: define@1.1.0
+  pack: define@1.2.0
 ---

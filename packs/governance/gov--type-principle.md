@@ -28,7 +28,7 @@ fields:
     kind: text
     label: Description
     required: true
-  pack: governance@1.1.0
+  pack: governance@1.2.0
 ---
 **Ask:** What rule of thumb should every future choice follow, unless there is a good reason not to?
 

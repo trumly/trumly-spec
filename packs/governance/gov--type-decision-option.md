@@ -16,7 +16,7 @@ fields:
     kind: text
     label: Description
     required: true
-  pack: governance@1.1.0
+  pack: governance@1.2.0
 ---
 **Ask:** What else could we have done? What is good and bad about each?
 

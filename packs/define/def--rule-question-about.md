@@ -12,7 +12,7 @@ fields:
     require_link:
       min: 1
       type: about
-  pack: define@1.1.0
+  pack: define@1.2.0
 ---
 **Why:** the question blocks what it is about.
 

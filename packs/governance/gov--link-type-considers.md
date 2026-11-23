@@ -10,5 +10,5 @@ fields:
   - decision
   to:
   - decision-option
-  pack: governance@1.1.0
+  pack: governance@1.2.0
 ---

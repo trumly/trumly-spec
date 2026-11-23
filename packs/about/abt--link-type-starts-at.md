@@ -9,5 +9,5 @@ fields:
   from:
   - overview
   to: []
-  pack: about@1.0.0
+  pack: about@1.1.0
 ---

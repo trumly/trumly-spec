@@ -13,7 +13,7 @@ fields:
       min: 1
       node_type: goal
       type: derives-from
-  pack: define@1.1.0
+  pack: define@1.2.0
 ---
 **Why:** capabilities without a goal are scope creep.
 

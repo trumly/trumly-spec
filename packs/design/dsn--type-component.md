@@ -32,7 +32,7 @@ fields:
     kind: text
     label: Description
     required: true
-  pack: design@1.0.0
+  pack: design@1.1.0
 ---
 **Ask:** What are the separate parts that do the work? Who looks after each one?
 

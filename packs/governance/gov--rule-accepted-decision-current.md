@@ -13,7 +13,7 @@ fields:
     forbid_link:
       dir: in
       type: supersedes
-  pack: governance@1.1.0
+  pack: governance@1.2.0
 ---
 **Why:** once a newer decision supersedes it, the old one should be marked superseded.
 

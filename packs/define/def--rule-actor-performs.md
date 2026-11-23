@@ -14,7 +14,7 @@ fields:
       min: 1
       node_type: capability
       type: performed-by
-  pack: define@1.1.0
+  pack: define@1.2.0
 ---
 **Why:** a role that performs no capability has no reason to be in the design.
 

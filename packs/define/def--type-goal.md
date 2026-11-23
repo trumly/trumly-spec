@@ -27,7 +27,7 @@ fields:
   - name: accepted-on
     kind: text
     label: Accepted on (date)
-  pack: define@1.1.0
+  pack: define@1.2.0
 ---
 **Ask:** What would be different if this succeeds? How would you know, with a number? Who cares most?
 
