@@ -163,7 +163,7 @@ fn search(report: &Report, args: &Value) -> Result<Value, String> {
             matched.push("fields");
             snip.get_or_insert_with(|| snippet(&fields, at, query.chars().count()));
         }
-        // derived values (a calculated name) are searched too, so a real name found in a console or an alert finds its node
+        // derived fields (a calculated name) are searched too, so a real name found in a console or an alert finds its node
         let derived = report
             .derived
             .get(&n.id)

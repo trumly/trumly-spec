@@ -295,7 +295,7 @@ fn unique_ok(list: &[Value], by: &Value) -> bool {
 }
 
 /// A name the node has no field of is read from its own `id` and `title`, then from `calc` (its calculated values), so a rule can check
-/// a node's name or a derived value like a field.
+/// a node's name or a derived field like a field.
 fn check_field_is(node: &Node, calc: Option<&Calc>, specs: &Value) -> Outcome {
     let Some(specs) = specs.as_object() else { return Outcome::Bad };
     let mut outcome = Outcome::Pass;
@@ -819,7 +819,7 @@ pub fn evaluate(graph: &Graph) -> Evaluation {
     evaluate_with(graph, &crate::derive::derive_all(graph))
 }
 
-/// The calculated values rules can read: each node's derived values as plain values (see [`Calc`]).
+/// The calculated values rules can read: each node's derived fields as plain values (see [`Calc`]).
 fn calc_of(derived: &crate::derive::DerivedMap) -> BTreeMap<&str, Calc> {
     use crate::derive::Derived;
     let mut out = BTreeMap::new();
@@ -847,7 +847,7 @@ fn calc_of(derived: &crate::derive::DerivedMap) -> BTreeMap<&str, Calc> {
     out
 }
 
-/// [`evaluate`] with the derived values already worked out, so `check` computes them once.
+/// [`evaluate`] with the derived fields already worked out, so `check` computes them once.
 pub fn evaluate_with(graph: &Graph, derived: &crate::derive::DerivedMap) -> Evaluation {
     let calcs = calc_of(derived);
     let rules: Vec<&Node> = graph.nodes().filter(|n| n.kind.as_deref() == Some("rule")).collect();

@@ -1,4 +1,4 @@
-//! Derived values: read-only values a node has but nobody types in, worked out from a template over the node's own
+//! Derived fields: read-only values a node has but nobody types in, worked out from a template over the node's own
 //! fields and the nodes it links to. Mirrors section 7a of the spec and `derive` in reference/core.py.
 //!
 //! A `derived` node defines one: its `name`, its `template` and an `applies_to` filter (the same filter rules use).
@@ -19,7 +19,7 @@ pub const MAX_VALUES: usize = 64;
 pub const MAX_PLACEHOLDERS: usize = 32;
 /// The most links one placeholder may follow before it reads a field. The longest in any shipped pack is four.
 pub const MAX_HOPS: usize = 5;
-/// The most characters a derived value may have. A template that would build a longer one is unusable (`missing: ["template"]`).
+/// The most characters a derived field may have. A template that would build a longer one is unusable (`missing: ["template"]`).
 pub const MAX_VALUE_CHARS: usize = 1024;
 
 /// What one derived name came to for one node.
@@ -52,7 +52,7 @@ impl Derived {
     }
 }
 
-/// Every node's derived values, by node id and then derived name. Nodes with none are left out.
+/// Every node's derived fields, by node id and then derived name. Nodes with none are left out.
 pub type DerivedMap = BTreeMap<String, BTreeMap<String, Derived>>;
 
 enum Part {
@@ -293,7 +293,7 @@ fn overridden(node: &Node, name: &str) -> Vec<String> {
     out
 }
 
-/// Work out every node's derived values (by `field-name`, else `name`). Reserved nodes and nodes in a scratch have none. For each name, the most specific
+/// Work out every node's derived fields (by `field-name`, else `name`). Reserved nodes and nodes in a scratch have none. For each name, the most specific
 /// definition that applies wins (an `id` filter, then `type`, then `plane`, then any other); a tie goes to the lower definition id.
 pub fn derive_all(graph: &Graph) -> DerivedMap {
     let defs: Vec<Def> = graph
@@ -359,7 +359,7 @@ pub fn derive_all(graph: &Graph) -> DerivedMap {
     out
 }
 
-/// One node's derived values as JSON (`{name: {"values": [...]} | {"missing": [...]}}`).
+/// One node's derived fields as JSON (`{name: {"values": [...]} | {"missing": [...]}}`).
 pub fn row_to_json(row: &BTreeMap<String, Derived>) -> Value {
     Value::Object(row.iter().map(|(k, v)| (k.clone(), v.to_json())).collect())
 }

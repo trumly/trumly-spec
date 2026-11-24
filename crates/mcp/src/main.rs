@@ -68,7 +68,7 @@ fn read_tools() -> Vec<Value> {
 fn write_tools() -> Vec<Value> {
     vec![
         json!({"name": "put_node",
-         "description": "Create a node, or replace one. Pass `node` in the shape get_node returns: {id, type, title, parent, plane, fields, links: [{type, to}], body}. Use a type, plane and link type that describe_types lists. Ids are lower-case letters, digits and `-`, usually `<type>-<name>`. A new node of a type that belongs on one plane gets that plane if you name none (the result says `defaulted`). To replace an existing node you must pass its current `rev` as `base_rev`; if the node changed since you read it you get a conflict, so read it again and redo your change. A new node takes no base_rev. Returns the new rev, the check findings for the node, and `advice` where the node strays from the project's vocabulary (unknown type, plane or link type): fix what it reports.",
+         "description": "Create a node, or replace one. Pass `node` in the shape get_node returns: {id, type, title, parent, plane, fields, links: [{type, to}], body}. Use a type, plane and link type that describe_types lists. Ids are lower-case letters, digits and `-`, usually `<type>-<name>`. A double hyphen (`--`) is reserved for the nodes of a pack (`<namespace>--name`), so use single hyphens for yours. A new node of a type that belongs on one plane gets that plane if you name none (the result says `defaulted`). To replace an existing node you must pass its current `rev` as `base_rev`; if the node changed since you read it you get a conflict, so read it again and redo your change. A new node takes no base_rev. Returns the new rev, the check findings for the node, and `advice` where the node strays from the project's vocabulary (unknown type, plane or link type): fix what it reports.",
          "inputSchema": {"type": "object", "properties": {"node": {"type": "object"}, "base_rev": {"type": "string"}}, "required": ["node"]}}),
         json!({"name": "delete_node",
          "description": "Delete a node. Pass its current `rev` as `base_rev`. Returns the links that now point at nothing.",
@@ -568,7 +568,7 @@ impl Server {
                         let namespaced = node.kind.as_deref() == Some("pack")
                             || node.fields.get("pack").is_some_and(Value::is_string);
                         if !portable_id(&node.id, namespaced) {
-                            return Err("new ids use lower-case letters, digits, '-' or '_' (max 100), start and end with a letter or digit, and have no '--' unless the node belongs to a pack. That keeps the file name working on every system.".into());
+                            return Err("new ids use lower-case letters, digits, '-' or '_' (max 100), start and end with a letter or digit, and have no '--' unless the node belongs to a pack (a pack's ids look like '<namespace>--name'; for your own node use single hyphens, such as 'component-orders'). That keeps the file name working on every system.".into());
                         }
                         if let Some(problem) = id_problem(&report.graph, "", &node.id) {
                             return Err(problem);
