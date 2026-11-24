@@ -341,7 +341,7 @@ pub fn lint(all: &[Pack]) -> Vec<Problem> {
                 push(
                     "error",
                     format!(
-                        "“{}” is an ordinary node (type {}). A pack carries definitions only: types, link types, rules, planes and derived values.",
+                        "“{}” is an ordinary node (type {}). A pack carries definitions only: types, link types, rules, planes and derived fields.",
                         n.id,
                         if k.is_empty() { "none" } else { k }
                     ),
@@ -447,7 +447,7 @@ pub fn lint(all: &[Pack]) -> Vec<Problem> {
                     }
                 }
                 Some("derived") => {
-                    let what = format!("The derived value “{name}”");
+                    let what = format!("The derived field “{name}”");
                     if let Some(t) = n.fields.get("applies_to").and_then(|a| a.get("type")).and_then(Value::as_str) {
                         missing(&what, t);
                     }

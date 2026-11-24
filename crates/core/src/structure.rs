@@ -270,7 +270,7 @@ pub fn check(graph: &Graph) -> Structure {
         if let Some(name) = duplicate_definition(graph, n) {
             out.warnings.push(Finding { node: n.id.clone(), kind: "duplicate_definition", reference: Some(name) });
         }
-        // a pack's own rule, derived value or link type that uses a bare name two packs define at the same distance
+        // a pack's own rule, derived field or link type that uses a bare name two packs define at the same distance
         if matches!(n.kind.as_deref(), Some("rule" | "derived" | "link-type")) {
             if let Some(ns) = def_ns(&n.id) {
                 let mut seen = BTreeSet::new();

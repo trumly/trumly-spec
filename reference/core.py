@@ -169,7 +169,7 @@ def load(root):
 
 # ---------- names (type and link-type resolution) ----------
 # A type or link name is bare (`service`) or qualified by a pack namespace (`k8s:service`). A definition belongs to the namespace in
-# its id (`k8s--type-service`); one without `--` belongs to none. `_CTX` is the namespace of the pack whose rule, derived value or
+# its id (`k8s--type-service`); one without `--` belongs to none. `_CTX` is the namespace of the pack whose rule, derived field or
 # link-type definition is being read (None for a node, a link, or a definition that is not in a pack).
 _NAMES = {"nodes": None, "idx": None}
 _CTX = [None]
@@ -871,7 +871,7 @@ def ghosts_for(nodes, inbound, node, rule_id, check):
 
 
 def calculated(derived):
-    """A node's derived values as plain values for rules: one value is text, several are a list. A name that could not be worked out is left out."""
+    """A node's derived fields as plain values for rules: one value is text, several are a list. A name that could not be worked out is left out."""
     out = {}
     for nid, row in derived.items():
         vals = {name: (d["values"][0] if len(d["values"]) == 1 else list(d["values"])) for name, d in row.items() if d.get("values")}
@@ -929,7 +929,7 @@ def unmatched_rules(nodes):
     return out
 
 
-# ---------- derived values ----------
+# ---------- derived fields ----------
 MAX_DERIVED = 64   # the most values one derived name gives a node
 MAX_PLACEHOLDERS = 32   # a template with more placeholders is unusable
 MAX_HOPS = 5   # a placeholder that follows more links than this makes the template unusable
@@ -1077,7 +1077,7 @@ def derived_override(node, name, computed):
 
 
 def derive(nodes):
-    """Every node's derived values: {node id: {name: {"values": [...]} or {"missing": [...]}}}. Reserved nodes and nodes in a
+    """Every node's derived fields: {node id: {name: {"values": [...]} or {"missing": [...]}}}. Reserved nodes and nodes in a
     scratch have none. For each name the most specific applicable definition wins (id 3, type 2, plane 1, other 0); ties go to the
     lower definition id."""
     defs = []

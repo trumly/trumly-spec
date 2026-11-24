@@ -166,7 +166,7 @@ impl Names {
     }
 }
 
-/// A graph, its names, and the namespace of the pack whose rule, derived value or link type is being read. Derefs to the graph, so
+/// A graph, its names, and the namespace of the pack whose rule, derived field or link type is being read. Derefs to the graph, so
 /// code that only needs nodes can use it as one.
 #[derive(Clone, Copy)]
 pub struct Scope<'a> {

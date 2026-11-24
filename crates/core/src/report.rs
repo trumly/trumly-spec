@@ -19,7 +19,7 @@ pub struct Report {
     pub structure: Structure,
     /// Rule results and ghosts.
     pub evaluation: Evaluation,
-    /// Derived values by node id, for the nodes that have any.
+    /// Derived fields by node id, for the nodes that have any.
     pub derived: DerivedMap,
 }
 
@@ -67,7 +67,7 @@ impl Report {
             "load_errors": self.load_errors.iter().map(|e| json!({"file": e.file, "kind": e.kind})).collect::<Vec<_>>(),
             "nodes": self.graph.nodes().map(|n| {
                 let mut j = node_to_json(n);
-                // only nodes that have derived values carry the key, so projects without any look as they always did
+                // only nodes that have derived fields carry the key, so projects without any look as they always did
                 if let Some(row) = self.derived.get(&n.id) {
                     j["derived"] = row_to_json(row);
                 }

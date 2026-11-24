@@ -190,7 +190,7 @@ timestamps). Integers beyond i64 become floats.
 
 ## 4. Packs
 
-A pack is a set of nodes (planes, types, link types, rules, derived values) that can be added to a project. Every node it provides carries
+A pack is a set of nodes (planes, types, link types, rules, derived fields) that can be added to a project. Every node it provides carries
 `fields.pack: <name>@<version>`, which records where the node came from so imported and local content can be told apart and
 a pack can be updated. A pack carries definitions only, never ordinary nodes: the definition kinds are `type`, `link-type`,
 `rule`, `plane` and `derived`. A pack ships a `derived` definition for a fact about its own types (an endpoint's address, an
@@ -259,7 +259,7 @@ part before the first `:` is a namespace as in section 4; the rest is the defini
 namespace in its id (`k8s--type-service`); one whose id has no `--` belongs to no namespace and is reached by its bare name only.
 
 A name appears in a node's `type`, a link's `type`, a rule's `applies_to`, `node_type`, `to_type`, `ancestor_type`, link and
-step `type` and `types`, a `link-type`'s `from` and `to`, and a derived value's `applies_to` and link hops. All of them resolve
+step `type` and `types`, a `link-type`'s `from` and `to`, and a derived field's `applies_to` and link hops. All of them resolve
 the same way, to the definitions the name can mean:
 
 1. A qualified name means the definitions of that name in that namespace.
@@ -289,7 +289,7 @@ A pack is a folder. The manifest and the definitions sit at the top, and two fol
 ```
 <pack>/
   <ns>--pack.md                  the manifest
-  <ns>--<kind>-<name>.md         the definitions: planes, types, link types, rules and derived values
+  <ns>--<kind>-<name>.md         the definitions: planes, types, link types, rules and derived fields
   patterns/<name>/pattern.md     a pattern: its description, and
   patterns/<name>/<node>.md      the nodes it adds to a project
   examples/<name>/example.md     an example: its description, and
@@ -461,7 +461,7 @@ Where a value is "one or a list", a single item means a one-item list.
 - `field_is: {path: {in?, min?, max?, type?, optional?, min_items?, max_items?, min_length?, max_length?, max_bytes?, unique?}}`: the field must satisfy every given constraint.
   A missing field fails unless `optional: true`. `type` is one of string, number, integer, boolean, list, map, null.
   Numbers compare exactly for integers, as floats otherwise. `min_items` / `max_items` (non-negative integers) bound the length of a list; a value that is not a list fails them.
-  `min_length` / `max_length` (non-negative integers) bound the length of text in characters, and `max_bytes` bounds its length in UTF-8 bytes (a limit stated in bytes, such as PostgreSQL's 63, differs from one in characters for accented text); a value that is not text fails them. A name the node has no field of is read from the node's own `id` and `title` (so `title: {max_length: 30}` holds a node's name to a length; a node with no title has its id as the title), then from its derived values (section 7a), so a rule can check a calculated name the same way: `field_is: {handle: {max_length: 63, optional: true}}`. A real field of that name wins. A name that could not be worked out counts as a missing field (hence `optional: true`). A name that gives several values is checked value by value.
+  `min_length` / `max_length` (non-negative integers) bound the length of text in characters, and `max_bytes` bounds its length in UTF-8 bytes (a limit stated in bytes, such as PostgreSQL's 63, differs from one in characters for accented text); a value that is not text fails them. A name the node has no field of is read from the node's own `id` and `title` (so `title: {max_length: 30}` holds a node's name to a length; a node with no title has its id as the title), then from its derived fields (section 7a), so a rule can check a calculated name the same way: `field_is: {handle: {max_length: 63, optional: true}}`. A real field of that name wins. A name that could not be worked out counts as a missing field (hence `optional: true`). A name that gives several values is checked value by value.
   `unique` needs a list: `true` means no two items are equal (JSON equality); a field path (no `[]`) means no two items hold the same value there. Items lacking that field are not compared. Any other `unique` is `unsupported`.
 - `compare_fields: one or a list of {left, op, right | value}`: `op` is `== != < <= > >=`. `left` and `right` are field paths;
   `value` is a literal. A missing field fails. Ordering works on number pairs and string pairs only. `left` may use `[]` (every item is compared); `right` must reach exactly one place or the check is `unsupported`.
@@ -511,9 +511,9 @@ Without that link the result would be `"status": "fail"`, and the project would 
 { "node": "component-ops-api", "rule": "dsn--rule-component-satisfies", "link": "satisfies", "to_type": "requirement", "plane": "dsn--design" }
 ```
 
-## 7a. Derived values
+## 7a. Derived fields
 
-A **derived value** is a read-only value a node has but nobody writes: it is worked out from a template over the node's own
+A **derived field** is a read-only value a node has but nobody writes: it is worked out from a template over the node's own
 fields and the nodes it links to. The first use is a calculated name (`psql-ops-prod-uks-001`) built from facts the model already holds. The core
 knows nothing about names; it only resolves fields and links, and a pack supplies the templates.
 
@@ -527,7 +527,7 @@ A `derived` node defines one. Its `fields` are:
 | `applies_to` | A filter, as for rules (section 7): absent or empty means every non-reserved node. |
 | `enabled` | `false` switches the definition off, as for rules. |
 
-A definition without a string `name` and `template` is ignored. Derived nodes are reserved: rules never apply to them, and they have no derived values of their own. Nodes in a scratch have none either.
+A definition without a string `name` and `template` is ignored. Derived nodes are reserved: rules never apply to them, and they have no derived fields of their own. Nodes in a scratch have none either.
 
 **Template.** Text with `{placeholders}`. `\{`, `\}` and `\\` write a literal `{`, `}` and `\`. An unbalanced brace or an empty `{}` makes the whole template unusable (`missing: ["template"]`, below), as does an empty template, one with more than 32 placeholders, one with a placeholder that follows more than 5 links, or one that would build a value longer than 1024 characters.
 
@@ -545,17 +545,17 @@ Hops can be chained. The nodes reached are taken once each, in id order; a link 
 
 **Which definition.** For one node and one value name (`field-name`, else `name`), the definitions that apply are compared by what their `applies_to` names: `id` (most specific), then `type`, then `plane`, then anything else or nothing. The most specific wins; a tie goes to the lower definition id. Definitions with different field names (or, without one, different names) do not compete: each gives its own value.
 
-**Result.** A node that any definition applies to gets, for each name, either `{"values": [...]}` (every placeholder reached something) or `{"missing": [...]}`, listing the placeholders, as written between the braces, that reached nothing (`["template"]` for an unusable template). Missing is not a finding: nothing fails and nothing is reported. A model with no `derived` nodes has no derived values, and a reader that does not know them ignores them.
+**Result.** A node that any definition applies to gets, for each name, either `{"values": [...]}` (every placeholder reached something) or `{"missing": [...]}`, listing the placeholders, as written between the braces, that reached nothing (`["template"]` for an unusable template). Missing is not a finding: nothing fails and nothing is reported. A model with no `derived` nodes has no derived fields, and a reader that does not know them ignores them.
 
-**Overrides.** A node that is an exception says what its value really is, in an ordinary field: `overrides: {<name>: "value"}`, or a list of values. For a `name` a definition applies to, non-empty string values there replace the template's, in the order written, repeats dropped, at most 64. The result then also has `"override": true` and `"computed"`, the values the template gave (an empty list if it could not be resolved): `{"values": ["legacy-psql"], "override": true, "computed": ["psql-ops-prod-uks-001"]}`. Anything else in `overrides` is ignored: a value that is not a string, a name no definition applies to, or an `overrides` that is not a map. An override gives a node a derived value only where a definition applies, so a search for a name finds the node by the real value, not the one the template would have made.
+**Overrides.** A node that is an exception says what its value really is, in an ordinary field: `overrides: {<name>: "value"}`, or a list of values. For a `name` a definition applies to, non-empty string values there replace the template's, in the order written, repeats dropped, at most 64. The result then also has `"override": true` and `"computed"`, the values the template gave (an empty list if it could not be resolved): `{"values": ["legacy-psql"], "override": true, "computed": ["psql-ops-prod-uks-001"]}`. Anything else in `overrides` is ignored: a value that is not a string, a name no definition applies to, or an `overrides` that is not a map. An override gives a node a derived field only where a definition applies, so a search for a name finds the node by the real value, not the one the template would have made.
 
-Derived values are computed, never stored: they are not written to a node's file, so they cannot go stale. A rule reads one through `field_is` (section 7), where a name the node has no field of is looked up here, an override standing in for the template's value; nothing else in a rule reads them.
+Derived fields are computed, never stored: they are not written to a node's file, so they cannot go stale. A rule reads one through `field_is` (section 7), where a name the node has no field of is looked up here, an override standing in for the template's value; nothing else in a rule reads them.
 
 ## 8. `check --json`
 
 ```
 { load_errors: [{file, kind}],
-  nodes: [full node, sorted by id; includes body; a node with derived values also has `derived`, section 7a],
+  nodes: [full node, sorted by id; includes body; a node with derived fields also has `derived`, section 7a],
   structure: {errors: [{node, kind, ref}], warnings: [...]},
   results: [...], ghosts: [...] }
 ```
